@@ -1,0 +1,4 @@
+- Use imperative shell, function core style, with core being funcitonal interface with a GameState returned
+- Use [VinylCutter](https://github.com/chamons/VinylCutter) to generate record types
+- Drive design with unit tests until fleshed out enough for simple console app
+- Decide later on Ui tech
