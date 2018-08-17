@@ -1,13 +1,17 @@
-[With]
-public struct Character
+namespace LS.Core
 {
-	int ID;
-}
 
-[With]
-public struct GameState 
-{
-	long Tick;
-	List<Character> Enemies;
-	List<Character> Party;
+	[With]
+	public struct Character
+	{
+		long ID;
+	}
+
+	[With]
+	public struct GameState 
+	{
+		long Tick;
+		List<Character> Enemies;
+		List<Character> Party;
+	}
 }

@@ -7,11 +7,14 @@ namespace LS.Core.Tests
 {
 	static class Factory
 	{
-		public static Character Player
+		public static Character Enemy => Character.Create ();
+		public static Character Player => Character.Create ();
+
+		public static GameState EmptyGameState
 		{
 			get
 			{
-				return new Character (42);
+				return new GameState (0, Player.Yield (), null);
 			}
 		}
 
@@ -19,7 +22,7 @@ namespace LS.Core.Tests
 		{
 			get
 			{
-				return new GameState (0, Player.Yield (), null);
+				return new GameState (0, Player.Yield (), Enemy.Yield ());
 			}
 		}
 	}
