@@ -1,0 +1,9 @@
+struct Character
+{
+}
+
+struct GameState 
+{
+	List<Character> Enemies;
+	List<Character> Party;
+}
