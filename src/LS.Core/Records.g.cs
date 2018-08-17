@@ -4,6 +4,17 @@ using System.Collections.Immutable;
 
 public partial struct Character
 {
+	public int ID { get; }
+
+	public Character (int iD)
+	{
+		ID = iD;
+	}
+
+	public Character WithID (int iD)
+	{
+		return new Character (iD);
+	}
 }
 
 public partial struct GameState

@@ -1,5 +1,7 @@
+[With]
 public struct Character
 {
+	int ID;
 }
 
 [With]

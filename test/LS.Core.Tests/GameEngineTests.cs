@@ -10,7 +10,7 @@ namespace LS.Core.Tests
 		[Fact]
 		public void ProcessingIncrementsTicks ()
 		{
-			GameEngine engine = new GameEngine (new GameState (0, null, null));
+			GameEngine engine = new GameEngine (Factory.DefaultGameState);
 			engine.Process ();
 			Assert.Equal (1, engine.CurrentState.Tick);
 		}
