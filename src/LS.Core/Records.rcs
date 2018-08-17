@@ -1,9 +1,11 @@
-struct Character
+public struct Character
 {
 }
 
-struct GameState 
+[With]
+public struct GameState 
 {
+	long Tick;
 	List<Character> Enemies;
 	List<Character> Party;
 }
