@@ -1,10 +1,18 @@
 namespace LS.Core
 {
+	[Inject]
+	public interface IIdentifiable
+	{
+		long ID { get; }
+	}
 
 	[With]
-	public struct Character
+	public struct Character : IIdentifiable
 	{
-		long ID;
+		public long ID { get; }
+
+		[Default ("0")]
+		int CT { get; }
 	}
 
 	[With]
@@ -13,5 +21,17 @@ namespace LS.Core
 		long Tick;
 		List<Character> Enemies;
 		List<Character> Party;
+
+		[Inject]
+		public IEnumerable <Character> AllCharacters
+		{
+			get
+			{
+				foreach (Character e in Enemies)
+					yield return e;
+				foreach (Character p in Party)
+					yield return p;
+			}
+		}
 	}
 }

@@ -4,18 +4,30 @@ using System.Collections.Immutable;
 
 namespace LS.Core
 {
-	public partial struct Character
+	public interface IIdentifiable
+	{
+		long ID { get; }
+	}
+
+	public partial struct Character : IIdentifiable
 	{
 		public long ID { get; }
+		public int CT { get; }
 
-		public Character (long iD)
+		public Character (long id, int ct = 0)
 		{
-			ID = iD;
+			ID = id;
+			CT = ct;
 		}
 
-		public Character WithID (long iD)
+		public Character WithID (long id)
 		{
-			return new Character (iD);
+			return new Character (id, CT);
+		}
+
+		public Character WithCT (int ct)
+		{
+			return new Character (ID, ct);
 		}
 	}
 
@@ -45,6 +57,17 @@ namespace LS.Core
 		public GameState WithParty (IEnumerable<Character> party)
 		{
 			return new GameState (Tick, Enemies, party);
+		}
+
+		public IEnumerable <Character> AllCharacters
+		{
+			get
+			{
+				foreach (Character e in Enemies)
+					yield return e;
+				foreach (Character p in Party)
+					yield return p;
+			}
 		}
 	}
 }

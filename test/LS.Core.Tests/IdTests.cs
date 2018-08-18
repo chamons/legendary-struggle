@@ -8,11 +8,11 @@ namespace LS.Core.Tests
 	public class IDTests 
 	{
 		[Fact]
-		public void IdsAreIncremental ()
+		public void IDsIncreaseOverTime ()
 		{
-			Assert.Equal (101, IDs.Next());
-			Assert.Equal (102, IDs.Next());
-			Assert.Equal (103, IDs.Next());
+			long [] ids = { IDs.Next (), IDs.Next (), IDs.Next () };
+			Assert.True (ids[0] < ids [1]);
+			Assert.True (ids[1] < ids [2]);
 		}
 	}
 }
