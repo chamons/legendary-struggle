@@ -13,9 +13,6 @@ namespace LS.Core
 
 		[Default ("0")]
 		int CT { get; }
-
-		[Default ("false")]
-		bool IsActivePlayer;
 	}
 
 	[With]
@@ -24,6 +21,7 @@ namespace LS.Core
 		long Tick;
 		List<Character> Enemies;
 		List<Character> Party;
+		long ActivePlayerID;
 
 		[Inject]
 		public IEnumerable <Character> AllCharacters

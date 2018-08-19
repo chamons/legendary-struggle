@@ -42,7 +42,8 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithCT (100).WithIsActivePlayer (true));
+			state = state.UpdateCharacter (state.Party[0].WithCT (100));
+			state = state.WithActivePlayerID (state.Party[0].ID);
 
 			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);

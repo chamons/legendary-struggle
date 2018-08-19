@@ -13,28 +13,21 @@ namespace LS.Core
 	{
 		public long ID { get; }
 		public int CT { get; }
-		public bool IsActivePlayer { get; }
 
-		public Character (long id, int ct = 0, bool isActivePlayer = false)
+		public Character (long id, int ct = 0)
 		{
 			ID = id;
 			CT = ct;
-			IsActivePlayer = isActivePlayer;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, CT, IsActivePlayer);
+			return new Character (id, CT);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, ct, IsActivePlayer);
-		}
-
-		public Character WithIsActivePlayer (bool isActivePlayer)
-		{
-			return new Character (ID, CT, isActivePlayer);
+			return new Character (ID, ct);
 		}
 	}
 
@@ -43,27 +36,34 @@ namespace LS.Core
 		public long Tick { get; }
 		public ImmutableArray<Character> Enemies { get; }
 		public ImmutableArray<Character> Party { get; }
+		public long ActivePlayerID { get; }
 
-		public GameState (long tick, IEnumerable<Character> enemies, IEnumerable<Character> party)
+		public GameState (long tick, IEnumerable<Character> enemies, IEnumerable<Character> party, long activePlayerID)
 		{
 			Tick = tick;
 			Enemies = ImmutableArray.CreateRange (enemies ?? Array.Empty<Character> ());
 			Party = ImmutableArray.CreateRange (party ?? Array.Empty<Character> ());
+			ActivePlayerID = activePlayerID;
 		}
 
 		public GameState WithTick (long tick)
 		{
-			return new GameState (tick, Enemies, Party);
+			return new GameState (tick, Enemies, Party, ActivePlayerID);
 		}
 
 		public GameState WithEnemies (IEnumerable<Character> enemies)
 		{
-			return new GameState (Tick, enemies, Party);
+			return new GameState (Tick, enemies, Party, ActivePlayerID);
 		}
 
 		public GameState WithParty (IEnumerable<Character> party)
 		{
-			return new GameState (Tick, Enemies, party);
+			return new GameState (Tick, Enemies, party, ActivePlayerID);
+		}
+
+		public GameState WithActivePlayerID (long activePlayerID)
+		{
+			return new GameState (Tick, Enemies, Party, activePlayerID);
 		}
 
 		public IEnumerable <Character> AllCharacters

@@ -14,35 +14,38 @@ namespace LS.Core
 			CharacterBehavior = behavior;
 		}
 
-		public bool BlockedOnActive => CurrentState.AllCharacters.Any (x => x.IsActivePlayer && Time.IsReady (x));
+		public bool BlockedOnActive => CurrentState.AllCharacters.Any (x => x.ID == CurrentState.ActivePlayerID && Time.IsReady (x));
 
 		public bool Process ()
 		{
 			if (BlockedOnActive)
 				return false;
 
-			CurrentState = CurrentState.WithTick (CurrentState.Tick + 1);
+			IncrementTime ();
 
-			foreach (Character e in CurrentState.Enemies)
-				ProcessCharacter (new CharacterResolver (e, CurrentState));
-			foreach (Character p in CurrentState.Party)
-				ProcessCharacter (new CharacterResolver (p, CurrentState));
+			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
+			         TakeAction (new CharacterResolver (c, CurrentState));
 
 			return true;
 		}
 
-		void ProcessCharacter (CharacterResolver c)
+		public void ProcessAction ()
 		{
-			CurrentState = CurrentState.UpdateCharacter (Time.Increment (c));
+		}
+
+		void IncrementTime ()
+		{
+			CurrentState = CurrentState.WithTick (CurrentState.Tick + 1);
+			foreach (Character c in CurrentState.AllCharacters)
+				CurrentState = CurrentState.UpdateCharacter (Time.Increment (c));
+		}
+
+		void TakeAction (CharacterResolver c)
+		{
+			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
 			c.Update (CurrentState);
 
-			if (Time.IsReady (c))
-			{
-				CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
-				c.Update (CurrentState);
-
-				CurrentState = CharacterBehavior.Act (CurrentState, c);
-			}
+			CurrentState = CharacterBehavior.Act (CurrentState, c);
 		}
 	}
 }

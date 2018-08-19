@@ -14,7 +14,7 @@ namespace LS.Core.Tests
 		{
 			get
 			{
-				return new GameState (0, Player.Yield (), null);
+				return new GameState (0, Player.Yield (), null, Player.ID);
 			}
 		}
 
@@ -22,7 +22,7 @@ namespace LS.Core.Tests
 		{
 			get
 			{
-				return new GameState (0, Player.Yield (), Enemy.Yield ());
+				return new GameState (0, Player.Yield (), Enemy.Yield (), Player.ID);
 			}
 		}
 	}
