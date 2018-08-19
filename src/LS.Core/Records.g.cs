@@ -13,21 +13,28 @@ namespace LS.Core
 	{
 		public long ID { get; }
 		public int CT { get; }
+		public bool IsActivePlayer { get; }
 
-		public Character (long id, int ct = 0)
+		public Character (long id, int ct = 0, bool isActivePlayer = false)
 		{
 			ID = id;
 			CT = ct;
+			IsActivePlayer = isActivePlayer;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, CT);
+			return new Character (id, CT, IsActivePlayer);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, ct);
+			return new Character (ID, ct, IsActivePlayer);
+		}
+
+		public Character WithIsActivePlayer (bool isActivePlayer)
+		{
+			return new Character (ID, CT, isActivePlayer);
 		}
 	}
 

@@ -12,7 +12,7 @@ namespace LS.Core.Tests
 		public void ProcessingIncrementsTicks ()
 		{
 			GameEngine engine = new GameEngine (Factory.EmptyGameState, new TestCharacterBehavior ());
-			engine.Process ();
+			Assert.True (engine.Process ());
 			Assert.Equal (1, engine.CurrentState.Tick);
 		}
 		
@@ -30,7 +30,7 @@ namespace LS.Core.Tests
 			}));
 
 			for (int i = 0 ; i < 90 ; ++i)
-				engine.Process ();
+				Assert.True (engine.Process ());
 
 			Assert.Single (acted);
 			Assert.Contains (acted, x => x == engine.CurrentState.Enemies[0].ID);
@@ -39,6 +39,22 @@ namespace LS.Core.Tests
 		[Fact]
 		public void BlockedWhenActiveCharacterTurn ()
 		{
+			var acted = new HashSet<long> ();
+
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (100).WithIsActivePlayer (true));
+
+			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ((s, c) => {
+				acted.Add (c.Item.ID);
+				return s;
+			}));
+
+			Assert.False (engine.Process ());
+
+			Assert.Empty (acted);
+			Assert.Equal (100, state.Party[0].CT);
+			Assert.Equal (0, state.Enemies[0].CT);
+
 		}
 	}
 }

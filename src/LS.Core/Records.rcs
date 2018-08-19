@@ -13,6 +13,9 @@ namespace LS.Core
 
 		[Default ("0")]
 		int CT { get; }
+
+		[Default ("false")]
+		bool IsActivePlayer;
 	}
 
 	[With]
