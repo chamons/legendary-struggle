@@ -1,6 +1,13 @@
 ﻿using System;
+
 namespace LS.Core
 {
+	// Having a stable reference to a immutable game state that can change
+	// out from under you (thus giving you stale references) is hard
+	// CharacterResolver abstracts that away as much as possible
+	// In the happy path, it holds the index into the array and it's pretty fast
+	// In the sad path (we reordered) it scans, but most CharacterResolver are
+	// short lived anyway
 	public class CharacterResolver
 	{
 		long ID;
@@ -20,9 +27,20 @@ namespace LS.Core
 
 		public Character Resolve ()
 		{
-			if (Index != -1)
-				ResolveByIndex ();
-			return ResolveBySearch ();
+			try
+			{
+				if (Index != -1)
+					ResolveByIndex ();
+				return ResolveBySearch ();
+			}
+			catch (InvalidOperationException)
+			{
+				throw new CharacterNotFoundException (); 
+			}
+			catch (IndexOutOfRangeException)
+			{
+				throw new CharacterNotFoundException (); 
+			}
 		}
 
 		public Character Item => Resolve ();
@@ -54,4 +72,10 @@ namespace LS.Core
 				return State.Enemies.WithID (ID);
 		}
 	}
-}
+
+	public class CharacterNotFoundException : Exception
+	{
+		public CharacterNotFoundException() : base ()
+		{
+		}
+	}}
