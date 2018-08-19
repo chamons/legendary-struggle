@@ -39,5 +39,17 @@ namespace LS.Core.Tests
 
 			Assert.Equal (100, resolver.Item.CT);
 		}
+
+		[Fact]
+		public void ThrowsWhenStale ()
+		{
+			GameState state = Factory.DefaultGameState;
+			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ());
+
+			CharacterResolver resolver = new CharacterResolver (state.Party[0], state);
+			engine.Process ();
+
+			Assert.Throws<StaleReferenceException> (() => resolver.Item);
+		}
 	}
 }

@@ -15,13 +15,18 @@ namespace LS.Core
 		int CT { get; }
 	}
 
+	interface CharacterResolver {}
+
 	[With]
-	public struct GameState 
+	public class GameState 
 	{
 		long Tick;
 		List<Character> Enemies;
 		List<Character> Party;
 		long ActivePlayerID;
+
+		[Mutable]
+		List<CharacterResolver> ActiveResolvers;
 
 		[Inject]
 		public IEnumerable <Character> AllCharacters

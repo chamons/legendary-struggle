@@ -5,7 +5,17 @@ namespace LS.Core
 {
 	public class GameEngine
 	{
-		public GameState CurrentState { get; private set; }
+		GameState _state;
+		public GameState CurrentState 
+		{
+			get => _state;
+			private set
+			{
+				_state = value;
+				_state.InvalidateResolvers ();
+			}
+		}
+
 		ICharacterBehavior CharacterBehavior;
 
 		public GameEngine (GameState initialState, ICharacterBehavior behavior)
@@ -30,7 +40,7 @@ namespace LS.Core
 		}
 
 		public void ProcessAction ()
-		{
+		{			
 		}
 
 		void IncrementTime ()

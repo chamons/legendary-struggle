@@ -14,6 +14,7 @@ namespace LS.Core
 		bool IsParty;
 		int Index;
 		GameState State;
+		internal bool Invalid;
 
 		public CharacterResolver (Character c, GameState state)
 		{
@@ -21,12 +22,15 @@ namespace LS.Core
 			IsParty = state.Party.Contains (c);
 			Index = IsParty ? state.Party.IndexOf (c) : state.Enemies.IndexOf (c);
 			State = state;
+			state.RegisterResolver (this);
 		}
 
 		public static implicit operator Character (CharacterResolver c) => c.Item;
 
 		public Character Resolve ()
 		{
+			if (Invalid)
+				throw new StaleReferenceException ();
 			try
 			{
 				if (Index != -1)
@@ -48,6 +52,7 @@ namespace LS.Core
 		public void Update (GameState state)
 		{
 			State = state;
+			Invalid = false;
 		}
 
 		Character ResolveByIndex ()
@@ -78,4 +83,12 @@ namespace LS.Core
 		public CharacterNotFoundException() : base ()
 		{
 		}
-	}}
+	}
+
+	public class StaleReferenceException : Exception
+	{
+		public StaleReferenceException () : base ()
+		{
+		}
+	}
+}
