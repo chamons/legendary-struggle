@@ -28,6 +28,7 @@ namespace LS.Core
 			{
 				foreach (var resolver in ActiveResolvers)
 					resolver.Invalid = true;
+				ActiveResolvers.Clear ();
 			}
 		}
 

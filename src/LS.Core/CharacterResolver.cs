@@ -53,6 +53,7 @@ namespace LS.Core
 		{
 			State = state;
 			Invalid = false;
+			State.RegisterResolver (this);
 		}
 
 		Character ResolveByIndex ()
