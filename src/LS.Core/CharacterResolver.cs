@@ -53,6 +53,7 @@ namespace LS.Core
 		{
 			State = state;
 			Invalid = false;
+			Index = -1;
 			State.RegisterResolver (this);
 		}
 
@@ -60,22 +61,16 @@ namespace LS.Core
 		{
 			Character potentialHit = IsParty ? State.Party [Index] : State.Enemies[Index];
 			if (potentialHit.ID == ID)
-			{
 				return potentialHit;
-			}
 			else
-			{
-				Index = -1;
 				return ResolveBySearch ();
-			}
 		}
 
 		Character ResolveBySearch ()
 		{
-			if (IsParty)
-				return State.Party.WithID (ID);
-			else
-				return State.Enemies.WithID (ID);
+			Character character = IsParty ? State.Party.WithID (ID) : State.Enemies.WithID (ID);
+			Index = IsParty ? State.Party.IndexOf (character) : State.Enemies.IndexOf (character);
+			return character;
 		}
 	}
 
