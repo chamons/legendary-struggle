@@ -1,0 +1,43 @@
+namespace LS.Core
+{
+	[Inject]
+	public interface IIdentifiable
+	{
+		long ID { get; }
+	}
+
+	[With]
+	public struct Character : IIdentifiable
+	{
+		public long ID { get; }
+
+		[Default ("0")]
+		int CT { get; }
+	}
+
+	interface CharacterResolver {}
+
+	[With]
+	public class GameState 
+	{
+		long Tick;
+		List<Character> Enemies;
+		List<Character> Party;
+		long ActivePlayerID;
+
+		[Mutable]
+		List<CharacterResolver> ActiveResolvers;
+
+		[Inject]
+		public IEnumerable <Character> AllCharacters
+		{
+			get
+			{
+				foreach (Character e in Enemies)
+					yield return e;
+				foreach (Character p in Party)
+					yield return p;
+			}
+		}
+	}
+}
