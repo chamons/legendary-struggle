@@ -6,11 +6,6 @@ namespace LS.Core
 	public partial struct Character
 	{
 		public static Character Create () => new Character (IDs.Next ()); 
-
-		public Character WithIncrementedCT ()
-		{
-			return WithCT (CT + 1);
-		}
 	}
 
 	public partial class GameState
