@@ -6,16 +6,57 @@ namespace LS.Core
 		long ID { get; }
 	}
 
+	[Inject]
+	public interface ITimeable : IIdentifiable
+	{
+		int CT { get; }
+	}
+
 	[With]
-	public struct Character : IIdentifiable
+	public struct Character : ITimeable
 	{
 		public long ID { get; }
 
 		[Default ("0")]
-		int CT { get; }
+		public int CT { get; }
 	}
 
-	interface CharacterResolver {}
+	[With]
+	public struct DelayedAction : ITimeable
+	{
+		public long ID { get; }
+
+		public Action Action { get; }
+
+		[Default ("0")]
+		public int CT { get; }
+	}
+
+	[Inject]
+	[Flags]
+	public enum ActionType
+	{
+		Wait = 1 << 0,
+		Damage = 1 << 1,
+		Heal = 1 << 2,
+	}
+
+	public struct TargettingInfo
+	{
+		long InvokerID;
+		long TargetID;
+	}
+
+	[With]
+	public struct Action
+	{
+		string Name;
+		TargettingInfo TargetInfo;
+		ActionType Type;
+		int Power;
+	}
+
+	interface IItemResolver {}
 
 	[With]
 	public class GameState 
@@ -23,10 +64,11 @@ namespace LS.Core
 		long Tick;
 		List<Character> Enemies;
 		List<Character> Party;
+		List<DelayedAction> DelayedActions;
 		long ActivePlayerID;
 
 		[Mutable]
-		List<CharacterResolver> ActiveResolvers;
+		List<IItemResolver> ActiveResolvers;
 
 		[Inject]
 		public IEnumerable <Character> AllCharacters
@@ -37,6 +79,20 @@ namespace LS.Core
 					yield return e;
 				foreach (Character p in Party)
 					yield return p;
+			}
+		}
+
+		[Inject]
+		public IEnumerable <ITimeable> AllTimables
+		{
+			get
+			{
+				foreach (Character e in Enemies)
+					yield return e;
+				foreach (Character p in Party)
+					yield return p;
+				foreach (DelayedAction a in DelayedActions)
+					yield return a;
 			}
 		}
 	}

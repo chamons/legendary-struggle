@@ -37,6 +37,28 @@ namespace LS.Core.Tests
 		}
 
 		[Fact]
+		public void DelayedActionTakeActionsAndDisappear ()
+		{
+			var acted = new HashSet<long> ();
+
+			GameState state = Factory.DefaultGameState;
+			Action testAction = new Action ("Test", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Wait, 0);
+			state = state.WithDelayedActions (DelayedAction.Create (testAction).WithCT (90).Yield ());
+			long delayedActionID = state.DelayedActions[0].ID;
+
+			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ());
+
+			engine.DelayedActions += (s, a) => acted.Add (a.ID);
+
+			for (int i = 0 ; i < 10 ; ++i)
+				Assert.True (engine.Process ());
+
+			Assert.Single (acted);
+			Assert.Contains (acted, x => x == delayedActionID);
+			Assert.Empty (engine.CurrentState.DelayedActions);
+		}
+
+		[Fact]
 		public void BlockedWhenActiveCharacterTurn ()
 		{
 			var acted = new HashSet<long> ();

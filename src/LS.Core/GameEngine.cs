@@ -3,6 +3,11 @@ using System.Linq;
 
 namespace LS.Core
 {
+	public class DelayedActionFired : EventArgs
+	{
+		public DelayedAction Action;
+	}
+	
 	public class GameEngine
 	{
 		GameState _state;
@@ -24,6 +29,8 @@ namespace LS.Core
 			CharacterBehavior = behavior;
 		}
 
+		public event EventHandler<DelayedAction> DelayedActions;
+
 		public bool BlockedOnActive => CurrentState.AllCharacters.Any (x => x.ID == CurrentState.ActivePlayerID && Time.IsReady (x));
 
 		public bool Process ()
@@ -33,24 +40,30 @@ namespace LS.Core
 
 			IncrementTime ();
 
-			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
-			         TakeAction (new CharacterResolver (c, CurrentState));
+			foreach (Character c in CurrentState.Party.Where (x => Time.IsReady (x)))
+				TakeAction (new PartyResolver (c, CurrentState));
+			foreach (Character e in CurrentState.Enemies.Where (x => Time.IsReady (x)))
+				TakeAction (new EnemyResolver (e, CurrentState));
+			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
+				TakeAction (new DelayedActionResolver (e, CurrentState));
 
 			return true;
-		}
-
-		public void ProcessAction ()
-		{			
 		}
 
 		void IncrementTime ()
 		{
 			CurrentState = CurrentState.WithTick (CurrentState.Tick + 1);
-			foreach (Character c in CurrentState.AllCharacters)
-				CurrentState = CurrentState.UpdateCharacter (Time.Increment (c));
+			foreach (ITimeable c in CurrentState.AllTimables)
+				CurrentState = CurrentState.UpdateTimeable (Time.Increment (c));
 		}
 
-		void TakeAction (CharacterResolver c)
+		void TakeAction (DelayedAction e)
+		{
+			DelayedActions (this, e);
+			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
+		}
+
+		void TakeAction (ItemResolver<Character> c)
 		{
 			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
 			c.Update (CurrentState);

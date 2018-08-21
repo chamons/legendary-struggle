@@ -9,7 +9,7 @@ namespace LS.Core.Tests
 		public void ThrowsWhenItemRemoved ()
 		{
 			GameState state = Factory.DefaultGameState;
-			CharacterResolver resolver = new CharacterResolver (state.Enemies[0], state);
+			EnemyResolver resolver = new EnemyResolver (state.Enemies[0], state);
 			state = state.WithEnemies (null);
 			resolver.Update (state);
 
@@ -20,7 +20,7 @@ namespace LS.Core.Tests
 		public void ThrowsWhenReplacedWithAnother ()
 		{
 			GameState state = Factory.DefaultGameState;
-			CharacterResolver resolver = new CharacterResolver (state.Enemies[0], state);
+			EnemyResolver resolver = new EnemyResolver (state.Enemies[0], state);
 			state = state.WithEnemies ((new Character ()).Yield ());
 			resolver.Update (state);
 
@@ -32,7 +32,7 @@ namespace LS.Core.Tests
 		{
 			GameState state = Factory.DefaultGameState;
 			Character character = state.Party[0];
-			CharacterResolver resolver = new CharacterResolver (character, state);
+			PartyResolver resolver = new PartyResolver (character, state);
 
 			state = state.WithParty (state.Party.ReplaceWithID (character.WithCT (100)));
 			resolver.Update (state);
@@ -46,7 +46,7 @@ namespace LS.Core.Tests
 			GameState state = Factory.DefaultGameState;
 			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ());
 
-			CharacterResolver resolver = new CharacterResolver (state.Party[0], state);
+			PartyResolver resolver = new PartyResolver (state.Party[0], state);
 			engine.Process ();
 
 			Assert.Throws<StaleReferenceException> (() => resolver.Item);
