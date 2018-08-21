@@ -45,7 +45,7 @@ namespace LS.Core
 			foreach (Character e in CurrentState.Enemies.Where (x => Time.IsReady (x)))
 				TakeAction (new EnemyResolver (e, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
-				TakeAction (e);
+				TakeAction (new DelayedActionResolver (e, CurrentState));
 
 			return true;
 		}
