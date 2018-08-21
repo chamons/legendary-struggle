@@ -17,7 +17,7 @@ namespace LS.Core
 	[Flags]
 	public enum ActionType
 	{
-		Wait = 1 << 0,
+		None = 1 << 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
 	}
@@ -90,25 +90,54 @@ namespace LS.Core
 		}
 	}
 
+	public partial struct Health
+	{
+		public int Current { get; }
+		public int Max { get; }
+
+		public Health (int current, int max)
+		{
+			Current = current;
+			Max = max;
+		}
+
+		public Health WithCurrent (int current)
+		{
+			return new Health (current, Max);
+		}
+
+		public Health WithMax (int max)
+		{
+			return new Health (Current, max);
+		}
+	}
+
 	public partial struct Character : ITimeable
 	{
 		public long ID { get; }
+		public Health Health { get; }
 		public int CT { get; }
 
-		public Character (long id, int ct = 0)
+		public Character (long id, Health health, int ct = 0)
 		{
 			ID = id;
+			Health = health;
 			CT = ct;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, CT);
+			return new Character (id, Health, CT);
+		}
+
+		public Character WithHealth (Health health)
+		{
+			return new Character (ID, health, CT);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, ct);
+			return new Character (ID, Health, ct);
 		}
 	}
 

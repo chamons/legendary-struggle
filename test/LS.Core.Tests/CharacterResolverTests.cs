@@ -44,7 +44,7 @@ namespace LS.Core.Tests
 		public void ThrowsWhenStale ()
 		{
 			GameState state = Factory.DefaultGameState;
-			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ());
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
 
 			PartyResolver resolver = new PartyResolver (state.Party[0], state);
 			engine.Process ();

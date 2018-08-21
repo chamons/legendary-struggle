@@ -11,20 +11,20 @@ namespace LS.Core.Tests
 		[Fact]
 		public void ProcessingIncrementsTicks ()
 		{
-			GameEngine engine = new GameEngine (Factory.EmptyGameState, new TestCharacterBehavior ());
+			GameEngine engine = Factory.CreateDefaultGameEngine (Factory.EmptyGameState);
 			Assert.True (engine.Process ());
 			Assert.Equal (1, engine.CurrentState.Tick);
 		}
 		
 		[Fact]
-		public void CharactersTakeActions ()
+		public void OtherCharactersTakeActions ()
 		{
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
 			state = state.UpdateCharacter (state.Enemies[0].WithCT (50));
 
-			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ((s, c) => {
+			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
 				return s;
 			}));
@@ -42,11 +42,11 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			Action testAction = new Action ("Test", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Wait, 0);
+			Action testAction = new Action ("Test", TargettingInfo.Empty, ActionType.None, 0);
 			state = state.WithDelayedActions (DelayedAction.Create (testAction).WithCT (90).Yield ());
 			long delayedActionID = state.DelayedActions[0].ID;
 
-			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ());
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
 
 			engine.DelayedActions += (s, a) => acted.Add (a.ID);
 
@@ -67,7 +67,7 @@ namespace LS.Core.Tests
 			state = state.UpdateCharacter (state.Party[0].WithCT (100));
 			state = state.WithActivePlayerID (state.Party[0].ID);
 
-			GameEngine engine = new GameEngine (state, new TestCharacterBehavior ((s, c) => {
+			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
 				return s;
 			}));
@@ -77,6 +77,12 @@ namespace LS.Core.Tests
 			Assert.Empty (acted);
 			Assert.Equal (100, state.Party[0].CT);
 			Assert.Equal (0, state.Enemies[0].CT);
+		}
+
+		[Fact]
+		public void ActiveCharacterCanUseSkill ()
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

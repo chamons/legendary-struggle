@@ -22,11 +22,13 @@ namespace LS.Core
 		}
 
 		ICharacterBehavior CharacterBehavior;
+		IEffectEngine EffectEngine;
 
-		public GameEngine (GameState initialState, ICharacterBehavior behavior)
+		public GameEngine (GameState initialState, ICharacterBehavior behavior, IEffectEngine effectEngine)
 		{
 			CurrentState = initialState;
 			CharacterBehavior = behavior;
+			EffectEngine = effectEngine;
 		}
 
 		public event EventHandler<DelayedAction> DelayedActions;
