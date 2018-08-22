@@ -19,7 +19,6 @@ namespace LS.Core.Configuration
 		}
 
 		public Effects Effects { get; set; }
-
 	}
 
 	public class Effects

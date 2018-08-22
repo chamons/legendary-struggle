@@ -40,6 +40,12 @@ namespace LS.Core
 			return state.UpdateCharacter (character.Item.WithDeltaCurrentHealth (amount));
 		}
 
+		GameState ApplyDamage (int power, ItemResolver<Character> character, GameState state)
+		{
+			int amount = CalculateDamageAmount (power);
+			return state.UpdateCharacter (character.Item.WithDeltaCurrentHealth (amount));
+		}
+
 		int CalculateLineralScalingValue (int power, double percentScale, double flatScale)
 		{
 			int powerBonus = power - Config.Effects.PowerBase;
@@ -59,12 +65,6 @@ namespace LS.Core
 		{
 			int amount = CalculateLineralScalingValue (power, Config.Effects.DamagePowerScalePercentagePerPoint, Config.Effects.DamagePowerFlatPerPoint);
 			return amount * -1;
-		}
-
-		GameState ApplyDamage (int power, ItemResolver<Character> character, GameState state)
-		{
-			int amount = CalculateDamageAmount (power);
-			return state.UpdateCharacter (character.Item.WithDeltaCurrentHealth (amount));
 		}
 	}
 }
