@@ -78,11 +78,5 @@ namespace LS.Core.Tests
 			Assert.Equal (100, state.Party[0].CT);
 			Assert.Equal (0, state.Enemies[0].CT);
 		}
-
-		[Fact]
-		public void ActiveCharacterCanUseSkill ()
-		{
-			throw new NotImplementedException ();
-		}
 	}
 }
