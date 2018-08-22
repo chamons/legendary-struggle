@@ -13,12 +13,24 @@ namespace LS.Core
 	}
 
 	[With]
-	public struct Character : ITimeable
+	public struct Health
+	{
+		public int Current;
+		public int Max;
+	}
+
+	[With]
+	public class Character : ITimeable
 	{
 		public long ID { get; }
 
+		public Health Health { get; }
+
 		[Default ("0")]
 		public int CT { get; }
+
+		[Inject]
+		public bool IsAlive => Health.Current > 0;
 	}
 
 	[With]
@@ -36,7 +48,7 @@ namespace LS.Core
 	[Flags]
 	public enum ActionType
 	{
-		Wait = 1 << 0,
+		None = 1 << 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
 	}

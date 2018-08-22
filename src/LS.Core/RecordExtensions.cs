@@ -4,9 +4,21 @@ using System.Linq;
 
 namespace LS.Core
 {
-	public partial struct Character
+	public partial class Character
 	{
-		public static Character Create () => new Character (IDs.Next ()); 
+		public static Character Create (Health health) => new Character (IDs.Next (), health); 
+
+		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
+		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
+	}
+
+	public partial struct Health
+	{
+		public Health WithDeltaCurrent (int delta)
+		{
+			int newHealthValue = (Current + delta).Clamp (0, Max);
+			return WithCurrent (newHealthValue);
+		}
 	}
 
 	public partial struct DelayedAction
@@ -14,9 +26,17 @@ namespace LS.Core
 		public static DelayedAction Create (Action action) => new DelayedAction (IDs.Next (), action);
 	}
 
-	public partial struct TargettingInfo
+	public partial struct TargettingInfo : IEquatable<TargettingInfo>
 	{
 		public static TargettingInfo From (Character source, Character target) => new TargettingInfo (source.ID, target.ID);
+
+		public static TargettingInfo Empty = new TargettingInfo (-1, -1);
+
+		public override bool Equals(object obj) => (obj is TargettingInfo info) && Equals(info);
+		public bool Equals(TargettingInfo other) => (InvokerID, TargetID) == (other.InvokerID, other.TargetID);
+		public override int GetHashCode() => (InvokerID, TargetID).GetHashCode ();
+		public static bool operator ==(TargettingInfo left, TargettingInfo right) => Equals (left, right);
+		public static bool operator !=(TargettingInfo left, TargettingInfo right) => !Equals (left, right);
 	}
 
 	public partial class GameState

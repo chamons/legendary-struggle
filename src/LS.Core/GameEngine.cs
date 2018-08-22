@@ -22,11 +22,13 @@ namespace LS.Core
 		}
 
 		ICharacterBehavior CharacterBehavior;
+		IEffectEngine EffectEngine;
 
-		public GameEngine (GameState initialState, ICharacterBehavior behavior)
+		public GameEngine (GameState initialState, ICharacterBehavior behavior, IEffectEngine effectEngine)
 		{
 			CurrentState = initialState;
 			CharacterBehavior = behavior;
+			EffectEngine = effectEngine;
 		}
 
 		public event EventHandler<DelayedAction> DelayedActions;
@@ -40,10 +42,8 @@ namespace LS.Core
 
 			IncrementTime ();
 
-			foreach (Character c in CurrentState.Party.Where (x => Time.IsReady (x)))
-				TakeAction (new PartyResolver (c, CurrentState));
-			foreach (Character e in CurrentState.Enemies.Where (x => Time.IsReady (x)))
-				TakeAction (new EnemyResolver (e, CurrentState));
+			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
+				TakeAction (CharacterResolver.Create (c, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
 				TakeAction (new DelayedActionResolver (e, CurrentState));
 
@@ -59,7 +59,10 @@ namespace LS.Core
 
 		void TakeAction (DelayedAction e)
 		{
-			DelayedActions (this, e);
+			CurrentState = EffectEngine.Apply (e.Action, CurrentState);
+
+			// TODO - This needs to be a UI friendly processed representation of the action
+			DelayedActions?.Invoke (this, e);
 			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
 		}
 
