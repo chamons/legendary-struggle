@@ -7,6 +7,17 @@ namespace LS.Core
 	public partial struct Character
 	{
 		public static Character Create (Health health) => new Character (IDs.Next (), health); 
+
+		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
+	}
+
+	public partial struct Health
+	{
+		public Health WithDeltaCurrent (int delta)
+		{
+			int newHealthValue = (Current + delta).Clamp (0, Max);
+			return WithCurrent (newHealthValue);
+		}
 	}
 
 	public partial struct DelayedAction

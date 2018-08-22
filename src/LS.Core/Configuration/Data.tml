@@ -1,0 +1,12 @@
+﻿[Effects]
+# Base Value that below is a penality, above is bonus
+# Points below are Character's Power - PowerBose
+PowerBase = 100
+
+# How much each point scales the base value
+HealingPowerScalePercentagePerPoint = 1.0
+DamagePowerScalePercentagePerPoint = 1.0
+
+# A flat additional value per point
+HealingPowerFlatPerPoint = 2.0
+DamagePowerFlatPerPoint = 2.0

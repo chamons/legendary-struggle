@@ -2,6 +2,7 @@ using System;
 using Xunit;
 
 using LS.Core;
+using LS.Core.Configuration;
 
 namespace LS.Core.Tests
 {
@@ -9,7 +10,7 @@ namespace LS.Core.Tests
 	{
 		public static Character Enemy => Character.Create (new Health (1, 1));
 		public static Character Player => Character.Create (new Health (1, 1));
-
+		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
 		public static GameState EmptyGameState
 		{
 			get
@@ -28,12 +29,12 @@ namespace LS.Core.Tests
 
 		public static GameEngine CreateDefaultGameEngine (GameState state)
 		{
-			return new GameEngine (state, new DefaultCharacterBehavior (), new EffectEngine ());
+			return new GameEngine (state, new DefaultCharacterBehavior (), EffectEngine);
 		}
 
 		public static GameEngine CreateGameEngine (GameState state, ICharacterBehavior characterBehavior)
 		{
-			return new GameEngine (state, characterBehavior, new EffectEngine ());
+			return new GameEngine (state, characterBehavior, EffectEngine);
 		}
 	}
 }

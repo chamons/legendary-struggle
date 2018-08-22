@@ -42,10 +42,8 @@ namespace LS.Core
 
 			IncrementTime ();
 
-			foreach (Character c in CurrentState.Party.Where (x => Time.IsReady (x)))
-				TakeAction (new PartyResolver (c, CurrentState));
-			foreach (Character e in CurrentState.Enemies.Where (x => Time.IsReady (x)))
-				TakeAction (new EnemyResolver (e, CurrentState));
+			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
+				TakeAction (CharacterResolver.Create (c, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
 				TakeAction (new DelayedActionResolver (e, CurrentState));
 

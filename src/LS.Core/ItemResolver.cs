@@ -81,6 +81,23 @@ namespace LS.Core
 		}
 	}
 
+	public static class CharacterResolver
+	{
+		public static ItemResolver<Character> Create (long id, GameState state)
+		{
+			Character character = state.AllCharacters.WithID (id);
+			return Create (character, state);
+		}
+
+		public static ItemResolver<Character> Create (Character item, GameState state)
+		{
+			if (state.Party.Contains (item))
+				return new PartyResolver (item, state);
+			else
+				return new EnemyResolver (item, state);
+		}
+	}
+
 	public class PartyResolver : ItemResolver<Character> 
 	{
 		public PartyResolver (Character item, GameState state) : base (item, state)

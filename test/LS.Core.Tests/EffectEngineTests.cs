@@ -2,6 +2,7 @@
 using Xunit;
 
 using LS.Core;
+using LS.Core.Configuration;
 using System.Collections.Generic;
 
 namespace LS.Core.Tests
@@ -15,10 +16,10 @@ namespace LS.Core.Tests
 			Character target = Character.Create (new Health (50, 100));
 
 			GameState state = new GameState (0, target.Yield (), invoker.Yield (), null, -1);
-			EffectEngine effectEngine = new EffectEngine ();
+			EffectEngine effectEngine = Factory.EffectEngine;
 			state = effectEngine.Apply (new Action ("Heal", TargettingInfo.From (invoker, target), ActionType.Heal, 100), state);
 
-			Assert.Equal (100, target.Health.Current);
+			Assert.Equal (100, state.Enemies[0].Health.Current);
 		}
 
 

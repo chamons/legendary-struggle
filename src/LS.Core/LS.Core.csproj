@@ -12,6 +12,19 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+    <PackageReference Include="Nett" Version="0.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Configuration\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Configuration\Defaults.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Configuration\Data.tml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\Data.tml" />
+  </ItemGroup>
 </Project>
