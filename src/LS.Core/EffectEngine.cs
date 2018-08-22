@@ -24,7 +24,7 @@ namespace LS.Core
 			switch (action.Type)
 			{
 				case ActionType.Damage:
-					return ApplyDamage (action, state);
+					return ApplyDamage (action.Power, CharacterResolver.Create (action.TargetInfo.TargetID, state), state);
 				case ActionType.Heal:
 					return ApplyHeal (action.Power, CharacterResolver.Create (action.TargetInfo.TargetID, state), state);
 				case ActionType.None:
@@ -40,19 +40,31 @@ namespace LS.Core
 			return state.UpdateCharacter (character.Item.WithDeltaCurrentHealth (amount));
 		}
 
-		int CalculateHealAmount (int power)
+		int CalculateLineralScalingValue (int power, double percentScale, double flatScale)
 		{
 			int powerBonus = power - Config.Effects.PowerBase;
-			double powerScaleBonus = ((powerBonus * Config.Effects.HealingPowerScalePercentagePerPoint) + 100) / 100;
-			int powerFlatBonus = (int)Math.Floor (powerBonus * Config.Effects.HealingPowerFlatPerPoint);
+			double powerScaleBonus = ((powerBonus * percentScale) + 100) / 100;
+			int powerFlatBonus = (int)Math.Floor (powerBonus * flatScale);
 			int diceCount = (int)Math.Floor (10 * powerScaleBonus);
 			Dice powerDice = new Dice (diceCount, 3);
 			return (powerDice.Roll (Random) * 10) + powerFlatBonus;
 		}
 
-		GameState ApplyDamage (Action action, GameState state)
+		int CalculateHealAmount (int power)
 		{
-			return state;
+			return CalculateLineralScalingValue (power, Config.Effects.HealingPowerScalePercentagePerPoint, Config.Effects.HealingPowerFlatPerPoint);
+		}
+
+		int CalculateDamageAmount(int power)
+		{
+			int amount = CalculateLineralScalingValue (power, Config.Effects.DamagePowerScalePercentagePerPoint, Config.Effects.DamagePowerFlatPerPoint);
+			return amount * -1;
+		}
+
+		GameState ApplyDamage (int power, ItemResolver<Character> character, GameState state)
+		{
+			int amount = CalculateDamageAmount (power);
+			return state.UpdateCharacter (character.Item.WithDeltaCurrentHealth (amount));
 		}
 	}
 }

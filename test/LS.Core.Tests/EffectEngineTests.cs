@@ -22,6 +22,18 @@ namespace LS.Core.Tests
 			Assert.Equal (100, state.Enemies[0].Health.Current);
 		}
 
+		[Fact]
+		public void DamageSkillDamages ()
+		{
+			Character invoker = Character.Create (new Health (1, 1));
+			Character target = Character.Create (new Health (50, 100));
+
+			GameState state = new GameState (0, target.Yield (), invoker.Yield (), null, -1);
+			EffectEngine effectEngine = Factory.EffectEngine;
+			state = effectEngine.Apply (new Action ("Damage", TargettingInfo.From (invoker, target), ActionType.Damage, 100), state);
+
+			Assert.Equal (0, state.Enemies[0].Health.Current);
+		}
 
 	}
 }
