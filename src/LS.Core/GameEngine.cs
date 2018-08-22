@@ -62,7 +62,7 @@ namespace LS.Core
 			CurrentState = EffectEngine.Apply (e.Action, CurrentState);
 
 			// TODO - This needs to be a UI friendly processed representation of the action
-			DelayedActions (this, e);
+			DelayedActions?.Invoke (this, e);
 			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
 		}
 

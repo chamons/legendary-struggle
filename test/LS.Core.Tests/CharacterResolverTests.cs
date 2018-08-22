@@ -21,7 +21,7 @@ namespace LS.Core.Tests
 		{
 			GameState state = Factory.DefaultGameState;
 			EnemyResolver resolver = new EnemyResolver (state.Enemies[0], state);
-			state = state.WithEnemies ((new Character ()).Yield ());
+			state = state.WithEnemies (Factory.Enemy.Yield ());
 			resolver.Update (state);
 
 			Assert.Throws<CharacterNotFoundException> (() => resolver.Item);

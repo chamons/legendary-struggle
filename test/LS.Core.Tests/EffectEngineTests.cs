@@ -54,5 +54,63 @@ namespace LS.Core.Tests
 			Assert.Equal (0, engine.CurrentState.Enemies[0].Health.Current);
 			Assert.True (delayedEffectFired);
 		}
+
+		[Fact]
+		public void DelayedEffect_WithSourceDead ()
+		{
+			GameState state = GetDefaultEffectState ();
+			Action damageAction = new Action ("Damage", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Damage, 100);
+			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
+			state = state.UpdateCharacter (state.Party[0].WithCurrentHealth (0));
+
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
+			for (int i = 0; i < 10; ++i)
+				engine.Process ();
+
+			Assert.Equal (50, engine.CurrentState.Enemies[0].Health.Current);
+		}
+
+		[Fact]
+		public void DelayedEffect_WithSourceGone ()
+		{
+			GameState state = GetDefaultEffectState ();
+			Action damageAction = new Action ("Damage", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Damage, 100);
+			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
+			state = state.WithParty (null);
+
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
+			for (int i = 0; i < 10; ++i)
+				engine.Process ();
+
+			Assert.Equal (50, engine.CurrentState.Enemies[0].Health.Current);
+		}
+
+		[Fact]
+		public void DelayedEffect_WithTargetDead()
+		{
+			GameState state = GetDefaultEffectState ();
+			Action damageAction = new Action ("Heal", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Heal, 100);
+			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
+			state = state.UpdateCharacter (state.Enemies[0].WithCurrentHealth (0));
+
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
+			for (int i = 0; i < 10; ++i)
+				engine.Process ();
+
+			Assert.Equal (0, engine.CurrentState.Enemies[0].Health.Current);
+		}
+
+		[Fact]
+		public void DelayedEffect_WithTargetGone()
+		{
+			GameState state = GetDefaultEffectState ();
+			Action damageAction = new Action ("Damage", TargettingInfo.From (state.Party[0], state.Enemies[0]), ActionType.Damage, 100);
+			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
+			state = state.WithEnemies (null);
+
+			GameEngine engine = Factory.CreateDefaultGameEngine (state);
+			for (int i = 0; i < 10; ++i)
+				engine.Process ();
+		}
 	}
 }

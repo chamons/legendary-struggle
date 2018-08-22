@@ -4,11 +4,12 @@ using System.Linq;
 
 namespace LS.Core
 {
-	public partial struct Character
+	public partial class Character
 	{
 		public static Character Create (Health health) => new Character (IDs.Next (), health); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
+		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
 	}
 
 	public partial struct Health

@@ -15,19 +15,22 @@ namespace LS.Core
 	[With]
 	public struct Health
 	{
-		int Current;
-		int Max;
+		public int Current;
+		public int Max;
 	}
 
 	[With]
-	public struct Character : ITimeable
+	public class Character : ITimeable
 	{
 		public long ID { get; }
 
-		Health Health { get; }
+		public Health Health { get; }
 
 		[Default ("0")]
 		public int CT { get; }
+
+		[Inject]
+		public bool IsAlive => Health.Current > 0;
 	}
 
 	[With]

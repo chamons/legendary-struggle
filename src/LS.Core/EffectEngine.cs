@@ -21,6 +21,14 @@ namespace LS.Core
 
 		public GameState Apply (Action action, GameState state)
 		{
+			Character invoker = state.AllCharacters.WithIDOrNull (action.TargetInfo.InvokerID);
+			Character target = state.AllCharacters.WithIDOrNull (action.TargetInfo.TargetID);
+			if (invoker == null || target == null)
+				return state;
+
+			if (!invoker.IsAlive || !target.IsAlive)
+				return state;
+
 			switch (action.Type)
 			{
 				case ActionType.Damage:

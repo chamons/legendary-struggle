@@ -22,6 +22,37 @@ namespace LS.Core
 		Heal = 1 << 2,
 	}
 
+	public partial class Character : ITimeable
+	{
+		public long ID { get; }
+		public Health Health { get; }
+		public int CT { get; }
+
+		public Character (long id, Health health, int ct = 0)
+		{
+			ID = id;
+			Health = health;
+			CT = ct;
+		}
+
+		public Character WithID (long id)
+		{
+			return new Character (id, Health, CT);
+		}
+
+		public Character WithHealth (Health health)
+		{
+			return new Character (ID, health, CT);
+		}
+
+		public Character WithCT (int ct)
+		{
+			return new Character (ID, Health, ct);
+		}
+
+		public bool IsAlive => Health.Current > 0;
+	}
+
 	public partial class GameState
 	{
 		public long Tick { get; }
@@ -109,35 +140,6 @@ namespace LS.Core
 		public Health WithMax (int max)
 		{
 			return new Health (Current, max);
-		}
-	}
-
-	public partial struct Character : ITimeable
-	{
-		public long ID { get; }
-		public Health Health { get; }
-		public int CT { get; }
-
-		public Character (long id, Health health, int ct = 0)
-		{
-			ID = id;
-			Health = health;
-			CT = ct;
-		}
-
-		public Character WithID (long id)
-		{
-			return new Character (id, Health, CT);
-		}
-
-		public Character WithHealth (Health health)
-		{
-			return new Character (ID, health, CT);
-		}
-
-		public Character WithCT (int ct)
-		{
-			return new Character (ID, Health, ct);
 		}
 	}
 
