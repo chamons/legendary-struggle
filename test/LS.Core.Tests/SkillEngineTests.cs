@@ -85,7 +85,7 @@ namespace LS.Core.Tests
 			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
 			Assert.False (engine.CurrentState.Party[0].Skills[0].Available);
 
-			for (int i = 0 ; i < 100 ; ++i)
+			for (int i = 0 ; i < Time.ActionAmount; ++i)
 				engine.Process ();
 
 			Assert.DoesNotContain (engine.CurrentState.DelayedActions, x => x.TargetAction.Action.Type == ActionType.Cooldown);

@@ -106,7 +106,7 @@ namespace LS.Core.Tests
 			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Type == ActionType.RemoveEffect && x.TargetAction.Action.EffectName == "Chilled");
 
 			GameEngine engine = Factory.CreateGameEngine (state, effectEngine: effectEngine);
-			for (int i = 0; i < 100; ++i)
+			for (int i = 0; i < Time.ActionAmount; ++i)
 				engine.Process ();
 
 			Assert.False (engine.CurrentState.Enemies[0].HasEffect ("Chilled"));
@@ -127,7 +127,9 @@ namespace LS.Core.Tests
 			Assert.Single (state.DelayedActions);
 			Assert.True (state.DelayedActions[0].TargetAction.Action.Type == ActionType.RemoveEffect);
 			Assert.True (state.DelayedActions[0].TargetAction.Action.EffectName == "Chilled");
-			Assert.True (state.DelayedActions[0].CT == -100);
+
+			// Two Time.ActionAmount total (100 -> 0 -> -100)
+			Assert.True (state.DelayedActions[0].CT == -Time.ActionAmount);
 		}
 
 		[Fact]

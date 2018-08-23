@@ -88,7 +88,7 @@ namespace LS.Core
 
 			Action removeAction = new Action (effectName, ActionType.RemoveEffect, 0, effectName);
 			TargettedAction removeActionTargetted = new TargettedAction (removeAction, TargettingInfo.Self (character));
-			DelayedAction removeEffectAction = DelayedAction.Create (removeActionTargetted, 100 - power);
+			DelayedAction removeEffectAction = DelayedAction.Create (removeActionTargetted, Time.ActionAmount - power);
 			return state.AddDelayedAction (removeEffectAction);
 		}
 
