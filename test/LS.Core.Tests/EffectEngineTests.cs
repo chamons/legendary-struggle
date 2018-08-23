@@ -57,63 +57,43 @@ namespace LS.Core.Tests
 			Assert.True (delayedEffectFired);
 		}
 
-		//Fix Dup
 		[Fact]
 		public void DelayedEffect_WithSourceDead ()
 		{
-			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
-			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
-			state = state.UpdateCharacter (state.Party[0].WithCurrentHealth (0));
-
-			GameEngine engine = Factory.CreateDefaultGameEngine (state);
-			for (int i = 0; i < 10; ++i)
-				engine.Process ();
-
-			Assert.Equal (50, engine.CurrentState.Enemies[0].Health.Current);
+			TargetLossTestCore (state => state.UpdateCharacter (state.Party[0].WithCurrentHealth (0)), 50);
 		}
 
 		[Fact]
 		public void DelayedEffect_WithSourceGone ()
 		{
-			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
-			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
-			state = state.WithParty (null);
-
-			GameEngine engine = Factory.CreateDefaultGameEngine (state);
-			for (int i = 0; i < 10; ++i)
-				engine.Process ();
-
-			Assert.Equal (50, engine.CurrentState.Enemies[0].Health.Current);
+			TargetLossTestCore (state => state.WithParty (null), 50);
 		}
 
 		[Fact]
 		public void DelayedEffect_WithTargetDead()
 		{
-			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
-			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
-			state = state.UpdateCharacter (state.Enemies[0].WithCurrentHealth (0));
-
-			GameEngine engine = Factory.CreateDefaultGameEngine (state);
-			for (int i = 0; i < 10; ++i)
-				engine.Process ();
-
-			Assert.Equal (0, engine.CurrentState.Enemies[0].Health.Current);
+			TargetLossTestCore (state => state.UpdateCharacter (state.Enemies[0].WithCurrentHealth (0)), 0);
 		}
 
 		[Fact]
 		public void DelayedEffect_WithTargetGone()
 		{
+			TargetLossTestCore (state => state.WithEnemies (null), -1);
+		}
+
+		static void TargetLossTestCore (Func<GameState, GameState> testProc, int expectedHealth)
+		{
 			GameState state = GetDefaultEffectState ();
 			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
-			state = state.WithEnemies (null);
+			state = testProc (state);
 
 			GameEngine engine = Factory.CreateDefaultGameEngine (state);
 			for (int i = 0; i < 10; ++i)
 				engine.Process ();
+
+			if (expectedHealth != -1)
+				Assert.Equal (expectedHealth, engine.CurrentState.Enemies[0].Health.Current);
 		}
 	}
 }
