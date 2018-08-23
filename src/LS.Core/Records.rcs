@@ -107,12 +107,33 @@ namespace LS.Core
 		string Name;
 	}
 
+	public class Behavior
+	{
+		List<BehaviorSkill> Skills;	
+	}
+
+	[Inject]
+	public enum GameCondition
+	{
+		None,
+		PartyHealthLow,
+		EnemyHealthLow
+	}
+
+	public class BehaviorSkill
+	{
+		string SkillName;
+
+		[Default ("GameCondition.None")]
+		GameCondition OverrideCondition;
+	}
+
 	[With]
 	public class GameState 
 	{
 		long Tick;
-		List<Character> Enemies;
 		List<Character> Party;
+		List<Character> Enemies;
 		List<DelayedAction> DelayedActions;
 		long ActivePlayerID;
 

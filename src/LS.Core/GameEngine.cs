@@ -7,7 +7,7 @@ namespace LS.Core
 	{
 		public DelayedAction Action;
 	}
-	
+
 	public class GameEngine
 	{
 		GameState _state;

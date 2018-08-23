@@ -13,13 +13,16 @@ namespace LS.Core.Tests
 		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
 		public static SkillEngine SkillEngine => new SkillEngine (EffectEngine);
 	
-		public static Skill TestSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
-		public static Skill TestDelayedSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 50);
-		public static Skill TestSkillCooldown = Skill.Create (new Action ("Test", ActionType.None, 0), 75, 0);
+		public static Skill TestSkill => Skill.Create (TestAction, 0, 0);
+		public static Skill TestDelayedSkill => Skill.Create (TestAction, 0, 50);
+		public static Skill TestSkillCooldown => Skill.Create (TestAction, 75, 0);
+		public static Skill DamageSkill => Skill.Create (DamageAction, 0, 0);
+		public static Skill HealSkill => Skill.Create (HealAction, 0, 0);
 
+		public static Action TestAction => new Action ("Test", ActionType.None, 0);
 		public static Action HealAction => new Action ("Heal", ActionType.Heal, 100);
-		public static Action DamageAction = new Action ("Damage", ActionType.Damage, 100);
-		public static Action StatusEffectAction = new Action ("Freeze", ActionType.Effect, 100, "Chilled");
+		public static Action DamageAction => new Action ("Damage", ActionType.Damage, 100);
+		public static Action StatusEffectAction => new Action ("Freeze", ActionType.Effect, 100, "Chilled");
 
 		public static GameState EmptyGameState
 		{
@@ -39,7 +42,7 @@ namespace LS.Core.Tests
 
 		public static GameEngine CreateDefaultGameEngine (GameState state)
 		{
-			return new GameEngine (state, new DefaultCharacterBehavior (), SkillEngine, EffectEngine);
+			return new GameEngine (state, new TestCharacterBehavior (), SkillEngine, EffectEngine);
 		}
 
 		public static GameEngine CreateGameEngine (GameState state, ICharacterBehavior characterBehavior = null, ISkillEngine skillEngine = null, IEffectEngine effectEngine = null)

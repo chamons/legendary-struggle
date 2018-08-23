@@ -10,7 +10,7 @@ namespace LS.Core.Tests
 			Character invoker = Character.Create (new Health (1, 1));
 			Character target = Character.Create (new Health (50, 100));
 
-			return new GameState (0, target.Yield (), invoker.Yield (), null, -1);
+			return new GameState (0, invoker.Yield (), target.Yield (), null, -1);
 		}
 
 		[Fact]

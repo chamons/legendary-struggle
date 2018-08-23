@@ -25,6 +25,13 @@ namespace LS.Core
 		RemoveEffect = 1 << 5
 	}
 
+	public enum GameCondition
+	{
+		None,
+		PartyHealthLow,
+		EnemyHealthLow
+	}
+
 	public partial class Character : ITimeable
 	{
 		public long ID { get; }
@@ -125,47 +132,69 @@ namespace LS.Core
 		}
 	}
 
+	public partial class Behavior
+	{
+		public ImmutableArray<BehaviorSkill> Skills { get; }
+
+		public Behavior (IEnumerable<BehaviorSkill> skills)
+		{
+			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<BehaviorSkill> ());
+		}
+	}
+
+	public partial class BehaviorSkill
+	{
+		public string SkillName { get; }
+		public GameCondition OverrideCondition { get; }
+
+		public BehaviorSkill (string skillName, GameCondition overrideCondition = GameCondition.None)
+		{
+			SkillName = skillName;
+			OverrideCondition = overrideCondition;
+		}
+	}
+
 	public partial class GameState
 	{
 		public long Tick { get; }
-		public ImmutableArray<Character> Enemies { get; }
 		public ImmutableArray<Character> Party { get; }
+		public ImmutableArray<Character> Enemies { get; }
 		public ImmutableArray<DelayedAction> DelayedActions { get; }
 		public long ActivePlayerID { get; }
 		List<IItemResolver> ActiveResolvers;
 
-		public GameState (long tick, IEnumerable<Character> enemies, IEnumerable<Character> party, IEnumerable<DelayedAction> delayedActions, long activePlayerID)
+		public GameState (long tick, IEnumerable<Character> party, IEnumerable<Character> enemies, IEnumerable<DelayedAction> delayedActions, long activePlayerID)
 		{
 			Tick = tick;
-			Enemies = ImmutableArray.CreateRange (enemies ?? Array.Empty<Character> ());
 			Party = ImmutableArray.CreateRange (party ?? Array.Empty<Character> ());
+			Enemies = ImmutableArray.CreateRange (enemies ?? Array.Empty<Character> ());
 			DelayedActions = ImmutableArray.CreateRange (delayedActions ?? Array.Empty<DelayedAction> ());
 			ActivePlayerID = activePlayerID;
 		}
 
 		public GameState WithTick (long tick)
 		{
-			return new GameState (tick, Enemies, Party, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
-		}
-
-		public GameState WithEnemies (IEnumerable<Character> enemies)
-		{
-			return new GameState (Tick, enemies, Party, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (tick, Party, Enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithParty (IEnumerable<Character> party)
 		{
-			return new GameState (Tick, Enemies, party, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, party, Enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+		}
+
+		public GameState WithEnemies (IEnumerable<Character> enemies)
+		{
+			return new GameState (Tick, Party, enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithDelayedActions (IEnumerable<DelayedAction> delayedActions)
 		{
-			return new GameState (Tick, Enemies, Party, delayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, Party, Enemies, delayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithActivePlayerID (long activePlayerID)
 		{
-			return new GameState (Tick, Enemies, Party, DelayedActions, activePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, Party, Enemies, DelayedActions, activePlayerID) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public IEnumerable <Character> AllCharacters

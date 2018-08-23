@@ -1,0 +1,25 @@
+﻿[[BehaviorSets]]
+Name = "Thief-Damage"
+
+[[BehaviorSets.Skills]]
+Name = "Backstab"
+[[BehaviorSets.Skills]]
+Name = "Poisoned Blade"
+[[BehaviorSets.Skills]]
+Name = "Stab"
+
+
+[[BehaviorSets]]
+Name = "Thief-Debuff"
+[[BehaviorSets.Skills]]
+Name = "Poisoned Blade"
+[[BehaviorSets.Skills]]
+Name = "Sap"
+[[BehaviorSets.Skills]]
+Name = "Potion"
+OverrideCondition = "PartyHealthLow"
+[[BehaviorSets.Skills]]
+Name = "Backstab"
+OverrideCondition = "EnemyHealthLow"
+[[BehaviorSets.Skills]]
+Name = "Stab"
