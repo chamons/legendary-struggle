@@ -125,6 +125,16 @@ namespace LS.Core
 		}
 	}
 
+	public partial class Behavior
+	{
+		public ImmutableArray<BehaviorSkill> Skills { get; }
+
+		public Behavior (IEnumerable<BehaviorSkill> skills)
+		{
+			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<BehaviorSkill> ());
+		}
+	}
+
 	public partial class GameState
 	{
 		public long Tick { get; }
@@ -321,6 +331,18 @@ namespace LS.Core
 		public StatusEffect (string name)
 		{
 			Name = name;
+		}
+	}
+
+	public partial struct BehaviorSkill
+	{
+		public string SkillName { get; }
+		public string OverrideCondition { get; }
+
+		public BehaviorSkill (string skillName, string overrideCondition = "")
+		{
+			SkillName = skillName;
+			OverrideCondition = overrideCondition;
 		}
 	}
 }

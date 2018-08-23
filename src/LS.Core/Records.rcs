@@ -107,6 +107,19 @@ namespace LS.Core
 		string Name;
 	}
 
+	public class Behavior
+	{
+		List<BehaviorSkill> Skills;	
+	}
+
+	public struct BehaviorSkill
+	{
+		string SkillName;
+
+		[Default ("")]
+		string OverrideCondition;
+	}
+
 	[With]
 	public class GameState 
 	{
