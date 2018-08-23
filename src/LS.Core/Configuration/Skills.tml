@@ -11,3 +11,11 @@ Type = "Heal"
 Power = 100
 Cooldown = 0
 Delay = 0
+
+[[SkillInfo]]
+Name = "Burn"
+Type = "Damage|Effect"
+Power = 100
+Cooldown = 0
+Delay = 0
+EffectName = "Burning"

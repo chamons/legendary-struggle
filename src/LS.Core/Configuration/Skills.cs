@@ -10,6 +10,7 @@ namespace LS.Core.Configuration
 	{
 		public string Name { get; set; }
 		public string Type { get; set; }
+		public string EffectName { get; set; }
 		public int Power { get; set; }
 		public int Cooldown { get; set; }
 		public int Delay { get; set; }
@@ -33,8 +34,17 @@ namespace LS.Core.Configuration
 		public Skill GetSkill (string name)
 		{
 			SkillInfo info = SkillInfo.First (x => x.Name == name);
-			Action action = new Action (name, (ActionType)Enum.Parse (typeof (ActionType), info.Type), info.Power);
+			Action action = new Action (name, GetAction (info), info.Power, info.EffectName);
 			return Skill.Create (action, info.Cooldown, info.Delay);
+		}
+
+		ActionType GetAction (SkillInfo info)
+		{
+			string [] parts = info.Type.Split (new char [] { '|' });
+			ActionType type = ActionType.None;
+			foreach (var part in parts)
+				type |= (ActionType)Enum.Parse (typeof (ActionType), part);
+			return type;
 		}
 	}
 }

@@ -134,7 +134,6 @@ namespace LS.Core.Tests
 		public void EffectsCanBeOfMultipleTypes ()
 		{
 			GameState state = GetDefaultEffectState ();
-			// TODO - Add and test this in XML
 			Action multiAction = new Action ("Burn", ActionType.Damage | ActionType.Effect, 200, "Burning");
 			TargettedAction targettedAction = new TargettedAction (multiAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 
