@@ -38,7 +38,7 @@ namespace LS.Core
 
 	public partial struct DelayedAction
 	{
-		public static DelayedAction Create (TargettedAction action) => new DelayedAction (IDs.Next (), action);
+		public static DelayedAction Create (TargettedAction action, int ct = 0) => new DelayedAction (IDs.Next (), action, ct);
 	}
 
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>

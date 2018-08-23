@@ -38,7 +38,7 @@ namespace LS.Core
 			TargettedAction targetAction = s.CreateAction ();
 
 			if (s.Skill.Delay > 0)
-				return state.AddDelayedAction (DelayedAction.Create (targetAction));
+				return state.AddDelayedAction (DelayedAction.Create (targetAction, 100 - s.Skill.Delay));
 			else
 				return EffectEngine.Apply (targetAction, state);
 		}

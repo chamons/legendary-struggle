@@ -35,6 +35,7 @@ namespace LS.Core.Tests
 
 			Assert.Empty (effectEngine.ActionsUsed);
 			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Name == skill.Action.Name);
+			Assert.Equal (50, state.DelayedActions[0].CT);
 		}
 
 		[Fact]
