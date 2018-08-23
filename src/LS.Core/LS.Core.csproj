@@ -23,8 +23,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Configuration\Data.tml" />
+    <None Remove="Configuration\Skills.tml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Configuration\Data.tml" />
+    <EmbeddedResource Include="Configuration\Skills.tml" />
   </ItemGroup>
 </Project>

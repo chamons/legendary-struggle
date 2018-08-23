@@ -11,7 +11,7 @@ namespace LS.Core
 			yield return item;
 		}
 
-		public static T WithIDOrNull<T>(this IEnumerable<T> array, long id) where T : IIdentifiable
+		public static T WithIDOrNull<T> (this IEnumerable<T> array, long id) where T : IIdentifiable
 		{
 			return array.FirstOrDefault (x => x.ID == id);
 		}

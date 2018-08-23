@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 using LS.Core;
-using System.Collections.Generic;
 
 namespace LS.Core.Tests
 {
@@ -26,10 +27,10 @@ namespace LS.Core.Tests
 
 			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
-				return s;
+				return null;
 			}));
 
-			for (int i = 0 ; i < 90 ; ++i)
+			for (int i = 0; i < 90; ++i)
 				Assert.True (engine.Process ());
 
 			Assert.Single (acted);
@@ -42,7 +43,7 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			Action testAction = new Action ("Test", TargettingInfo.Empty, ActionType.None, 0);
+			TargettedAction testAction = new TargettedAction (new Action ("Test", ActionType.None, 0), TargettingInfo.Empty);
 			state = state.WithDelayedActions (DelayedAction.Create (testAction).WithCT (90).Yield ());
 			long delayedActionID = state.DelayedActions[0].ID;
 
@@ -50,7 +51,7 @@ namespace LS.Core.Tests
 
 			engine.DelayedActions += (s, a) => acted.Add (a.ID);
 
-			for (int i = 0 ; i < 10 ; ++i)
+			for (int i = 0; i < 10; ++i)
 				Assert.True (engine.Process ());
 
 			Assert.Single (acted);
@@ -69,7 +70,7 @@ namespace LS.Core.Tests
 
 			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
-				return s;
+				return null;
 			}));
 
 			Assert.False (engine.Process ());
@@ -77,6 +78,56 @@ namespace LS.Core.Tests
 			Assert.Empty (acted);
 			Assert.Equal (100, state.Party[0].CT);
 			Assert.Equal (0, state.Enemies[0].CT);
+		}
+
+		[Fact]
+		public void CharacterBehavior_ReturnsSkill_GivenToSkillEngine ()
+		{
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (99));
+
+			Skill skill = Factory.TestSkill;
+
+			ICharacterBehavior characterBehavior = new TestCharacterBehavior ((s, c) => new TargettedSkill (skill, TargettingInfo.Empty));
+
+			TestSkillEngine skillEngine = new TestSkillEngine ();
+			GameEngine engine = Factory.CreateGameEngine (state, characterBehavior, skillEngine);
+			engine.Process ();
+
+			Assert.Single (skillEngine.SkillsUsed);
+			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
+		}
+
+		[Fact]
+		public void ActiveCharacterCanUseSkill ()
+		{
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (100));
+			state = state.WithActivePlayerID (state.Party[0].ID);
+
+			Skill skill = Factory.TestSkill;
+
+			TestSkillEngine skillEngine = new TestSkillEngine ();
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty));
+
+			Assert.Single (skillEngine.SkillsUsed);
+			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
+			Assert.Equal (0, engine.CurrentState.Party[0].CT);
+		}
+
+		[Fact]
+		public void ActivePlayerUsingSkillWhenNonActiveThrows()
+		{
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (50));
+			state = state.WithActivePlayerID (state.Party[0].ID);
+
+			Skill skill = Factory.TestSkill;
+
+			TestSkillEngine skillEngine = new TestSkillEngine ();
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			Assert.Throws <InvalidOperationException> (() => engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty)));
 		}
 	}
 }

@@ -20,37 +20,100 @@ namespace LS.Core
 		None = 1 << 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
+		Cooldown = 1 << 3
 	}
 
 	public partial class Character : ITimeable
 	{
 		public long ID { get; }
 		public Health Health { get; }
+		public ImmutableArray<Skill> Skills { get; }
 		public int CT { get; }
 
-		public Character (long id, Health health, int ct = 0)
+		public Character (long id, Health health, IEnumerable<Skill> skills, int ct = 0)
 		{
 			ID = id;
 			Health = health;
+			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<Skill> ());
 			CT = ct;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, Health, CT);
+			return new Character (id, Health, Skills, CT);
 		}
 
 		public Character WithHealth (Health health)
 		{
-			return new Character (ID, health, CT);
+			return new Character (ID, health, Skills, CT);
+		}
+
+		public Character WithSkills (IEnumerable<Skill> skills)
+		{
+			return new Character (ID, Health, skills, CT);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, Health, ct);
+			return new Character (ID, Health, Skills, ct);
 		}
 
 		public bool IsAlive => Health.Current > 0;
+	}
+
+	public partial class Skill : IIdentifiable
+	{
+		public long ID { get; }
+		public Action Action { get; }
+		public bool Available { get; }
+		public int Cooldown { get; }
+		public int Delay { get; }
+
+		public Skill (long id, Action action, bool available, int cooldown, int delay)
+		{
+			ID = id;
+			Action = action;
+			Available = available;
+			Cooldown = cooldown;
+			Delay = delay;
+		}
+
+		public Skill WithID (long id)
+		{
+			return new Skill (id, Action, Available, Cooldown, Delay);
+		}
+
+		public Skill WithAction (Action action)
+		{
+			return new Skill (ID, action, Available, Cooldown, Delay);
+		}
+
+		public Skill WithAvailable (bool available)
+		{
+			return new Skill (ID, Action, available, Cooldown, Delay);
+		}
+
+		public Skill WithCooldown (int cooldown)
+		{
+			return new Skill (ID, Action, Available, cooldown, Delay);
+		}
+
+		public Skill WithDelay (int delay)
+		{
+			return new Skill (ID, Action, Available, Cooldown, delay);
+		}
+	}
+
+	public partial class TargettedSkill
+	{
+		public Skill Skill { get; }
+		public TargettingInfo TargetInfo { get; }
+
+		public TargettedSkill (Skill skill, TargettingInfo targetInfo)
+		{
+			Skill = skill;
+			TargetInfo = targetInfo;
+		}
 	}
 
 	public partial class GameState
@@ -146,29 +209,29 @@ namespace LS.Core
 	public partial struct DelayedAction : ITimeable
 	{
 		public long ID { get; }
-		public Action Action { get; }
+		public TargettedAction TargetAction { get; }
 		public int CT { get; }
 
-		public DelayedAction (long id, Action action, int ct = 0)
+		public DelayedAction (long id, TargettedAction targetAction, int ct = 0)
 		{
 			ID = id;
-			Action = action;
+			TargetAction = targetAction;
 			CT = ct;
 		}
 
 		public DelayedAction WithID (long id)
 		{
-			return new DelayedAction (id, Action, CT);
+			return new DelayedAction (id, TargetAction, CT);
 		}
 
-		public DelayedAction WithAction (Action action)
+		public DelayedAction WithTargetAction (TargettedAction targetAction)
 		{
-			return new DelayedAction (ID, action, CT);
+			return new DelayedAction (ID, targetAction, CT);
 		}
 
 		public DelayedAction WithCT (int ct)
 		{
-			return new DelayedAction (ID, Action, ct);
+			return new DelayedAction (ID, TargetAction, ct);
 		}
 	}
 
@@ -187,36 +250,51 @@ namespace LS.Core
 	public partial struct Action
 	{
 		public string Name { get; }
-		public TargettingInfo TargetInfo { get; }
 		public ActionType Type { get; }
 		public int Power { get; }
 
-		public Action (string name, TargettingInfo targetInfo, ActionType type, int power)
+		public Action (string name, ActionType type, int power)
 		{
 			Name = name;
-			TargetInfo = targetInfo;
 			Type = type;
 			Power = power;
 		}
 
 		public Action WithName (string name)
 		{
-			return new Action (name, TargetInfo, Type, Power);
-		}
-
-		public Action WithTargetInfo (TargettingInfo targetInfo)
-		{
-			return new Action (Name, targetInfo, Type, Power);
+			return new Action (name, Type, Power);
 		}
 
 		public Action WithType (ActionType type)
 		{
-			return new Action (Name, TargetInfo, type, Power);
+			return new Action (Name, type, Power);
 		}
 
 		public Action WithPower (int power)
 		{
-			return new Action (Name, TargetInfo, Type, power);
+			return new Action (Name, Type, power);
+		}
+	}
+
+	public partial struct TargettedAction
+	{
+		public Action Action { get; }
+		public TargettingInfo TargetInfo { get; }
+
+		public TargettedAction (Action action, TargettingInfo targetInfo)
+		{
+			Action = action;
+			TargetInfo = targetInfo;
+		}
+
+		public TargettedAction WithAction (Action action)
+		{
+			return new TargettedAction (action, TargetInfo);
+		}
+
+		public TargettedAction WithTargetInfo (TargettingInfo targetInfo)
+		{
+			return new TargettedAction (Action, targetInfo);
 		}
 	}
 }

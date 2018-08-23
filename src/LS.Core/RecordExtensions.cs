@@ -6,10 +6,15 @@ namespace LS.Core
 {
 	public partial class Character
 	{
-		public static Character Create (Health health) => new Character (IDs.Next (), health); 
+		public static Character Create (Health health) => new Character (IDs.Next (), health, null); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
+
+		public Character WithUpdatedSkill (Skill s)
+		{
+			return WithSkills (Skills.ReplaceWithID (s));
+		}
 	}
 
 	public partial struct Health
@@ -21,14 +26,26 @@ namespace LS.Core
 		}
 	}
 
+	public partial class Skill
+	{
+		public static Skill Create (Action action, int cooldown, int delay) => new Skill (IDs.Next (), action, true, cooldown, delay);
+	}
+
+	public partial class TargettedSkill
+	{
+		public TargettedAction CreateAction () => new TargettedAction (Skill.Action, TargetInfo);
+	}
+
 	public partial struct DelayedAction
 	{
-		public static DelayedAction Create (Action action) => new DelayedAction (IDs.Next (), action);
+		public static DelayedAction Create (TargettedAction action, int ct = 0) => new DelayedAction (IDs.Next (), action, ct);
 	}
 
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>
 	{
 		public static TargettingInfo From (Character source, Character target) => new TargettingInfo (source.ID, target.ID);
+		public static TargettingInfo Self (Character source) => new TargettingInfo (source.ID, source.ID);
+		public static TargettingInfo Self (long id) => new TargettingInfo (id, id);
 
 		public static TargettingInfo Empty = new TargettingInfo (-1, -1);
 
@@ -78,6 +95,11 @@ namespace LS.Core
 				return WithEnemies (Enemies.ReplaceWithID (newCharacter));
 			else 
 				return WithParty (Party.ReplaceWithID (newCharacter));
+		}
+
+		public GameState AddDelayedAction (DelayedAction action)
+		{
+			return WithDelayedActions (DelayedActions.Add (action));
 		}
 	}
 }
