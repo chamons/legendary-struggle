@@ -39,6 +39,7 @@ namespace LS.Core
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>
 	{
 		public static TargettingInfo From (Character source, Character target) => new TargettingInfo (source.ID, target.ID);
+		public static TargettingInfo Self (Character source) => new TargettingInfo (source.ID, source.ID);
 
 		public static TargettingInfo Empty = new TargettingInfo (-1, -1);
 

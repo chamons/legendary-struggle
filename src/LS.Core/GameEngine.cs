@@ -84,7 +84,8 @@ namespace LS.Core
 			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
 			c.Update (CurrentState);
 
-			CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
+			if (skillToUse != null)
+				CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
 		}
 	}
 }

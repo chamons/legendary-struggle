@@ -12,8 +12,10 @@ namespace LS.Core.Tests
 			TestEffectEngine effectEngine = new TestEffectEngine ();
 
 			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
+
 			SkillEngine engine = new SkillEngine (effectEngine);
-			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state);
+			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
 			Assert.Single (effectEngine.ActionsUsed);
 			Assert.Contains (effectEngine.ActionsUsed, x => x.Name == skill.Action.Name);
@@ -26,8 +28,10 @@ namespace LS.Core.Tests
 			TestEffectEngine effectEngine = new TestEffectEngine ();
 
 			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
+
 			SkillEngine engine = new SkillEngine (effectEngine);
-			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state);
+			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
 			Assert.Empty (effectEngine.ActionsUsed);
 			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Name == skill.Action.Name);
@@ -36,7 +40,13 @@ namespace LS.Core.Tests
 		[Fact]
 		public void SkillFailsIfInvokerDoesNotHave ()	
 		{
-			throw new NotImplementedException ();
+			Skill skill = Factory.TestDelayedSkill;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
+
+			GameState state = Factory.DefaultGameState;
+			SkillEngine engine = new SkillEngine (effectEngine);
+
+			Assert.Throws<InvalidOperationException> (() => engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state));
 		}
 
 		[Fact]
