@@ -1,10 +1,6 @@
 ﻿using System;
 using Xunit;
 
-using LS.Core;
-using LS.Core.Configuration;
-using System.Collections.Generic;
-
 namespace LS.Core.Tests
 {
 	public class EffectEngineTests
@@ -137,7 +133,16 @@ namespace LS.Core.Tests
 		[Fact]
 		public void EffectsCanBeOfMultipleTypes ()
 		{
-			throw new NotImplementedException ();
+			GameState state = GetDefaultEffectState ();
+			// TODO - Add and test this in XML
+			Action multiAction = new Action ("Burn", ActionType.Damage | ActionType.Effect, 200, "Burning");
+			TargettedAction targettedAction = new TargettedAction (multiAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+
+			EffectEngine effectEngine = Factory.EffectEngine;
+			state = effectEngine.Apply (targettedAction, state);
+
+			Assert.Equal (0, state.Enemies[0].Health.Current);
+			Assert.True (state.Enemies[0].HasEffect ("Burning"));
 		}
 	}
 }

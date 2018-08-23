@@ -28,33 +28,30 @@ namespace LS.Core
 				return state;
 
 			Action action = targettedAction.Action;
-			switch (action.Type)
+			ActionType type = action.Type;
+			if (type.HasFlag (ActionType.Damage) || type.HasFlag (ActionType.Heal))
 			{
-				case ActionType.Damage:
-				case ActionType.Heal:
 					Character target = state.AllCharacters.WithIDOrNull (targettingInfo.TargetID);
 					if (target == null || !target.IsAlive)
 						return state;
-					break;
 			}
 
-			switch (action.Type)
-			{
-				case ActionType.Damage:
-					return ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
-				case ActionType.Heal:
-					return ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
-				case ActionType.Cooldown:
-					return ApplyCooldown (targettingInfo, state);
-				case ActionType.Effect:
-					return ApplyEffect (action.EffectName, action.Power, targettingInfo, state);
-				case ActionType.RemoveEffect:
-					return RemoveEffect (action.EffectName, targettingInfo, state);
-				case ActionType.None:
-					return state;
-				default:
-					throw new NotImplementedException ($"EffectEngine.Apply with {action.Type}");
-			}
+			if (type.HasFlag (ActionType.Damage))
+				state = ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
+
+			if (type.HasFlag (ActionType.Heal))
+				state = ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
+
+			if (type.HasFlag (ActionType.Cooldown))
+				state = ApplyCooldown (targettingInfo, state);
+
+			if (type.HasFlag (ActionType.Effect))
+				state = ApplyEffect (action.EffectName, action.Power, targettingInfo, state);
+
+			if (type.HasFlag (ActionType.RemoveEffect))
+				state = RemoveEffect (action.EffectName, targettingInfo, state);
+
+			return state;
 		}
 
 		GameState RemoveEffect (string effectName, TargettingInfo targettingInfo, GameState state)
