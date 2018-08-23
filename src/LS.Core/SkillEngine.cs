@@ -19,7 +19,6 @@ namespace LS.Core
 
 		Action CooldownAction = new Action ("Cooldown", ActionType.Cooldown, 0);
 
-		// This needs to consider cooldown, Available, etc
 		public GameState ApplyTargettedSkill (TargettedSkill s, GameState state)
 		{
 			if (!s.Skill.Available)
