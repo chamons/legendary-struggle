@@ -28,9 +28,9 @@ namespace LS.Core.Tests
 	{
 		public HashSet<Action> ActionsUsed = new HashSet<Action> ();
 
-		public GameState Apply(TargettedAction action, GameState state)
+		public GameState Apply(TargettedAction targetAction, GameState state)
 		{
-			ActionsUsed.Add (action.Action);
+			ActionsUsed.Add (targetAction.Action);
 			return state;
 		}
 	}

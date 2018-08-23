@@ -66,7 +66,7 @@ namespace LS.Core
 
 		void ApplyDelayedAction (DelayedAction e)
 		{
-			CurrentState = EffectEngine.Apply (e.Action, CurrentState);
+			CurrentState = EffectEngine.Apply (e.TargetAction, CurrentState);
 
 			// TODO - This needs to be a UI friendly processed representation of the action
 			DelayedActions?.Invoke (this, e);

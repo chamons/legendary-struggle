@@ -208,29 +208,29 @@ namespace LS.Core
 	public partial struct DelayedAction : ITimeable
 	{
 		public long ID { get; }
-		public TargettedAction Action { get; }
+		public TargettedAction TargetAction { get; }
 		public int CT { get; }
 
-		public DelayedAction (long id, TargettedAction action, int ct = 0)
+		public DelayedAction (long id, TargettedAction targetAction, int ct = 0)
 		{
 			ID = id;
-			Action = action;
+			TargetAction = targetAction;
 			CT = ct;
 		}
 
 		public DelayedAction WithID (long id)
 		{
-			return new DelayedAction (id, Action, CT);
+			return new DelayedAction (id, TargetAction, CT);
 		}
 
-		public DelayedAction WithAction (TargettedAction action)
+		public DelayedAction WithTargetAction (TargettedAction targetAction)
 		{
-			return new DelayedAction (ID, action, CT);
+			return new DelayedAction (ID, targetAction, CT);
 		}
 
 		public DelayedAction WithCT (int ct)
 		{
-			return new DelayedAction (ID, Action, ct);
+			return new DelayedAction (ID, TargetAction, ct);
 		}
 	}
 

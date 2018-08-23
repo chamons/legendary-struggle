@@ -40,7 +40,7 @@ namespace LS.Core
 	{
 		public long ID { get; }
 
-		public TargettedAction Action { get; }
+		public TargettedAction TargetAction { get; }
 
 		[Default ("0")]
 		public int CT { get; }

@@ -5,7 +5,7 @@ namespace LS.Core
 {
 	public interface IEffectEngine
 	{
-		GameState Apply (TargettedAction action, GameState state);
+		GameState Apply (TargettedAction targetAction, GameState state);
 	}
 
 	public class EffectEngine : IEffectEngine
