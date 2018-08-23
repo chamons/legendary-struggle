@@ -27,6 +27,7 @@ namespace LS.Core
 		public Health Health { get; }
 
 		List<Skill> Skills { get; }
+		List<StatusEffect> StatusEffects { get; }
 
 		[Default ("0")]
 		public int CT { get; }
@@ -50,10 +51,12 @@ namespace LS.Core
 	[Flags]
 	public enum ActionType
 	{
-		None = 1 << 0,
+		None = 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
-		Cooldown = 1 << 3
+		Cooldown = 1 << 3,
+		Effect = 1 << 4,
+		RemoveEffect = 1 << 5
 	}
 
 	public struct TargettingInfo
@@ -68,6 +71,9 @@ namespace LS.Core
 		string Name;
 		ActionType Type;
 		int Power;
+
+		[Default ("")]
+		string EffectName;
 	}
 
 	[With]
@@ -95,6 +101,11 @@ namespace LS.Core
 	}
 
 	interface IItemResolver {}
+	
+	public struct StatusEffect
+	{
+		string Name;
+	}
 
 	[With]
 	public class GameState 

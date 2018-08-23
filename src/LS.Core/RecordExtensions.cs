@@ -6,7 +6,7 @@ namespace LS.Core
 {
 	public partial class Character
 	{
-		public static Character Create (Health health) => new Character (IDs.Next (), health, null); 
+		public static Character Create (Health health) => new Character (IDs.Next (), health, null, null); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
@@ -15,6 +15,13 @@ namespace LS.Core
 		{
 			return WithSkills (Skills.ReplaceWithID (s));
 		}
+
+		public Character AddStatusEffect (StatusEffect effect)
+		{
+			return WithStatusEffects (StatusEffects.Add (effect));
+		}
+
+		public bool HasEffect (string name) => StatusEffects.Any (x => x.Name == name);
 	}
 
 	public partial struct Health
@@ -39,6 +46,8 @@ namespace LS.Core
 	public partial struct DelayedAction
 	{
 		public static DelayedAction Create (TargettedAction action, int ct = 0) => new DelayedAction (IDs.Next (), action, ct);
+
+		public DelayedAction ExtendDuration (int ct) => WithCT (CT + ct);
 	}
 
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>
@@ -100,6 +109,11 @@ namespace LS.Core
 		public GameState AddDelayedAction (DelayedAction action)
 		{
 			return WithDelayedActions (DelayedActions.Add (action));
+		}
+
+		public GameState ExtendDelayedAction (DelayedAction action, int amount)
+		{
+			return UpdateDelayedAction (DelayedActions.WithID (action.ID).ExtendDuration (amount));
 		}
 	}
 }
