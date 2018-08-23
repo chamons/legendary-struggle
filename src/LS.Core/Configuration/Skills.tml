@@ -1,0 +1,13 @@
+﻿[[SkillInfo]]
+Name = "Hurt"
+Type = "Damage"
+Power = 100
+Cooldown = 0
+Delay = 0
+
+[[SkillInfo]]
+Name = "Heal"
+Type = "Heal"
+Power = 100
+Cooldown = 0
+Delay = 0
