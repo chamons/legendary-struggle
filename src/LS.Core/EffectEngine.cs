@@ -23,25 +23,40 @@ namespace LS.Core
 		{
 			TargettingInfo targettingInfo = targettedAction.TargetInfo;
 			Character invoker = state.AllCharacters.WithIDOrNull (targettingInfo.InvokerID);
-			Character target = state.AllCharacters.WithIDOrNull (targettingInfo.TargetID);
-			if (invoker == null || target == null)
-				return state;
-
-			if (!invoker.IsAlive || !target.IsAlive)
+			if (invoker == null || !invoker.IsAlive)
 				return state;
 
 			Action action = targettedAction.Action;
 			switch (action.Type)
 			{
 				case ActionType.Damage:
+				case ActionType.Heal:
+					Character target = state.AllCharacters.WithIDOrNull (targettingInfo.TargetID);
+					if (target == null || !target.IsAlive)
+						return state;
+					break;
+			}
+
+			switch (action.Type)
+			{
+				case ActionType.Damage:
 					return ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
 				case ActionType.Heal:
 					return ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
+				case ActionType.Cooldown:
+					return ApplyCooldown (targettingInfo, state);
 				case ActionType.None:
 					return state;
 				default:
 					throw new NotImplementedException ($"EffectEngine.Apply with {action.Type}");
 			}
+		}
+
+		GameState ApplyCooldown (TargettingInfo targettingInfo, GameState state)
+		{
+			Character c = state.AllCharacters.WithID (targettingInfo.InvokerID);
+			c = c.WithUpdatedSkill (c.Skills.WithID (targettingInfo.TargetID).WithAvailable (true));
+			return state.UpdateCharacter (c);
 		}
 
 		GameState ApplyHeal (int power, ItemResolver<Character> character, GameState state)

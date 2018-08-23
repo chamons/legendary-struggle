@@ -17,18 +17,38 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
+		Action CooldownAction = new Action ("Cooldown", ActionType.Cooldown, 0);
+
 		// This needs to consider cooldown, Available, etc
 		public GameState ApplyTargettedSkill (TargettedSkill s, GameState state)
 		{
+			if (!s.Skill.Available)
+				throw new InvalidOperationException ($"{s.TargetInfo.InvokerID} tried to use skill {s.Skill.ID} but it is not available for use.");
+
+			AssertContainSkill (s, state);
+
+			if (s.Skill.Cooldown > 0)
+			{
+				TargettingInfo targettingInfo = new TargettingInfo (s.TargetInfo.InvokerID, s.Skill.ID);
+				TargettedAction cooldownAction = new TargettedAction (CooldownAction, targettingInfo);
+				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction));
+				Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
+				state = state.UpdateCharacter (character.WithUpdatedSkill (s.Skill.WithAvailable (false)));
+			}
+
+			TargettedAction targetAction = s.CreateAction ();
+
+			if (s.Skill.Delay > 0)
+				return state.AddDelayedAction (DelayedAction.Create (targetAction));
+			else
+				return EffectEngine.Apply (targetAction, state);
+		}
+
+		static void AssertContainSkill (TargettedSkill s, GameState state)
+		{
 			Character invoker = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
 			if (!invoker.Skills.Any (x => x.ID == s.Skill.ID))
-				throw new InvalidOperationException ($"{invoker.ID} tried to use skill {s.Skill.ID} without having it");
-
-			TargettedAction action = s.CreateAction ();
-			if (s.Skill.Delay > 0)
-				return state.AddDelayedAction (DelayedAction.Create (action));
-			else
-				return EffectEngine.Apply (action, state);
+				throw new InvalidOperationException ($"{invoker.ID} tried to use skill {s.Skill.ID} without having it.");
 		}
 	}
 }

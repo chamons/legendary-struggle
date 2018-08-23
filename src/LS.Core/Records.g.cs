@@ -20,6 +20,7 @@ namespace LS.Core
 		None = 1 << 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
+		Cooldown = 1 << 3
 	}
 
 	public partial class Character : ITimeable

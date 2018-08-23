@@ -40,50 +40,52 @@ namespace LS.Core.Tests
 		[Fact]
 		public void SkillFailsIfInvokerDoesNotHave ()	
 		{
-			Skill skill = Factory.TestDelayedSkill;
+			Skill skill = Factory.TestSkill;
 			TestEffectEngine effectEngine = new TestEffectEngine ();
 
 			GameState state = Factory.DefaultGameState;
 			SkillEngine engine = new SkillEngine (effectEngine);
 
-			Assert.Throws<InvalidOperationException> (() => engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state));
+			Assert.Throws<InvalidOperationException> (() => engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state));
 		}
 
 		[Fact]
 		public void CooldownPreventsReuse ()
 		{
-			throw new NotImplementedException ();
+			Skill skill = Factory.TestSkillCooldown;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
+
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
+
+			SkillEngine engine = new SkillEngine (effectEngine);
+			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
+
+			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Type == ActionType.Cooldown);
+			Assert.False (state.Party[0].Skills[0].Available);
+
+			Assert.Throws<InvalidOperationException> (() => engine.ApplyTargettedSkill (new TargettedSkill (state.Party[0].Skills[0], TargettingInfo.Self (state.Party[0])), state));
 		}
 
 		[Fact]
 		public void CooldownDisappearsAfterTime ()
 		{
-			throw new NotImplementedException ();
-		}
+			Skill skill = Factory.TestSkillCooldown;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
 
-		[Fact]
-		public void SkillSkipsIfInvokerIsDead ()
-		{
-			throw new NotImplementedException ();
-		}
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
 
-		[Fact]
-		public void SkillSkipsIfInvokerIsGone ()
-		{
-			throw new NotImplementedException ();
-		}
+			SkillEngine skillEngine = new SkillEngine (effectEngine);
+			state = skillEngine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
-		[Fact]
-		public void SkillSkipsIfTargetIsDead ()
-		{
-			throw new NotImplementedException ();
-		}
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
 
-		[Fact]
-		public void SkillSkipsIfTargetIsMissing ()
-		{
-			throw new NotImplementedException ();
-		}
+			for (int i = 0 ; i < 100 ; ++i)
+				engine.Process ();
 
+			Assert.DoesNotContain (engine.CurrentState.DelayedActions, x => x.TargetAction.Action.Type == ActionType.Cooldown);
+			Assert.True (engine.CurrentState.Party[0].Skills[0].Available);
+		}
 	}
 }

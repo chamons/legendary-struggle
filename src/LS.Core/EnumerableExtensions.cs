@@ -21,7 +21,7 @@ namespace LS.Core
 			return array.First (x => x.ID == id);
 		}
 
-		public static ImmutableArray<T> ReplaceWithID<T> (this ImmutableArray<T> array, T item) where T : IIdentifiable
+		public static ImmutableArray<T> ReplaceWithID<T>(this ImmutableArray<T> array, T item) where T : IIdentifiable
 		{
 			return array.Replace (array.WithID (item.ID), item);
 		}

@@ -15,6 +15,8 @@ namespace LS.Core.Tests
 	
 		public static Skill TestSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
 		public static Skill TestDelayedSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 50);
+		public static Skill TestSkillCooldown = Skill.Create (new Action ("Test", ActionType.None, 0), 100, 0);
+
 		public static Action HealAction => new Action ("Heal", ActionType.Heal, 100);
 		public static Action DamageAction = new Action ("Damage", ActionType.Damage, 100);
 

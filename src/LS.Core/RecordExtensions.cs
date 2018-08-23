@@ -10,6 +10,11 @@ namespace LS.Core
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
+
+		public Character WithUpdatedSkill (Skill s)
+		{
+			return WithSkills (Skills.ReplaceWithID (s));
+		}
 	}
 
 	public partial struct Health
@@ -40,6 +45,7 @@ namespace LS.Core
 	{
 		public static TargettingInfo From (Character source, Character target) => new TargettingInfo (source.ID, target.ID);
 		public static TargettingInfo Self (Character source) => new TargettingInfo (source.ID, source.ID);
+		public static TargettingInfo Self (long id) => new TargettingInfo (id, id);
 
 		public static TargettingInfo Empty = new TargettingInfo (-1, -1);
 
