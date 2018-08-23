@@ -54,6 +54,9 @@ namespace LS.Core
 
 		public void ProcessActivePlayerAction (TargettedSkill skill)
 		{
+			if (!BlockedOnActive)
+				throw new InvalidOperationException ($"Attempted to use skill {skill.Skill.ID} when not blocked on active");
+
 			ApplySkill (CharacterResolver.Create (CurrentState.ActivePlayerID, CurrentState), skill);
 		}
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -29,7 +30,7 @@ namespace LS.Core.Tests
 				return null;
 			}));
 
-			for (int i = 0 ; i < 90 ; ++i)
+			for (int i = 0; i < 90; ++i)
 				Assert.True (engine.Process ());
 
 			Assert.Single (acted);
@@ -50,7 +51,7 @@ namespace LS.Core.Tests
 
 			engine.DelayedActions += (s, a) => acted.Add (a.ID);
 
-			for (int i = 0 ; i < 10 ; ++i)
+			for (int i = 0; i < 10; ++i)
 				Assert.True (engine.Process ());
 
 			Assert.Single (acted);
@@ -113,6 +114,20 @@ namespace LS.Core.Tests
 			Assert.Single (skillEngine.SkillsUsed);
 			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
 			Assert.Equal (0, engine.CurrentState.Party[0].CT);
+		}
+
+		[Fact]
+		public void ActivePlayerUsingSkillWhenNonActiveThrows()
+		{
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (50));
+			state = state.WithActivePlayerID (state.Party[0].ID);
+
+			Skill skill = Factory.TestSkill;
+
+			TestSkillEngine skillEngine = new TestSkillEngine ();
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			Assert.Throws <InvalidOperationException> (() => engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty)));
 		}
 	}
 }
