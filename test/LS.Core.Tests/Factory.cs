@@ -11,6 +11,8 @@ namespace LS.Core.Tests
 		public static Character Enemy => Character.Create (new Health (1, 1));
 		public static Character Player => Character.Create (new Health (1, 1));
 		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
+		public static SkillEngine SkillEngine => new SkillEngine (EffectEngine);
+
 		public static GameState EmptyGameState
 		{
 			get
@@ -29,12 +31,15 @@ namespace LS.Core.Tests
 
 		public static GameEngine CreateDefaultGameEngine (GameState state)
 		{
-			return new GameEngine (state, new DefaultCharacterBehavior (), EffectEngine);
+			return new GameEngine (state, new DefaultCharacterBehavior (), SkillEngine, EffectEngine);
 		}
 
-		public static GameEngine CreateGameEngine (GameState state, ICharacterBehavior characterBehavior)
+		public static GameEngine CreateGameEngine (GameState state, ICharacterBehavior characterBehavior = null, ISkillEngine skillEngine = null, IEffectEngine effectEngine = null)
 		{
-			return new GameEngine (state, characterBehavior, EffectEngine);
+			characterBehavior = characterBehavior ?? new DefaultCharacterBehavior ();
+			effectEngine = effectEngine ?? EffectEngine;
+			skillEngine = skillEngine ?? new SkillEngine (effectEngine);
+			return new GameEngine (state, characterBehavior, skillEngine, effectEngine);
 		}
 	}
 }

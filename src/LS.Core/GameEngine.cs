@@ -23,11 +23,13 @@ namespace LS.Core
 
 		ICharacterBehavior CharacterBehavior;
 		IEffectEngine EffectEngine;
+		ISkillEngine SkillEngine;
 
-		public GameEngine (GameState initialState, ICharacterBehavior behavior, IEffectEngine effectEngine)
+		public GameEngine (GameState initialState, ICharacterBehavior behavior, ISkillEngine skillEngine, IEffectEngine effectEngine)
 		{
 			CurrentState = initialState;
 			CharacterBehavior = behavior;
+			SkillEngine = skillEngine;
 			EffectEngine = effectEngine;
 		}
 
@@ -43,11 +45,15 @@ namespace LS.Core
 			IncrementTime ();
 
 			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
-				TakeAction (CharacterResolver.Create (c, CurrentState));
+				ApplyNonActiveCharacterTurn (CharacterResolver.Create (c, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
-				TakeAction (new DelayedActionResolver (e, CurrentState));
+				ApplyDelayedAction (new DelayedActionResolver (e, CurrentState));
 
 			return true;
+		}
+
+		public void ProcessActivePlayerAction (TargettedSkill skill)
+		{
 		}
 
 		void IncrementTime ()
@@ -57,7 +63,7 @@ namespace LS.Core
 				CurrentState = CurrentState.UpdateTimeable (Time.Increment (c));
 		}
 
-		void TakeAction (DelayedAction e)
+		void ApplyDelayedAction (DelayedAction e)
 		{
 			CurrentState = EffectEngine.Apply (e.Action, CurrentState);
 
@@ -66,12 +72,13 @@ namespace LS.Core
 			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
 		}
 
-		void TakeAction (ItemResolver<Character> c)
+		void ApplyNonActiveCharacterTurn (ItemResolver<Character> c)
 		{
 			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
 			c.Update (CurrentState);
 
-			CurrentState = CharacterBehavior.Act (CurrentState, c);
+			TargettedSkill skillToUse = CharacterBehavior.Act (CurrentState, c);
+			CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
 		}
 	}
 }

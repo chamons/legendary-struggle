@@ -4,19 +4,19 @@ namespace LS.Core.Tests
 {
 	public class TestCharacterBehavior : ICharacterBehavior
 	{
-		public Func <GameState, ItemResolver<Character>, GameState> TestAction;
+		public Func <GameState, ItemResolver<Character>, TargettedSkill> TestAction;
 
 		public TestCharacterBehavior ()
 		{
-			TestAction = (s, c) => s;
+			TestAction = (s, c) => null;
 		}
 
-		public TestCharacterBehavior (Func <GameState, ItemResolver<Character>, GameState> testAction)
+		public TestCharacterBehavior (Func <GameState, ItemResolver<Character>, TargettedSkill> testAction)
 		{
 			TestAction = testAction;
 		}
 
-		public GameState Act (GameState state, ItemResolver<Character> c)
+		public TargettedSkill Act (GameState state, ItemResolver<Character> c)
 		{
 			return TestAction (state, c);
 		}

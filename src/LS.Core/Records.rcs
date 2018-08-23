@@ -26,6 +26,8 @@ namespace LS.Core
 
 		public Health Health { get; }
 
+		List<Skill> Skills { get; }
+
 		[Default ("0")]
 		public int CT { get; }
 
@@ -38,7 +40,7 @@ namespace LS.Core
 	{
 		public long ID { get; }
 
-		public Action Action { get; }
+		public TargettedAction Action { get; }
 
 		[Default ("0")]
 		public int CT { get; }
@@ -63,9 +65,32 @@ namespace LS.Core
 	public struct Action
 	{
 		string Name;
-		TargettingInfo TargetInfo;
 		ActionType Type;
 		int Power;
+	}
+
+	[With]
+	public struct TargettedAction
+	{
+		Action Action;
+		TargettingInfo TargetInfo;
+	}
+
+	[With]
+	public class Skill : IIdentifiable
+	{
+		public long ID { get; }
+		public Action Action;
+
+		bool Available;
+		int Cooldown;
+		int Delay;
+	}
+
+	public class TargettedSkill
+	{
+		Skill Skill;
+		TargettingInfo TargetInfo;
 	}
 
 	interface IItemResolver {}

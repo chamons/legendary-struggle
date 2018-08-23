@@ -26,7 +26,7 @@ namespace LS.Core.Tests
 
 			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
-				return s;
+				return null;
 			}));
 
 			for (int i = 0 ; i < 90 ; ++i)
@@ -42,7 +42,7 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			Action testAction = new Action ("Test", TargettingInfo.Empty, ActionType.None, 0);
+			TargettedAction testAction = new TargettedAction (new Action ("Test", ActionType.None, 0), TargettingInfo.Empty);
 			state = state.WithDelayedActions (DelayedAction.Create (testAction).WithCT (90).Yield ());
 			long delayedActionID = state.DelayedActions[0].ID;
 
@@ -69,7 +69,7 @@ namespace LS.Core.Tests
 
 			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
 				acted.Add (c.Item.ID);
-				return s;
+				return null;
 			}));
 
 			Assert.False (engine.Process ());
@@ -77,6 +77,18 @@ namespace LS.Core.Tests
 			Assert.Empty (acted);
 			Assert.Equal (100, state.Party[0].CT);
 			Assert.Equal (0, state.Enemies[0].CT);
+		}
+
+		[Fact]
+		public void CharacterBehavior_ReturnsSkill_GivenToSkillEngine ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Fact]
+		public void ActiveCharacterCanUseSkill ()
+		{
+			throw new NotImplementedException ();
 		}
 	}
 }

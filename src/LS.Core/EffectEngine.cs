@@ -5,7 +5,7 @@ namespace LS.Core
 {
 	public interface IEffectEngine
 	{
-		GameState Apply(Action action, GameState state);
+		GameState Apply (TargettedAction action, GameState state);
 	}
 
 	public class EffectEngine : IEffectEngine
@@ -19,22 +19,24 @@ namespace LS.Core
 			Config = config;
 		}
 
-		public GameState Apply (Action action, GameState state)
+		public GameState Apply (TargettedAction targettedAction, GameState state)
 		{
-			Character invoker = state.AllCharacters.WithIDOrNull (action.TargetInfo.InvokerID);
-			Character target = state.AllCharacters.WithIDOrNull (action.TargetInfo.TargetID);
+			TargettingInfo targettingInfo = targettedAction.TargetInfo;
+			Character invoker = state.AllCharacters.WithIDOrNull (targettingInfo.InvokerID);
+			Character target = state.AllCharacters.WithIDOrNull (targettingInfo.TargetID);
 			if (invoker == null || target == null)
 				return state;
 
 			if (!invoker.IsAlive || !target.IsAlive)
 				return state;
 
+			Action action = targettedAction.Action;
 			switch (action.Type)
 			{
 				case ActionType.Damage:
-					return ApplyDamage (action.Power, CharacterResolver.Create (action.TargetInfo.TargetID, state), state);
+					return ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
 				case ActionType.Heal:
-					return ApplyHeal (action.Power, CharacterResolver.Create (action.TargetInfo.TargetID, state), state);
+					return ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
 				case ActionType.None:
 					return state;
 				default:

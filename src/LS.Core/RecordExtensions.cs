@@ -6,7 +6,7 @@ namespace LS.Core
 {
 	public partial class Character
 	{
-		public static Character Create (Health health) => new Character (IDs.Next (), health); 
+		public static Character Create (Health health) => new Character (IDs.Next (), health, null); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
@@ -21,9 +21,14 @@ namespace LS.Core
 		}
 	}
 
+	public partial class TargettedSkill
+	{
+		public TargettedAction CreateAction () => new TargettedAction (Skill.Action, TargetInfo);
+	}
+
 	public partial struct DelayedAction
 	{
-		public static DelayedAction Create (Action action) => new DelayedAction (IDs.Next (), action);
+		public static DelayedAction Create (TargettedAction action) => new DelayedAction (IDs.Next (), action);
 	}
 
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>
@@ -78,6 +83,11 @@ namespace LS.Core
 				return WithEnemies (Enemies.ReplaceWithID (newCharacter));
 			else 
 				return WithParty (Party.ReplaceWithID (newCharacter));
+		}
+
+		public GameState AddDelayedAction (DelayedAction action)
+		{
+			return WithDelayedActions (DelayedActions.Add (action));
 		}
 	}
 }
