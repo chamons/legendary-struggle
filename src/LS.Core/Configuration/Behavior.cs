@@ -24,7 +24,7 @@ namespace LS.Core.Configuration
 		public BehaviorSkill GetBehavior (string name)
 		{
 			BehaviorInfo info = Behaviors.First (x => x.Name == name);
-			return new BehaviorSkill ();
+			throw new NotImplementedException ();
 		}
 	}
 

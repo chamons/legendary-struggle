@@ -46,7 +46,19 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillOverrideWhenCondition ()
 		{
-			throw new NotImplementedException ();
+			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Damage"), new BehaviorSkill ("Heal", GameCondition.PartyHealthLow) };
+			Skill[] skills = { Factory.DamageSkill, Factory.HealSkill };
+
+			Behavior behavior = new Behavior (behaviorSkills);
+			CharacterBehavior characterBehavior = new CharacterBehavior (behavior);
+
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithHealth (new Health (1, 10)).WithSkills (skills));
+
+			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
+			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
+			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
+			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.TargetID);
 		}
 
 		[Fact]

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace LS.Core
@@ -22,6 +23,9 @@ namespace LS.Core
 		}
 
 		public bool HasEffect (string name) => StatusEffects.Any (x => x.Name == name);
+
+		public Skill SkillWithName (string name) => Skills.FirstOrDefault (x => x.Action.Name == name);
+		public bool HasSkill (string name) => Skills.Any (x => x.Action.Name == name);
 	}
 
 	public partial struct Health
@@ -31,6 +35,8 @@ namespace LS.Core
 			int newHealthValue = (Current + delta).Clamp (0, Max);
 			return WithCurrent (newHealthValue);
 		}
+
+		public bool IsLow => (Current / (double)Max) < .25;
 	}
 
 	public partial class Skill
@@ -115,5 +121,16 @@ namespace LS.Core
 		{
 			return UpdateDelayedAction (DelayedActions.WithID (action.ID).ExtendDuration (amount));
 		}
+
+		public ImmutableArray<Character> GetTeammates (ItemResolver<Character> c)
+		{
+			return Enemies.Contains (c.Item) ? Enemies : Party;
+		}
+
+		public ImmutableArray<Character> GetOpponents (ItemResolver<Character> c)
+		{
+			return Enemies.Contains (c.Item) ? Party : Enemies;
+		}
+
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
@@ -20,15 +21,33 @@ namespace LS.Core
 
 		public TargettedSkill Act (GameState state, ItemResolver<Character> c)
 		{
+			foreach (BehaviorSkill behaviorSkill in Behavior.Skills.Where (x => x.OverrideCondition != GameCondition.None))
+			{
+				if (ConditionFinder.IsConditionTrue (behaviorSkill.OverrideCondition, state, c))
+				{
+					TargettedSkill targettedSkill = ConsiderSkill (behaviorSkill.SkillName, state, c);
+					if (targettedSkill != null)
+						return targettedSkill;
+				}
+			}
+			
 			foreach (BehaviorSkill behaviorSkill in Behavior.Skills)
 			{
-				Skill skill = c.Item.Skills.FirstOrDefault (x => x.Action.Name == behaviorSkill.SkillName);
-				if (skill != null && skill.Available)
-				{
-					TargettingInfo targetting = SelectTarget (skill, state, c);
-					if (targetting != TargettingInfo.Empty)
-						return new TargettedSkill (skill, targetting);
-				}
+				TargettedSkill targettedSkill = ConsiderSkill (behaviorSkill.SkillName, state, c);
+				if (targettedSkill != null)
+					return targettedSkill;
+			}
+			return null;
+		}
+
+		TargettedSkill ConsiderSkill (string skillName, GameState state, ItemResolver<Character> c)
+		{
+			Skill skill = c.Item.SkillWithName (skillName);
+			if (skill != null && skill.Available)
+			{
+				TargettingInfo targetting = SelectTarget (skill, state, c);
+				if (targetting != TargettingInfo.Empty)
+					return new TargettedSkill (skill, targetting);
 			}
 			return null;
 		}
@@ -52,10 +71,21 @@ namespace LS.Core
 
 			return TargettingInfo.Empty;
 		}
+	}
 
-		Character FindLowestHealth (ImmutableArray<Character> characters)
+	public static class ConditionFinder
+	{
+		public static bool IsConditionTrue (GameCondition condition, GameState state, ItemResolver<Character> c)
 		{
-			return characters.OrderBy (x => x.Health.Current).Last ();
+			switch (condition)
+			{
+				case GameCondition.EnemyHealthLow:
+					return state.GetOpponents (c).Any (x => x.Health.IsLow);
+				case GameCondition.PartyHealthLow:
+					return state.GetTeammates (c).Any (x => x.Health.IsLow);
+				default:
+					throw new NotImplementedException ($"{condition} in ConditionFinder.IsConditionTrue");
+			}
 		}
 	}
 }

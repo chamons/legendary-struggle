@@ -25,6 +25,13 @@ namespace LS.Core
 		RemoveEffect = 1 << 5
 	}
 
+	public enum GameCondition
+	{
+		None,
+		PartyHealthLow,
+		EnemyHealthLow
+	}
+
 	public partial class Character : ITimeable
 	{
 		public long ID { get; }
@@ -132,6 +139,18 @@ namespace LS.Core
 		public Behavior (IEnumerable<BehaviorSkill> skills)
 		{
 			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<BehaviorSkill> ());
+		}
+	}
+
+	public partial class BehaviorSkill
+	{
+		public string SkillName { get; }
+		public GameCondition OverrideCondition { get; }
+
+		public BehaviorSkill (string skillName, GameCondition overrideCondition = GameCondition.None)
+		{
+			SkillName = skillName;
+			OverrideCondition = overrideCondition;
 		}
 	}
 
@@ -331,18 +350,6 @@ namespace LS.Core
 		public StatusEffect (string name)
 		{
 			Name = name;
-		}
-	}
-
-	public partial struct BehaviorSkill
-	{
-		public string SkillName { get; }
-		public string OverrideCondition { get; }
-
-		public BehaviorSkill (string skillName, string overrideCondition = "")
-		{
-			SkillName = skillName;
-			OverrideCondition = overrideCondition;
 		}
 	}
 }

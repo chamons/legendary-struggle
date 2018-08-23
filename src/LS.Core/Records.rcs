@@ -112,12 +112,20 @@ namespace LS.Core
 		List<BehaviorSkill> Skills;	
 	}
 
-	public struct BehaviorSkill
+	[Inject]
+	public enum GameCondition
+	{
+		None,
+		PartyHealthLow,
+		EnemyHealthLow
+	}
+
+	public class BehaviorSkill
 	{
 		string SkillName;
 
-		[Default ("")]
-		string OverrideCondition;
+		[Default ("GameCondition.None")]
+		GameCondition OverrideCondition;
 	}
 
 	[With]
