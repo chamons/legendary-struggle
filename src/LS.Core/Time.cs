@@ -12,12 +12,12 @@ namespace LS.Core
 			throw new NotImplementedException ();
 		}
 
-		static Character Increment(Character c)
+		static Character Increment (Character c)
 		{
 			return c.WithCT (c.CT + 1);
 		}
 
-		static DelayedAction Increment(DelayedAction a)
+		static DelayedAction Increment (DelayedAction a)
 		{
 			return a.WithCT (a.CT + 1);
 		}
