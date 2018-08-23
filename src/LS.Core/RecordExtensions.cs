@@ -47,7 +47,7 @@ namespace LS.Core
 	{
 		public static DelayedAction Create (TargettedAction action, int ct = 0) => new DelayedAction (IDs.Next (), action, ct);
 
-		public DelayedAction ExtendDuration (int ct) => WithCT (CT + ct);
+		public DelayedAction ExtendDuration (int ct) => WithCT (CT - ct);
 	}
 
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>

@@ -78,7 +78,7 @@ namespace LS.Core
 				bool correctCharacter = x.TargetAction.TargetInfo.TargetID == character.Item.ID;
 				return isRemoval && removingCorrectEffect && correctCharacter;
 			});
-			return state.ExtendDelayedAction (removalAction, -power);
+			return state.ExtendDelayedAction (removalAction, power);
 		}
 
 		static GameState AddNewEffect (string effectName, int power, ItemResolver<Character> character, GameState state)
