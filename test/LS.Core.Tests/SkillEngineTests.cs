@@ -80,6 +80,7 @@ namespace LS.Core.Tests
 			state = skillEngine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
 			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			Assert.False (engine.CurrentState.Party[0].Skills[0].Available);
 
 			for (int i = 0 ; i < 100 ; ++i)
 				engine.Process ();
