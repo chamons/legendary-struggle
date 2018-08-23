@@ -17,10 +17,12 @@ namespace LS.Core
 	[Flags]
 	public enum ActionType
 	{
-		None = 1 << 0,
+		None = 0,
 		Damage = 1 << 1,
 		Heal = 1 << 2,
-		Cooldown = 1 << 3
+		Cooldown = 1 << 3,
+		Effect = 1 << 4,
+		RemoveEffect = 1 << 5
 	}
 
 	public partial class Character : ITimeable
@@ -28,34 +30,41 @@ namespace LS.Core
 		public long ID { get; }
 		public Health Health { get; }
 		public ImmutableArray<Skill> Skills { get; }
+		public ImmutableArray<StatusEffect> StatusEffects { get; }
 		public int CT { get; }
 
-		public Character (long id, Health health, IEnumerable<Skill> skills, int ct = 0)
+		public Character (long id, Health health, IEnumerable<Skill> skills, IEnumerable<StatusEffect> statusEffects, int ct = 0)
 		{
 			ID = id;
 			Health = health;
 			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<Skill> ());
+			StatusEffects = ImmutableArray.CreateRange (statusEffects ?? Array.Empty<StatusEffect> ());
 			CT = ct;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, Health, Skills, CT);
+			return new Character (id, Health, Skills, StatusEffects, CT);
 		}
 
 		public Character WithHealth (Health health)
 		{
-			return new Character (ID, health, Skills, CT);
+			return new Character (ID, health, Skills, StatusEffects, CT);
 		}
 
 		public Character WithSkills (IEnumerable<Skill> skills)
 		{
-			return new Character (ID, Health, skills, CT);
+			return new Character (ID, Health, skills, StatusEffects, CT);
+		}
+
+		public Character WithStatusEffects (IEnumerable<StatusEffect> statusEffects)
+		{
+			return new Character (ID, Health, Skills, statusEffects, CT);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, Health, Skills, ct);
+			return new Character (ID, Health, Skills, StatusEffects, ct);
 		}
 
 		public bool IsAlive => Health.Current > 0;
@@ -252,27 +261,34 @@ namespace LS.Core
 		public string Name { get; }
 		public ActionType Type { get; }
 		public int Power { get; }
+		public string EffectName { get; }
 
-		public Action (string name, ActionType type, int power)
+		public Action (string name, ActionType type, int power, string effectName = "")
 		{
 			Name = name;
 			Type = type;
 			Power = power;
+			EffectName = effectName;
 		}
 
 		public Action WithName (string name)
 		{
-			return new Action (name, Type, Power);
+			return new Action (name, Type, Power, EffectName);
 		}
 
 		public Action WithType (ActionType type)
 		{
-			return new Action (Name, type, Power);
+			return new Action (Name, type, Power, EffectName);
 		}
 
 		public Action WithPower (int power)
 		{
-			return new Action (Name, Type, power);
+			return new Action (Name, Type, power, EffectName);
+		}
+
+		public Action WithEffectName (string effectName)
+		{
+			return new Action (Name, Type, Power, effectName);
 		}
 	}
 
@@ -295,6 +311,16 @@ namespace LS.Core
 		public TargettedAction WithTargetInfo (TargettingInfo targetInfo)
 		{
 			return new TargettedAction (Action, targetInfo);
+		}
+	}
+
+	public partial struct StatusEffect
+	{
+		public string Name { get; }
+
+		public StatusEffect (string name)
+		{
+			Name = name;
 		}
 	}
 }

@@ -19,6 +19,7 @@ namespace LS.Core.Tests
 
 		public static Action HealAction => new Action ("Heal", ActionType.Heal, 100);
 		public static Action DamageAction = new Action ("Damage", ActionType.Damage, 100);
+		public static Action StatusEffectAction = new Action ("Freeze", ActionType.Effect, 100, "Chilled");
 
 		public static GameState EmptyGameState
 		{

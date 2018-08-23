@@ -30,7 +30,7 @@ namespace LS.Core
 			{
 				TargettingInfo targettingInfo = new TargettingInfo (s.TargetInfo.InvokerID, s.Skill.ID);
 				TargettedAction cooldownAction = new TargettedAction (CooldownAction, targettingInfo);
-				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction, 100 - s.Skill.Cooldown));
+				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction, Time.ActionAmount - s.Skill.Cooldown));
 				Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
 				state = state.UpdateCharacter (character.WithUpdatedSkill (s.Skill.WithAvailable (false)));
 			}
@@ -38,7 +38,7 @@ namespace LS.Core
 			TargettedAction targetAction = s.CreateAction ();
 
 			if (s.Skill.Delay > 0)
-				return state.AddDelayedAction (DelayedAction.Create (targetAction, 100 - s.Skill.Delay));
+				return state.AddDelayedAction (DelayedAction.Create (targetAction, Time.ActionAmount - s.Skill.Delay));
 			else
 				return EffectEngine.Apply (targetAction, state);
 		}

@@ -34,10 +34,10 @@ namespace LS.Core.Tests
 			Character character = state.Party[0];
 			PartyResolver resolver = new PartyResolver (character, state);
 
-			state = state.WithParty (state.Party.ReplaceWithID (character.WithCT (100)));
+			state = state.WithParty (state.Party.ReplaceWithID (character.WithCT (Time.ActionAmount)));
 			resolver.Update (state);
 
-			Assert.Equal (100, resolver.Item.CT);
+			Assert.Equal (Time.ActionAmount, resolver.Item.CT);
 		}
 
 		[Fact]

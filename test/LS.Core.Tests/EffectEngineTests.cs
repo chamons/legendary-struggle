@@ -1,10 +1,6 @@
 ﻿using System;
 using Xunit;
 
-using LS.Core;
-using LS.Core.Configuration;
-using System.Collections.Generic;
-
 namespace LS.Core.Tests
 {
 	public class EffectEngineTests
@@ -94,6 +90,60 @@ namespace LS.Core.Tests
 
 			if (expectedHealth != -1)
 				Assert.Equal (expectedHealth, engine.CurrentState.Enemies[0].Health.Current);
+		}
+
+		[Fact]
+		public void StatusEffectSkill_AddsEffect_AndRemovesAfterDuration ()
+		{
+			GameState state = GetDefaultEffectState ();
+			TargettedAction statusAction = new TargettedAction (Factory.StatusEffectAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+
+			EffectEngine effectEngine = Factory.EffectEngine;
+			state = effectEngine.Apply (statusAction, state);
+
+			Assert.True (state.Enemies[0].HasEffect ("Chilled"));
+			Assert.Single (state.DelayedActions);
+			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Type == ActionType.RemoveEffect && x.TargetAction.Action.EffectName == "Chilled");
+
+			GameEngine engine = Factory.CreateGameEngine (state, effectEngine: effectEngine);
+			for (int i = 0; i < Time.ActionAmount; ++i)
+				engine.Process ();
+
+			Assert.False (engine.CurrentState.Enemies[0].HasEffect ("Chilled"));
+			Assert.Empty (engine.CurrentState.DelayedActions);
+		}
+
+		[Fact]
+		public void MultipleStatusEffectApplications_ExtendDuration ()
+		{
+			GameState state = GetDefaultEffectState ();
+			TargettedAction statusAction = new TargettedAction (Factory.StatusEffectAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+
+			EffectEngine effectEngine = Factory.EffectEngine;
+			state = effectEngine.Apply (statusAction, state);
+			state = effectEngine.Apply (statusAction, state);
+
+			Assert.True (state.Enemies[0].HasEffect ("Chilled"));
+			Assert.Single (state.DelayedActions);
+			Assert.True (state.DelayedActions[0].TargetAction.Action.Type == ActionType.RemoveEffect);
+			Assert.True (state.DelayedActions[0].TargetAction.Action.EffectName == "Chilled");
+
+			// Two Time.ActionAmount total (100 -> 0 -> -100)
+			Assert.True (state.DelayedActions[0].CT == -Time.ActionAmount);
+		}
+
+		[Fact]
+		public void EffectsCanBeOfMultipleTypes ()
+		{
+			GameState state = GetDefaultEffectState ();
+			Action multiAction = new Action ("Burn", ActionType.Damage | ActionType.Effect, 200, "Burning");
+			TargettedAction targettedAction = new TargettedAction (multiAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+
+			EffectEngine effectEngine = Factory.EffectEngine;
+			state = effectEngine.Apply (targettedAction, state);
+
+			Assert.Equal (0, state.Enemies[0].Health.Current);
+			Assert.True (state.Enemies[0].HasEffect ("Burning"));
 		}
 	}
 }

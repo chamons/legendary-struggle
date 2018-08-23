@@ -65,7 +65,7 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithCT (100));
+			state = state.UpdateCharacter (state.Party[0].WithCT (Time.ActionAmount));
 			state = state.WithActivePlayerID (state.Party[0].ID);
 
 			GameEngine engine = Factory.CreateGameEngine (state, new TestCharacterBehavior ((s, c) => {
@@ -76,7 +76,7 @@ namespace LS.Core.Tests
 			Assert.False (engine.Process ());
 
 			Assert.Empty (acted);
-			Assert.Equal (100, state.Party[0].CT);
+			Assert.Equal (Time.ActionAmount, state.Party[0].CT);
 			Assert.Equal (0, state.Enemies[0].CT);
 		}
 
@@ -102,7 +102,7 @@ namespace LS.Core.Tests
 		public void ActiveCharacterCanUseSkill ()
 		{
 			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithCT (100));
+			state = state.UpdateCharacter (state.Party[0].WithCT (Time.ActionAmount));
 			state = state.WithActivePlayerID (state.Party[0].ID);
 
 			Skill skill = Factory.TestSkill;

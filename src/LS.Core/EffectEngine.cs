@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using LS.Core.Configuration;
 
 namespace LS.Core
@@ -27,29 +28,68 @@ namespace LS.Core
 				return state;
 
 			Action action = targettedAction.Action;
-			switch (action.Type)
+			ActionType type = action.Type;
+			if (type.HasFlag (ActionType.Damage) || type.HasFlag (ActionType.Heal))
 			{
-				case ActionType.Damage:
-				case ActionType.Heal:
 					Character target = state.AllCharacters.WithIDOrNull (targettingInfo.TargetID);
 					if (target == null || !target.IsAlive)
 						return state;
-					break;
 			}
 
-			switch (action.Type)
-			{
-				case ActionType.Damage:
-					return ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
-				case ActionType.Heal:
-					return ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
-				case ActionType.Cooldown:
-					return ApplyCooldown (targettingInfo, state);
-				case ActionType.None:
-					return state;
-				default:
-					throw new NotImplementedException ($"EffectEngine.Apply with {action.Type}");
-			}
+			if (type.HasFlag (ActionType.Damage))
+				state = ApplyDamage (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
+
+			if (type.HasFlag (ActionType.Heal))
+				state = ApplyHeal (action.Power, CharacterResolver.Create (targettingInfo.TargetID, state), state);
+
+			if (type.HasFlag (ActionType.Cooldown))
+				state = ApplyCooldown (targettingInfo, state);
+
+			if (type.HasFlag (ActionType.Effect))
+				state = ApplyEffect (action.EffectName, action.Power, targettingInfo, state);
+
+			if (type.HasFlag (ActionType.RemoveEffect))
+				state = RemoveEffect (action.EffectName, targettingInfo, state);
+
+			return state;
+		}
+
+		GameState RemoveEffect (string effectName, TargettingInfo targettingInfo, GameState state)
+		{
+			Character c = state.AllCharacters.WithID (targettingInfo.TargetID);
+			c = c.WithStatusEffects (c.StatusEffects.RemoveAll (x => x.Name == effectName));
+			return state.UpdateCharacter (c);
+		}
+
+		GameState ApplyEffect (string effectName, int power, TargettingInfo targettingInfo, GameState state)
+		{
+			var character = CharacterResolver.Create (targettingInfo.TargetID, state);
+			if (character.Item.HasEffect (effectName))
+				return ExtendEffect (effectName, power, character, state);
+			else
+				return AddNewEffect (effectName, power, character, state);
+		}
+
+		static GameState ExtendEffect (string effectName, int power, ItemResolver<Character> character, GameState state)
+		{
+			DelayedAction removalAction = state.DelayedActions.First (x => {
+				bool isRemoval = x.TargetAction.Action.Type == ActionType.RemoveEffect;
+				bool removingCorrectEffect = x.TargetAction.Action.EffectName == effectName;
+				bool correctCharacter = x.TargetAction.TargetInfo.TargetID == character.Item.ID;
+				return isRemoval && removingCorrectEffect && correctCharacter;
+			});
+			return state.ExtendDelayedAction (removalAction, power);
+		}
+
+		static GameState AddNewEffect (string effectName, int power, ItemResolver<Character> character, GameState state)
+		{
+			state = state.UpdateCharacter (character.Item.AddStatusEffect (new StatusEffect (effectName)));
+			character.Update (state);
+
+			Action removeAction = new Action (effectName, ActionType.RemoveEffect, 0, effectName);
+			TargettedAction removeActionTargetted = new TargettedAction (removeAction, TargettingInfo.Self (character));
+			DelayedAction removeEffectAction = DelayedAction.Create (removeActionTargetted, Time.ActionAmount - power);
+			return state.AddDelayedAction (removeEffectAction);
 		}
 
 		GameState ApplyCooldown (TargettingInfo targettingInfo, GameState state)
