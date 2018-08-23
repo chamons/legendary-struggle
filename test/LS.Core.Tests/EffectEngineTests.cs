@@ -17,15 +17,12 @@ namespace LS.Core.Tests
 			return new GameState (0, target.Yield (), invoker.Yield (), null, -1);
 		}
 
-		Action HealAction => new Action ("Heal", ActionType.Heal, 100);
-		Action DamageAction = new Action ("Damage", ActionType.Damage, 100);
-
 		[Fact]
 		public void HealSkillHeals ()
 		{
 			GameState state = GetDefaultEffectState ();
 			EffectEngine effectEngine = Factory.EffectEngine;
-			TargettedAction healAction = new TargettedAction (HealAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction healAction = new TargettedAction (Factory.HealAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = effectEngine.Apply (healAction, state);
 
 			Assert.Equal (100, state.Enemies[0].Health.Current);
@@ -36,7 +33,7 @@ namespace LS.Core.Tests
 		{
 			GameState state = GetDefaultEffectState ();
 			EffectEngine effectEngine = Factory.EffectEngine;
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = effectEngine.Apply (damageAction, state);
 
 			Assert.Equal (0, state.Enemies[0].Health.Current);
@@ -46,7 +43,7 @@ namespace LS.Core.Tests
 		public void DelayedEffectApplies ()
 		{
 			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
 
 			bool delayedEffectFired = false;
@@ -60,11 +57,12 @@ namespace LS.Core.Tests
 			Assert.True (delayedEffectFired);
 		}
 
+		//Fix Dup
 		[Fact]
 		public void DelayedEffect_WithSourceDead ()
 		{
 			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
 			state = state.UpdateCharacter (state.Party[0].WithCurrentHealth (0));
 
@@ -79,7 +77,7 @@ namespace LS.Core.Tests
 		public void DelayedEffect_WithSourceGone ()
 		{
 			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
 			state = state.WithParty (null);
 
@@ -94,7 +92,7 @@ namespace LS.Core.Tests
 		public void DelayedEffect_WithTargetDead()
 		{
 			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
 			state = state.UpdateCharacter (state.Enemies[0].WithCurrentHealth (0));
 
@@ -109,7 +107,7 @@ namespace LS.Core.Tests
 		public void DelayedEffect_WithTargetGone()
 		{
 			GameState state = GetDefaultEffectState ();
-			TargettedAction damageAction = new TargettedAction (DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
+			TargettedAction damageAction = new TargettedAction (Factory.DamageAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 			state = state.WithDelayedActions (DelayedAction.Create (damageAction).WithCT (90).Yield ());
 			state = state.WithEnemies (null);
 

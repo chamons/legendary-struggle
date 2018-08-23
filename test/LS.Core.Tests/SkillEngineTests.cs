@@ -8,11 +8,33 @@ namespace LS.Core.Tests
 		[Fact]
 		public void SkillsCanApplyEffectDirectly ()
 		{
-			throw new NotImplementedException ();
+			Skill skill = Factory.TestSkill;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
+
+			GameState state = Factory.DefaultGameState;
+			SkillEngine engine = new SkillEngine (effectEngine);
+			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state);
+
+			Assert.Single (effectEngine.ActionsUsed);
+			Assert.Contains (effectEngine.ActionsUsed, x => x.Name == skill.Action.Name);
 		}
 
 		[Fact]
-		public void SkillsCanApplyEffectWithDelay ()	
+		public void SkillsCanApplyEffectWithDelay ()
+		{
+			Skill skill = Factory.TestDelayedSkill;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
+
+			GameState state = Factory.DefaultGameState;
+			SkillEngine engine = new SkillEngine (effectEngine);
+			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Empty), state);
+
+			Assert.Empty (effectEngine.ActionsUsed);
+			Assert.Contains (state.DelayedActions, x => x.Action.Action.Name == skill.Action.Name);
+		}
+
+		[Fact]
+		public void SkillFailsIfInvokerDoesNotHave ()	
 		{
 			throw new NotImplementedException ();
 		}
@@ -30,25 +52,25 @@ namespace LS.Core.Tests
 		}
 
 		[Fact]
-		public void DelayedSkill_SkipsIfInvokerIsDead ()
+		public void SkillSkipsIfInvokerIsDead ()
 		{
 			throw new NotImplementedException ();
 		}
 
 		[Fact]
-		public void DelayedSkill_SkipsIfInvokerIsMissing ()
+		public void SkillSkipsIfInvokerIsGone ()
 		{
 			throw new NotImplementedException ();
 		}
 
 		[Fact]
-		public void DelayedSkill_SkipsIfTargetIsDead ()
+		public void SkillSkipsIfTargetIsDead ()
 		{
 			throw new NotImplementedException ();
 		}
 
 		[Fact]
-		public void DelayedSkill_SkipsIfTargetIsMissing()
+		public void SkillSkipsIfTargetIsMissing ()
 		{
 			throw new NotImplementedException ();
 		}

@@ -12,6 +12,11 @@ namespace LS.Core.Tests
 		public static Character Player => Character.Create (new Health (1, 1));
 		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
 		public static SkillEngine SkillEngine => new SkillEngine (EffectEngine);
+	
+		public static Skill TestSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
+		public static Skill TestDelayedSkill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 50);
+		public static Action HealAction => new Action ("Heal", ActionType.Heal, 100);
+		public static Action DamageAction = new Action ("Damage", ActionType.Damage, 100);
 
 		public static GameState EmptyGameState
 		{

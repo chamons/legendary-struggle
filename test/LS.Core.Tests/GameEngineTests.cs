@@ -1,8 +1,8 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xunit;
 
 using LS.Core;
-using System.Collections.Generic;
 
 namespace LS.Core.Tests
 {
@@ -85,20 +85,16 @@ namespace LS.Core.Tests
 			GameState state = Factory.DefaultGameState;
 			state = state.UpdateCharacter (state.Party[0].WithCT (99));
 
-			Skill skill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
+			Skill skill = Factory.TestSkill;
 
 			ICharacterBehavior characterBehavior = new TestCharacterBehavior ((s, c) => new TargettedSkill (skill, TargettingInfo.Empty));
 
-			long skillID = -1;
-			ISkillEngine skillEngine = new TestSkillEngine ((sk, st) => {
-				skillID = sk.Skill.ID;
-				return st;
-			});
+			TestSkillEngine skillEngine = new TestSkillEngine ();
 			GameEngine engine = Factory.CreateGameEngine (state, characterBehavior, skillEngine);
 			engine.Process ();
 
-			Assert.Equal (skill.ID, skillID);
-			Assert.Equal (0, engine.CurrentState.Party[0].CT);
+			Assert.Single (skillEngine.SkillsUsed);
+			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
 		}
 
 		[Fact]
@@ -108,17 +104,14 @@ namespace LS.Core.Tests
 			state = state.UpdateCharacter (state.Party[0].WithCT (100));
 			state = state.WithActivePlayerID (state.Party[0].ID);
 
-			Skill skill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
+			Skill skill = Factory.TestSkill;
 
-			long skillID = -1;
-			ISkillEngine skillEngine = new TestSkillEngine ((sk, st) => {
-				skillID = sk.Skill.ID;
-				return st;
-			});
+			TestSkillEngine skillEngine = new TestSkillEngine ();
 			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
 			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty));
 
-			Assert.Equal (skill.ID, skillID);
+			Assert.Single (skillEngine.SkillsUsed);
+			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
 			Assert.Equal (0, engine.CurrentState.Party[0].CT);
 		}
 	}

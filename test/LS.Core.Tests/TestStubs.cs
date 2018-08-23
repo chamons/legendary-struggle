@@ -24,26 +24,27 @@ namespace LS.Core.Tests
 		}
 	}
 
-	public class TestSkillEngine : ISkillEngine
+	public class TestEffectEngine : IEffectEngine
 	{
-		public Func<TargettedSkill, GameState, GameState> TestAction;
+		public HashSet<Action> ActionsUsed = new HashSet<Action> ();
 
-		public TestSkillEngine ()
+		public GameState Apply(TargettedAction action, GameState state)
 		{
-			TestAction = (skill, state) => state;
-		}
-
-		public TestSkillEngine (Func<TargettedSkill, GameState, GameState> testAction)
-		{
-			TestAction = testAction;
-		}
-
-		public GameState ApplyTargettedSkill (TargettedSkill skill, GameState state)
-		{
-			return TestAction (skill, state);
+			ActionsUsed.Add (action.Action);
+			return state;
 		}
 	}
 
+	public class TestSkillEngine : ISkillEngine
+	{
+		public HashSet<Skill> SkillsUsed = new HashSet<Skill> ();
+
+		public GameState ApplyTargettedSkill (TargettedSkill skill, GameState state)
+		{
+			SkillsUsed.Add (skill.Skill);
+			return state;
+		}
+	}
 
 	public class TestRandomGenerator : IRandomGenerator
 	{
