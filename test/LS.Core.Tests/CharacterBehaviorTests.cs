@@ -62,9 +62,39 @@ namespace LS.Core.Tests
 		}
 
 		[Fact]
-		public void WillChooseReasonableDamageAndHealTargets ()
+		public void WillChooseReasonableHealTarget ()
 		{
-			throw new NotImplementedException ();
+			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Heal") };
+			Skill[] skills = { Factory.HealSkill };
+
+			CharacterBehavior characterBehavior = new CharacterBehavior (new Behavior (behaviorSkills));
+
+			Character [] party = { Character.Create (new Health (10, 10)).WithSkills (skills), Character.Create (new Health (10, 100)) };
+			Character [] enemies = { Character.Create (new Health (10, 10)), Character.Create (new Health (5, 50)) };
+			GameState state = new GameState (0, party, enemies, null, -1);
+
+			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
+			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
+			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
+			Assert.Equal (state.Party[1].ID, targettedSkill.TargetInfo.TargetID);
+		}
+
+		[Fact]
+		public void WillChooseReasonableDamageTarget ()
+		{
+			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Damage") };
+			Skill[] skills = { Factory.DamageSkill };
+
+			CharacterBehavior characterBehavior = new CharacterBehavior (new Behavior (behaviorSkills));
+
+			Character[] party = { Character.Create (new Health (10, 10)).WithSkills (skills), Character.Create (new Health (10, 100)) };
+			Character[] enemies = { Character.Create (new Health (10, 10)), Character.Create (new Health (5, 50)) };
+			GameState state = new GameState (0, party, enemies, null, -1);
+
+			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
+			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
+			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
+			Assert.Equal (state.Enemies[1].ID, targettedSkill.TargetInfo.TargetID);
 		}
 	}
 }

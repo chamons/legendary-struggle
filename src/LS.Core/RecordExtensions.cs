@@ -37,6 +37,8 @@ namespace LS.Core
 		}
 
 		public bool IsLow => (Current / (double)Max) < .25;
+
+		public override string ToString() => $"{Current}/{Max}";
 	}
 
 	public partial class Skill
@@ -59,6 +61,7 @@ namespace LS.Core
 	public partial struct TargettingInfo : IEquatable<TargettingInfo>
 	{
 		public static TargettingInfo From (Character source, Character target) => new TargettingInfo (source.ID, target.ID);
+		public static TargettingInfo From (long source, long target) => new TargettingInfo (source, target);
 		public static TargettingInfo Self (Character source) => new TargettingInfo (source.ID, source.ID);
 		public static TargettingInfo Self (long id) => new TargettingInfo (id, id);
 

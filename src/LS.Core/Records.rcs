@@ -132,8 +132,8 @@ namespace LS.Core
 	public class GameState 
 	{
 		long Tick;
-		List<Character> Enemies;
 		List<Character> Party;
+		List<Character> Enemies;
 		List<DelayedAction> DelayedActions;
 		long ActivePlayerID;
 

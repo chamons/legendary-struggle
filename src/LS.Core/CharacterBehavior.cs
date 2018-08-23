@@ -58,16 +58,12 @@ namespace LS.Core
 			ImmutableArray<Character> team = isEnemy ? state.Enemies : state.Party;
 			ImmutableArray<Character> opposingTeam = isEnemy ? state.Party : state.Enemies;
 
-			// This is braindead
+			// This logic is very greedy, and doesn't consider anything but % health
 			if (skill.Action.Type.HasFlag (ActionType.Heal))
-			{
-				return TargettingInfo.From (c, team[0]);
-			}
+				return ConditionFinder.FindBestHealingTarget (state, c);
 
 			if (skill.Action.Type.HasFlag (ActionType.Damage))
-			{
-				return TargettingInfo.From (c, opposingTeam[0]);
-			}
+				return ConditionFinder.FindBestDamageTarget (state, c);
 
 			return TargettingInfo.Empty;
 		}
@@ -75,6 +71,18 @@ namespace LS.Core
 
 	public static class ConditionFinder
 	{
+		public static TargettingInfo FindBestHealingTarget (GameState state, ItemResolver<Character> c)
+		{
+			Character lowestHealth = state.GetTeammates (c).OrderBy (x => x.Health.Current / (double)x.Health.Max).First ();
+			return TargettingInfo.From (c.Item.ID, lowestHealth.ID);
+		}
+
+		public static TargettingInfo FindBestDamageTarget (GameState state, ItemResolver<Character> c)
+		{
+			Character lowestHealth = state.GetOpponents (c).OrderBy (x => x.Health.Current / (double)x.Health.Max).First ();
+			return TargettingInfo.From (c.Item.ID, lowestHealth.ID);
+		}
+
 		public static bool IsConditionTrue (GameCondition condition, GameState state, ItemResolver<Character> c)
 		{
 			switch (condition)
