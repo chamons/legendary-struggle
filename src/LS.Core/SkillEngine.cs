@@ -30,7 +30,7 @@ namespace LS.Core
 			{
 				TargettingInfo targettingInfo = new TargettingInfo (s.TargetInfo.InvokerID, s.Skill.ID);
 				TargettedAction cooldownAction = new TargettedAction (CooldownAction, targettingInfo);
-				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction));
+				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction, 100 - s.Skill.Cooldown));
 				Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
 				state = state.UpdateCharacter (character.WithUpdatedSkill (s.Skill.WithAvailable (false)));
 			}

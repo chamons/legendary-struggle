@@ -62,8 +62,10 @@ namespace LS.Core.Tests
 			SkillEngine engine = new SkillEngine (effectEngine);
 			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
+			Assert.Single (state.DelayedActions);
 			Assert.Contains (state.DelayedActions, x => x.TargetAction.Action.Type == ActionType.Cooldown);
 			Assert.False (state.Party[0].Skills[0].Available);
+			Assert.Equal (25, state.DelayedActions[0].CT);
 
 			Assert.Throws<InvalidOperationException> (() => engine.ApplyTargettedSkill (new TargettedSkill (state.Party[0].Skills[0], TargettingInfo.Self (state.Party[0])), state));
 		}
