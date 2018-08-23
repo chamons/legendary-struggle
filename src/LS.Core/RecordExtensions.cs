@@ -21,6 +21,11 @@ namespace LS.Core
 		}
 	}
 
+	public partial class Skill
+	{
+		public static Skill Create (Action action, int cooldown, int delay) => new Skill (IDs.Next (), action, true, cooldown, delay);
+	}
+
 	public partial class TargettedSkill
 	{
 		public TargettedAction CreateAction () => new TargettedAction (Skill.Action, TargetInfo);

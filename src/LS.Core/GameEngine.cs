@@ -54,6 +54,7 @@ namespace LS.Core
 
 		public void ProcessActivePlayerAction (TargettedSkill skill)
 		{
+			ApplySkill (CharacterResolver.Create (CurrentState.ActivePlayerID, CurrentState), skill);
 		}
 
 		void IncrementTime ()
@@ -74,10 +75,15 @@ namespace LS.Core
 
 		void ApplyNonActiveCharacterTurn (ItemResolver<Character> c)
 		{
+			TargettedSkill skillToUse = CharacterBehavior.Act (CurrentState, c);
+			ApplySkill (c, skillToUse);
+		}
+
+		void ApplySkill (ItemResolver<Character> c, TargettedSkill skillToUse)
+		{
 			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
 			c.Update (CurrentState);
 
-			TargettedSkill skillToUse = CharacterBehavior.Act (CurrentState, c);
 			CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
 		}
 	}

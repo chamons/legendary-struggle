@@ -3,7 +3,7 @@ namespace LS.Core
 {
 	public interface ISkillEngine
 	{
-		GameState ApplyTargettedSkill (TargettedSkill s, GameState state);
+		GameState ApplyTargettedSkill (TargettedSkill skill, GameState state);
 	}
 
 	public class SkillEngine : ISkillEngine
@@ -15,7 +15,6 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
-		// This should be on SkillEngine
 		// This needs to consider cooldown, Available, etc
 		public GameState ApplyTargettedSkill (TargettedSkill s, GameState state)
 		{

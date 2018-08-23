@@ -82,13 +82,44 @@ namespace LS.Core.Tests
 		[Fact]
 		public void CharacterBehavior_ReturnsSkill_GivenToSkillEngine ()
 		{
-			throw new NotImplementedException ();
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (99));
+
+			Skill skill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
+
+			ICharacterBehavior characterBehavior = new TestCharacterBehavior ((s, c) => new TargettedSkill (skill, TargettingInfo.Empty));
+
+			long skillID = -1;
+			ISkillEngine skillEngine = new TestSkillEngine ((sk, st) => {
+				skillID = sk.Skill.ID;
+				return st;
+			});
+			GameEngine engine = Factory.CreateGameEngine (state, characterBehavior, skillEngine);
+			engine.Process ();
+
+			Assert.Equal (skill.ID, skillID);
+			Assert.Equal (0, engine.CurrentState.Party[0].CT);
 		}
 
 		[Fact]
 		public void ActiveCharacterCanUseSkill ()
 		{
-			throw new NotImplementedException ();
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithCT (100));
+			state = state.WithActivePlayerID (state.Party[0].ID);
+
+			Skill skill = Skill.Create (new Action ("Test", ActionType.None, 0), 0, 0);
+
+			long skillID = -1;
+			ISkillEngine skillEngine = new TestSkillEngine ((sk, st) => {
+				skillID = sk.Skill.ID;
+				return st;
+			});
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty));
+
+			Assert.Equal (skill.ID, skillID);
+			Assert.Equal (0, engine.CurrentState.Party[0].CT);
 		}
 	}
 }

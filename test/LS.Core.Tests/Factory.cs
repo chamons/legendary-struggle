@@ -36,7 +36,7 @@ namespace LS.Core.Tests
 
 		public static GameEngine CreateGameEngine (GameState state, ICharacterBehavior characterBehavior = null, ISkillEngine skillEngine = null, IEffectEngine effectEngine = null)
 		{
-			characterBehavior = characterBehavior ?? new DefaultCharacterBehavior ();
+			characterBehavior = characterBehavior ?? new TestCharacterBehavior ();
 			effectEngine = effectEngine ?? EffectEngine;
 			skillEngine = skillEngine ?? new SkillEngine (effectEngine);
 			return new GameEngine (state, characterBehavior, skillEngine, effectEngine);
