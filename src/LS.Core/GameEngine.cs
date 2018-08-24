@@ -3,9 +3,40 @@ using System.Linq;
 
 namespace LS.Core
 {
-	public class DelayedActionFired : EventArgs
+	public class DelayedActionFiredEventArgs : EventArgs
 	{
+		public DelayedActionFiredEventArgs (DelayedAction action)
+		{
+			Action = action;
+		}
+
 		public DelayedAction Action;
+	}
+
+	// TODO needs skill channel event
+
+	public class SkillUsedEventArgs : EventArgs
+	{
+		public SkillUsedEventArgs (Character character, Skill skill)
+		{
+			Character = character;
+			Skill = skill;
+		}
+
+		public Character Character;
+		public Skill Skill;
+	}
+
+	public class SkillChannelEventArgs : EventArgs
+	{
+		public SkillChannelEventArgs (Character character, Skill skill)
+		{
+			Character = character;
+			Skill = skill;
+		}
+
+		public Character Character;
+		public Skill Skill;
 	}
 
 	public class GameEngine
@@ -33,7 +64,10 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
-		public event EventHandler<DelayedAction> DelayedActions;
+		public event EventHandler<DelayedActionFiredEventArgs> DelayedActions;
+		public event EventHandler<SkillChannelEventArgs> SkillChannelStarted;
+		public event EventHandler<SkillChannelEventArgs> SkillChannelEnded;
+		public event EventHandler<SkillUsedEventArgs> SkillUsed;
 
 		public bool BlockedOnActive => CurrentState.AllCharacters.Any (x => x.ID == CurrentState.ActivePlayerID && Time.IsReady (x));
 
@@ -72,7 +106,15 @@ namespace LS.Core
 			CurrentState = EffectEngine.Apply (e.TargetAction, CurrentState);
 
 			// TODO - This needs to be a UI friendly processed representation of the action
-			DelayedActions?.Invoke (this, e);
+			if (e.SourceSkill != null)
+			{
+				Character invoker = CurrentState.AllCharacters.WithID (e.SourceSkill.TargetInfo.InvokerID);
+				SkillChannelEnded?.Invoke (this, new SkillChannelEventArgs (invoker, e.SourceSkill.Skill));
+			}
+			else
+			{
+				DelayedActions?.Invoke (this, new DelayedActionFiredEventArgs (e));
+			}
 			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
 		}
 
@@ -88,7 +130,24 @@ namespace LS.Core
 			c.Update (CurrentState);
 
 			if (skillToUse != null)
+			{
 				CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
+				c.Update (CurrentState);
+
+				if (skillToUse.Skill.Delay > 0)
+					SkillChannelStarted?.Invoke (this, new SkillChannelEventArgs (c, skillToUse.Skill));
+				else
+					SkillUsed?.Invoke (this, new SkillUsedEventArgs (c, skillToUse.Skill));
+			}
+		}
+
+		public static GameState Reset (GameState state)
+		{
+			state = state.WithEnemies (null);
+			state = state.WithDelayedActions (null);
+			foreach (Character c in state.Party)
+				state = state.UpdateCharacter (c.WithCT (0).WithHealth (c.Health.WithFull ()).WithStatusEffects (null).WithResetSkills ());
+			return state;
 		}
 	}
 }

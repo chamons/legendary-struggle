@@ -8,7 +8,10 @@ namespace LS.Core
 			CharacterBehavior behavior = new CharacterBehavior (Configuration.Behaviors.LoadDefault ().GetBehaviorsSets ());
 			EffectEngine effectEngine = new EffectEngine (new RandomGenerator (), Configuration.ConfigData.LoadDefault ());
 			SkillEngine skillEngine = new SkillEngine (effectEngine);
-			GameState state = new GameState (0, null, null, null, -1);
+
+			Configuration.Skills skills = Configuration.Skills.LoadDefault ();
+			GameState state = Configuration.InitialState.LoadDefault (skills).CreateInitialBattle ();
+
 			return new GameEngine (state, behavior, skillEngine, effectEngine);
 		}
 	}

@@ -1,25 +1,52 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 using Nett;
 
 namespace LS.Core.Configuration
 {
 	public class InitialState
 	{
-		public static InitialState LoadDefault()
+		public static InitialState LoadDefault (Skills skillConfig)
 		{
 			Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("LS.Core.Configuration.InitialState.tml");
-			return Toml.ReadStream<InitialState> (stream);
+			InitialState state = Toml.ReadStream<InitialState> (stream);
+			state.SkillConfig = skillConfig;
+			return state;
 		}
 
-		public static InitialState Load (string file)
+		public static InitialState Load (string file, Skills skillConfig)
 		{
-			return Toml.ReadFile<InitialState> (file);
+			InitialState state = Toml.ReadFile<InitialState> (file);
+			state.SkillConfig = skillConfig;
+			return state;
 		}
 
+		Skills SkillConfig;
 		public CharacterInfo[] Party { get; set; }
 		public BattleInfo [] Battles { get; set; }
+
+		public GameState CreateInitialBattle ()
+		{
+			var party = Party.Select (x => Create (x));
+			var state = new GameState (0, party, null, null, party.First ().ID);
+			return LoadBattle (state, 0);
+		}
+
+		public GameState LoadBattle (GameState state, int index)
+		{
+			state = GameEngine.Reset (state);
+			var enemies = Battles[index].Characters.Select (x => Create (x));
+			return state.WithEnemies (enemies);
+		}
+
+		Character Create (CharacterInfo info)
+		{
+			var skills = info.Skills.Select (x => SkillConfig.GetSkill (x));
+
+			return Character.Create (info.Name, new Health (info.Health, info.Health));
+		}
 	}
 
 	public class BattleInfo

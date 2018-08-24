@@ -49,7 +49,7 @@ namespace LS.Core.Tests
 
 			GameEngine engine = Factory.CreateDefaultGameEngine (state);
 
-			engine.DelayedActions += (s, a) => acted.Add (a.ID);
+			engine.DelayedActions += (s, a) => acted.Add (a.Action.ID);
 
 			for (int i = 0; i < 10; ++i)
 				Assert.True (engine.Process ());
@@ -92,10 +92,14 @@ namespace LS.Core.Tests
 
 			TestSkillEngine skillEngine = new TestSkillEngine ();
 			GameEngine engine = Factory.CreateGameEngine (state, characterBehavior, skillEngine);
+
+			Skill skillReportedUsed = null;
+			engine.SkillUsed += (o, s) => skillReportedUsed = s.Skill;
 			engine.Process ();
 
 			Assert.Single (skillEngine.SkillsUsed);
 			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
+			Assert.Equal (skillReportedUsed, skillEngine.SkillsUsed.First ());
 		}
 
 		[Fact]
@@ -109,10 +113,14 @@ namespace LS.Core.Tests
 
 			TestSkillEngine skillEngine = new TestSkillEngine ();
 			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			Skill skillReportedUsed = null;
+			engine.SkillUsed += (o, s) => skillReportedUsed = s.Skill;
+
 			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty));
 
 			Assert.Single (skillEngine.SkillsUsed);
 			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
+			Assert.Equal (skillReportedUsed, skillEngine.SkillsUsed.First ());
 			Assert.Equal (0, engine.CurrentState.Party[0].CT);
 		}
 

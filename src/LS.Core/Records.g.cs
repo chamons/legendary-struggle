@@ -268,27 +268,34 @@ namespace LS.Core
 		public long ID { get; }
 		public TargettedAction TargetAction { get; }
 		public int CT { get; }
+		public TargettedSkill SourceSkill { get; }
 
-		public DelayedAction (long id, TargettedAction targetAction, int ct = 0)
+		public DelayedAction (long id, TargettedAction targetAction, int ct = 0, TargettedSkill sourceSkill = null)
 		{
 			ID = id;
 			TargetAction = targetAction;
 			CT = ct;
+			SourceSkill = sourceSkill;
 		}
 
 		public DelayedAction WithID (long id)
 		{
-			return new DelayedAction (id, TargetAction, CT);
+			return new DelayedAction (id, TargetAction, CT, SourceSkill);
 		}
 
 		public DelayedAction WithTargetAction (TargettedAction targetAction)
 		{
-			return new DelayedAction (ID, targetAction, CT);
+			return new DelayedAction (ID, targetAction, CT, SourceSkill);
 		}
 
 		public DelayedAction WithCT (int ct)
 		{
-			return new DelayedAction (ID, TargetAction, ct);
+			return new DelayedAction (ID, TargetAction, ct, SourceSkill);
+		}
+
+		public DelayedAction WithSourceSkill (TargettedSkill sourceSkill)
+		{
+			return new DelayedAction (ID, TargetAction, CT, sourceSkill);
 		}
 	}
 

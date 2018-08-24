@@ -45,6 +45,9 @@ namespace LS.Core
 
 		[Default ("0")]
 		public int CT { get; }
+
+		[Default ("null")]
+		public TargettedSkill SourceSkill;
 	}
 
 	[Inject]
