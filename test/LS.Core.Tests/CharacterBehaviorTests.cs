@@ -8,14 +8,9 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillChooseFirstAvailableSkill ()
 		{
-			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Damage"), new BehaviorSkill ("Heal") };
-			Skill [] skills = { Factory.DamageSkill, Factory.HealSkill };
+			CharacterBehavior characterBehavior = CreateTestsBehavior (new BehaviorSkill [] { new BehaviorSkill ("Damage"), new BehaviorSkill ("Heal") });
+			GameState state = CreateTestState (new Skill [] { Factory.DamageSkill, Factory.HealSkill });
 
-			Behavior behavior = new Behavior (behaviorSkills);
-			CharacterBehavior characterBehavior = new CharacterBehavior (behavior); 
-
-			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithSkills (skills));
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
 			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
@@ -31,14 +26,9 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillNotChoseNonOwnedSkill()
 		{
-			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Heal"), new BehaviorSkill ("Damage") };
-			Skill[] skills = { Factory.DamageSkill };
+			CharacterBehavior characterBehavior = CreateTestsBehavior (new BehaviorSkill[] { new BehaviorSkill ("Heal"), new BehaviorSkill ("Damage") });
+			GameState state = CreateTestState (new Skill[] { Factory.DamageSkill });
 
-			Behavior behavior = new Behavior (behaviorSkills);
-			CharacterBehavior characterBehavior = new CharacterBehavior (behavior);
-
-			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithSkills (skills));
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
 			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
 		}
@@ -46,14 +36,10 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillOverrideWhenCondition ()
 		{
-			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Damage"), new BehaviorSkill ("Heal", GameCondition.PartyHealthLow) };
-			Skill[] skills = { Factory.DamageSkill, Factory.HealSkill };
+			CharacterBehavior characterBehavior = CreateTestsBehavior (new BehaviorSkill[] { new BehaviorSkill ("Damage"), new BehaviorSkill ("Heal", GameCondition.PartyHealthLow) });
+			GameState state = CreateTestState (new Skill[] { Factory.DamageSkill, Factory.HealSkill });
 
-			Behavior behavior = new Behavior (behaviorSkills);
-			CharacterBehavior characterBehavior = new CharacterBehavior (behavior);
-
-			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithHealth (new Health (1, 10)).WithSkills (skills));
+			state = state.UpdateCharacter (state.Party[0].WithHealth (new Health (1, 10)));
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
 			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
@@ -64,14 +50,8 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillChooseReasonableHealTarget ()
 		{
-			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Heal") };
-			Skill[] skills = { Factory.HealSkill };
-
-			CharacterBehavior characterBehavior = new CharacterBehavior (new Behavior (behaviorSkills));
-
-			Character [] party = { Character.Create (new Health (10, 10)).WithSkills (skills), Character.Create (new Health (10, 100)) };
-			Character [] enemies = { Character.Create (new Health (10, 10)), Character.Create (new Health (5, 50)) };
-			GameState state = new GameState (0, party, enemies, null, -1);
+			CharacterBehavior characterBehavior = CreateTestsBehavior (new BehaviorSkill[] { new BehaviorSkill ("Heal") });
+ 			GameState state = CreateMultiTargetTestState (new Skill [] { Factory.HealSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
 			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
@@ -82,19 +62,32 @@ namespace LS.Core.Tests
 		[Fact]
 		public void WillChooseReasonableDamageTarget ()
 		{
-			BehaviorSkill[] behaviorSkills = { new BehaviorSkill ("Damage") };
-			Skill[] skills = { Factory.DamageSkill };
-
-			CharacterBehavior characterBehavior = new CharacterBehavior (new Behavior (behaviorSkills));
-
-			Character[] party = { Character.Create (new Health (10, 10)).WithSkills (skills), Character.Create (new Health (10, 100)) };
-			Character[] enemies = { Character.Create (new Health (10, 10)), Character.Create (new Health (5, 50)) };
-			GameState state = new GameState (0, party, enemies, null, -1);
+			CharacterBehavior characterBehavior = CreateTestsBehavior (new BehaviorSkill[] { new BehaviorSkill ("Damage") });
+			GameState state = CreateMultiTargetTestState (new Skill[] { Factory.DamageSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
 			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Enemies[1].ID, targettedSkill.TargetInfo.TargetID);
+		}
+
+		static CharacterBehavior CreateTestsBehavior(BehaviorSkill[] behaviorSkills)
+		{
+			BehaviorSet behaviorSet = new BehaviorSet (new Behavior (behaviorSkills), "Player");
+			return new CharacterBehavior (behaviorSet.Yield ());
+		}
+
+		static GameState CreateTestState(Skill[] skills)
+		{
+			GameState state = Factory.DefaultGameState;
+			return state.UpdateCharacter (state.Party[0].WithSkills (skills));
+		}
+
+		static GameState CreateMultiTargetTestState(Skill[] skills)
+		{
+			Character[] party = { Character.Create ("Player", new Health (10, 10)).WithSkills (skills), Character.Create ("Player", new Health (10, 100)) };
+			Character[] enemies = { Character.Create ("Enemy", new Health (10, 10)), Character.Create ("Enemy", new Health (5, 50)) };
+			return new GameState (0, party, enemies, null, -1);
 		}
 	}
 }

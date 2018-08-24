@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using Nett;
+using System.Collections.Generic;
 
 namespace LS.Core.Configuration
 {
@@ -19,13 +20,17 @@ namespace LS.Core.Configuration
 			return Toml.ReadFile<Behaviors> (file);
 		}
 
-		public BehaviorInfo [] BehaviorSets { get; set; }
+		public BehaviorInfo [] BehaviorInfos { get; set; }
 
-		public Behavior GetBehaviorSet (string name)
+		public List<BehaviorSet> GetBehaviorsSets ()
 		{
-			BehaviorInfo info = BehaviorSets.First (x => x.Name == name);
-			var behaviorSkills = info.Skills.Select (x => new BehaviorSkill (x.Name, ParseCondition (x.OverrideCondition)));
-			return new Behavior (behaviorSkills);
+			List<BehaviorSet> sets = new List<BehaviorSet> ();
+			foreach (var info in BehaviorInfos)
+			{
+				var behaviorSkills = info.Skills.Select (x => new BehaviorSkill (x.Name, ParseCondition (x.OverrideCondition)));
+				sets.Add (new BehaviorSet (new Behavior (behaviorSkills), info.Name));
+			}
+			return sets;
 		}
 
 		GameCondition ParseCondition (string overrideCondition)

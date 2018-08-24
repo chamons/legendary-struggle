@@ -12,16 +12,19 @@ namespace LS.Core
 
 	public class CharacterBehavior : ICharacterBehavior
 	{
-		Behavior Behavior;
+		Dictionary <string, Behavior> Behaviors;
 
-		public CharacterBehavior (Behavior behavior)
+		public CharacterBehavior (IEnumerable<BehaviorSet> behaviorSets)
 		{
-			Behavior = behavior;
+			Behaviors = new Dictionary<string, Behavior> ();
+			foreach (var set in behaviorSets)
+				Behaviors[set.Name] = set.Behavior;
 		}
 
 		public TargettedSkill Act (GameState state, ItemResolver<Character> c)
 		{
-			foreach (BehaviorSkill behaviorSkill in Behavior.Skills.Where (x => x.OverrideCondition != GameCondition.None))
+			Behavior behavior = Behaviors [c.Item.Name];
+			foreach (BehaviorSkill behaviorSkill in behavior.Skills.Where (x => x.OverrideCondition != GameCondition.None))
 			{
 				if (ConditionFinder.IsConditionTrue (behaviorSkill.OverrideCondition, state, c))
 				{
@@ -31,7 +34,7 @@ namespace LS.Core
 				}
 			}
 			
-			foreach (BehaviorSkill behaviorSkill in Behavior.Skills)
+			foreach (BehaviorSkill behaviorSkill in behavior.Skills)
 			{
 				TargettedSkill targettedSkill = ConsiderSkill (behaviorSkill.SkillName, state, c);
 				if (targettedSkill != null)

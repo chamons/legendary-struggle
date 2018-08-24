@@ -23,7 +23,7 @@ namespace LS.Core
 	public class Character : ITimeable
 	{
 		public long ID { get; }
-
+		string Name { get; }
 		public Health Health { get; }
 
 		List<Skill> Skills { get; }
@@ -104,6 +104,12 @@ namespace LS.Core
 	
 	public struct StatusEffect
 	{
+		string Name;
+	}
+
+	public class BehaviorSet
+	{
+		Behavior Behavior;
 		string Name;
 	}
 
