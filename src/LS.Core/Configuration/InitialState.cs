@@ -29,7 +29,7 @@ namespace LS.Core.Configuration
 
 		public GameState CreateInitialBattle ()
 		{
-			var party = Party.Select (x => Create (x));
+			var party = Party.Select (x => Create (x)).ToList ();
 			var state = new GameState (0, party, null, null, party.First ().ID);
 			return LoadBattle (state, 0);
 		}
@@ -45,7 +45,7 @@ namespace LS.Core.Configuration
 		{
 			var skills = info.Skills.Select (x => SkillConfig.GetSkill (x));
 
-			return Character.Create (info.Name, new Health (info.Health, info.Health));
+			return Character.Create (info.Name, new Health (info.Health, info.Health)).WithSkills (skills);
 		}
 	}
 

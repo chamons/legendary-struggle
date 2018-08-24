@@ -6,21 +6,13 @@ namespace LS.Core.Tests
 {
 	public class TestCharacterBehavior : ICharacterBehavior
 	{
-		public Func <GameState, ItemResolver<Character>, TargettedSkill> TestAction;
-
-		public TestCharacterBehavior ()
-		{
-			TestAction = (s, c) => null;
-		}
-
-		public TestCharacterBehavior (Func <GameState, ItemResolver<Character>, TargettedSkill> testAction)
-		{
-			TestAction = testAction;
-		}
+		public HashSet<Character> CharactersActed = new HashSet<Character> ();
+		public TargettedSkill SkillToReturn = null;
 
 		public TargettedSkill Act (GameState state, ItemResolver<Character> c)
 		{
-			return TestAction (state, c);
+			CharactersActed.Add (c.Item);
+			return SkillToReturn;
 		}
 	}
 

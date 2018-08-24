@@ -29,6 +29,19 @@ Name = "Imp"
 	Name = "Hurt"
 
 [[BehaviorInfos]]
+Name = "Wolf"
+	[[BehaviorInfos.Skills]]
+	Name = "Stab"
+
+[[BehaviorInfos]]
+Name = "Dark Knight"
+	[[BehaviorInfos.Skills]]
+	Name = "Stab"
+	[[BehaviorInfos.Skills]]
+	Name = "Hurt"
+	OverrideCondition = "EnemyHealthLow"
+
+[[BehaviorInfos]]
 Name = "Mage"
 	[[BehaviorInfos.Skills]]
 	Name = "Hurt"

@@ -14,5 +14,11 @@ namespace LS.Core
 
 			return new GameEngine (state, behavior, skillEngine, effectEngine);
 		}
+
+		public static GameState LoadLevel (GameState state, int level)
+		{
+			Configuration.Skills skills = Configuration.Skills.LoadDefault ();
+			return Configuration.InitialState.LoadDefault (skills).LoadBattle (state, level);
+		}
 	}
 }

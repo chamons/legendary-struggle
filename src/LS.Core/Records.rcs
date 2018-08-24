@@ -160,19 +160,5 @@ namespace LS.Core
 					yield return p;
 			}
 		}
-
-		[Inject]
-		public IEnumerable <ITimeable> AllTimables
-		{
-			get
-			{
-				foreach (Character e in Enemies)
-					yield return e;
-				foreach (Character p in Party)
-					yield return p;
-				foreach (DelayedAction a in DelayedActions)
-					yield return a;
-			}
-		}
 	}
 }

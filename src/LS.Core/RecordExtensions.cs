@@ -104,15 +104,6 @@ namespace LS.Core
 			}
 		}
 
-		public GameState UpdateTimeable (ITimeable t)
-		{
-			if (t is DelayedAction a)
-				return UpdateDelayedAction (a);
-			if (t is Character c)
-				return UpdateCharacter (c);
-			throw new NotImplementedException ();
-		}
-
 		public GameState UpdateDelayedAction (DelayedAction delayedEffect)
 		{
 			return WithDelayedActions (DelayedActions.ReplaceWithID (delayedEffect));

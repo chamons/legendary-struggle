@@ -64,6 +64,12 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
+		// Hack for console 
+		public void LoadState (GameState state)
+		{
+			CurrentState = state;
+		}
+
 		public event EventHandler<DelayedActionFiredEventArgs> DelayedActions;
 		public event EventHandler<SkillChannelEventArgs> SkillChannelStarted;
 		public event EventHandler<SkillChannelEventArgs> SkillChannelEnded;
@@ -78,12 +84,17 @@ namespace LS.Core
 
 			IncrementTime ();
 
-			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
+			foreach (Character c in CurrentState.AllCharacters.Where (CanTakeNonActiveTurn))
 				ApplyNonActiveCharacterTurn (CharacterResolver.Create (c, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
 				ApplyDelayedAction (new DelayedActionResolver (e, CurrentState));
 
 			return true;
+		}
+
+		bool CanTakeNonActiveTurn (Character c)
+		{
+			return c.ID != CurrentState.ActivePlayerID && c.IsAlive && Time.IsReady (c);
 		}
 
 		public void ProcessActivePlayerAction (TargettedSkill skill)
@@ -97,8 +108,10 @@ namespace LS.Core
 		void IncrementTime ()
 		{
 			CurrentState = CurrentState.WithTick (CurrentState.Tick + 1);
-			foreach (ITimeable c in CurrentState.AllTimables)
-				CurrentState = CurrentState.UpdateTimeable (Time.Increment (c));
+			foreach (Character c in CurrentState.AllCharacters.Where (x => x.IsAlive))
+				CurrentState = CurrentState.UpdateCharacter (Time.Increment (c));
+			foreach (DelayedAction a in CurrentState.DelayedActions)
+				CurrentState = CurrentState.UpdateDelayedAction (Time.Increment (a));
 		}
 
 		void ApplyDelayedAction (DelayedAction e)
