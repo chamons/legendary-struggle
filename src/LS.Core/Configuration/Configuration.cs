@@ -9,7 +9,7 @@ namespace LS.Core.Configuration
 	{
 		public static ConfigData LoadDefault ()
 		{
-			Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("LS.Core.Configuration.Data.tml");
+			Stream stream = Assembly.GetExecutingAssembly ().GetManifestResourceStream ("LS.Core.Configuration.Configuration.tml");
 			return Toml.ReadStream<ConfigData> (stream);
 		}
 

@@ -1,0 +1,35 @@
+﻿[[Party]]
+Name = "Thief"
+Skills = ["Stab"]
+Health = 500
+
+[[Party]]
+Name = "Mage"
+Skills = ["Hurt", "Heal"]
+Health = 400
+
+
+
+[[Battles]]
+Name = "Summoning Circle"
+
+	[[Battles.Characters]]
+	Name = "Imp"
+	Skills = ["Hurt"]
+	Health = 800
+
+[[Battles]]
+Name = "Forest Ambust"
+
+	[[Battles.Characters]]
+	Name = "Wolf"
+	Skills = ["Stab"]
+	Health = 1200
+
+[[Battles]]
+Name = "Ancient Bridge" 
+
+	[[Battles.Characters]]
+	Name = "Dark Knight"
+	Skills = ["Stab", "Hurt"]
+	Health = 1500

@@ -25,10 +25,12 @@
     <None Remove="Configuration\Data.tml" />
     <None Remove="Configuration\Skills.tml" />
     <None Remove="Configuration\Behavior.tml" />
+    <None Remove="Configuration\InitialState.tml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Configuration\Data.tml" />
+    <EmbeddedResource Include="Configuration\Configuration.tml" />
     <EmbeddedResource Include="Configuration\Skills.tml" />
     <EmbeddedResource Include="Configuration\Behavior.tml" />
+    <EmbeddedResource Include="Configuration\InitialState.tml" />
   </ItemGroup>
 </Project>
