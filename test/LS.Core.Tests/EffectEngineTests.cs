@@ -136,7 +136,7 @@ namespace LS.Core.Tests
 		public void EffectsCanBeOfMultipleTypes ()
 		{
 			GameState state = GetDefaultEffectState ();
-			Action multiAction = new Action ("Burn", ActionType.Damage | ActionType.Effect, 200, "Burning");
+			Action multiAction = new Action (ActionType.Damage | ActionType.Effect, 200, "Burning");
 			TargettedAction targettedAction = new TargettedAction (multiAction, TargettingInfo.From (state.Party[0], state.Enemies[0]));
 
 			EffectEngine effectEngine = Factory.EffectEngine;

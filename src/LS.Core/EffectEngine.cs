@@ -86,7 +86,7 @@ namespace LS.Core
 			state = state.UpdateCharacter (character.Item.AddStatusEffect (new StatusEffect (effectName)));
 			character.Update (state);
 
-			Action removeAction = new Action (effectName, ActionType.RemoveEffect, 0, effectName);
+			Action removeAction = new Action (ActionType.RemoveEffect, 0, effectName);
 			TargettedAction removeActionTargetted = new TargettedAction (removeAction, TargettingInfo.Self (character));
 			DelayedAction removeEffectAction = DelayedAction.Create (removeActionTargetted, Time.ActionAmount - power);
 			return state.AddDelayedAction (removeEffectAction);

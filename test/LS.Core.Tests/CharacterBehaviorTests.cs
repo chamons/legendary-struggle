@@ -12,13 +12,13 @@ namespace LS.Core.Tests
 			GameState state = CreateTestState (new Skill [] { Factory.DamageSkill, Factory.HealSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Damage", targettedSkill.Skill.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Enemies[0].ID, targettedSkill.TargetInfo.TargetID);
 
 			state = state.UpdateCharacter (state.Party[0].WithUpdatedSkill (state.Party[0].Skills[0].WithAvailable (false)));
 			targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Heal", targettedSkill.Skill.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.TargetID);
 		}
@@ -30,7 +30,7 @@ namespace LS.Core.Tests
 			GameState state = CreateTestState (new Skill[] { Factory.DamageSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Damage", targettedSkill.Skill.Name);
 		}
 
 		[Fact]
@@ -42,7 +42,7 @@ namespace LS.Core.Tests
 			state = state.UpdateCharacter (state.Party[0].WithHealth (new Health (1, 10)));
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Heal", targettedSkill.Skill.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.TargetID);
 		}
@@ -54,7 +54,7 @@ namespace LS.Core.Tests
  			GameState state = CreateMultiTargetTestState (new Skill [] { Factory.HealSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Heal", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Heal", targettedSkill.Skill.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Party[1].ID, targettedSkill.TargetInfo.TargetID);
 		}
@@ -66,7 +66,7 @@ namespace LS.Core.Tests
 			GameState state = CreateMultiTargetTestState (new Skill[] { Factory.DamageSkill });
 
 			TargettedSkill targettedSkill = characterBehavior.Act (state, CharacterResolver.Create (state.Party[0], state));
-			Assert.Equal ("Damage", targettedSkill.Skill.Action.Name);
+			Assert.Equal ("Damage", targettedSkill.Skill.Name);
 			Assert.Equal (state.Party[0].ID, targettedSkill.TargetInfo.InvokerID);
 			Assert.Equal (state.Enemies[1].ID, targettedSkill.TargetInfo.TargetID);
 		}

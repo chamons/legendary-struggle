@@ -24,8 +24,8 @@ namespace LS.Core
 
 		public bool HasEffect (string name) => StatusEffects.Any (x => x.Name == name);
 
-		public Skill SkillWithName (string name) => Skills.FirstOrDefault (x => x.Action.Name == name);
-		public bool HasSkill (string name) => Skills.Any (x => x.Action.Name == name);
+		public Skill SkillWithName (string name) => Skills.FirstOrDefault (x => x.Name == name);
+		public bool HasSkill (string name) => Skills.Any (x => x.Name == name);
 
 		public Character WithResetSkills () => WithSkills (Skills.Select (x => x.WithAvailable (true)));
 
@@ -49,7 +49,7 @@ namespace LS.Core
 
 	public partial class Skill
 	{
-		public static Skill Create (Action action, int cooldown, int delay) => new Skill (IDs.Next (), action, true, cooldown, delay);
+		public static Skill Create (string name, Action action, int cooldown, int delay) => new Skill (IDs.Next (), name, action, true, cooldown, delay);
 	}
 
 	public partial class TargettedSkill

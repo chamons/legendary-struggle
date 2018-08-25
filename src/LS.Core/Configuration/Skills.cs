@@ -31,12 +31,11 @@ namespace LS.Core.Configuration
 
 		public SkillInfo [] SkillInfo { get; set; }
 
-		// TODO - Skills need a name independent of action name
 		public Skill GetSkill (string name)
 		{
 			SkillInfo info = SkillInfo.First (x => x.Name == name);
-			Action action = new Action (name, GetAction (info), info.Power, info.EffectName);
-			return Skill.Create (action, info.Cooldown, info.Delay);
+			Action action = new Action (GetAction (info), info.Power, info.EffectName);
+			return Skill.Create (info.Name, action, info.Cooldown, info.Delay);
 		}
 
 		ActionType GetAction (SkillInfo info)
