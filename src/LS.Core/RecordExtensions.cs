@@ -7,7 +7,7 @@ namespace LS.Core
 {
 	public partial class Character
 	{
-		public static Character Create (Health health) => new Character (IDs.Next (), health, null, null); 
+		public static Character Create (string name, Health health) => new Character (IDs.Next (), name, health, null, null); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
@@ -26,6 +26,10 @@ namespace LS.Core
 
 		public Skill SkillWithName (string name) => Skills.FirstOrDefault (x => x.Action.Name == name);
 		public bool HasSkill (string name) => Skills.Any (x => x.Action.Name == name);
+
+		public Character WithResetSkills () => WithSkills (Skills.Select (x => x.WithAvailable (true)));
+
+		public override string ToString() => $"{Name} ({ID}) {Health}";
 	}
 
 	public partial struct Health
@@ -35,6 +39,8 @@ namespace LS.Core
 			int newHealthValue = (Current + delta).Clamp (0, Max);
 			return WithCurrent (newHealthValue);
 		}
+
+		public Health WithFull () => WithCurrent (Max);
 
 		public bool IsLow => (Current / (double)Max) < .25;
 
@@ -53,7 +59,10 @@ namespace LS.Core
 
 	public partial struct DelayedAction
 	{
-		public static DelayedAction Create (TargettedAction action, int ct = 0) => new DelayedAction (IDs.Next (), action, ct);
+		public static DelayedAction Create (TargettedAction action, int ct = 0, TargettedSkill sourceSkill = null)
+		{
+			return new DelayedAction (IDs.Next (), action, ct, sourceSkill);
+		}
 
 		public DelayedAction ExtendDuration (int ct) => WithCT (CT - ct);
 	}
@@ -76,6 +85,8 @@ namespace LS.Core
 
 	public partial class GameState
 	{
+		public Character ActiveCharacter => Party.WithID (ActivePlayerID);
+
 		internal void RegisterResolver (IItemResolver resolver)
 		{
 			if (ActiveResolvers == null)
@@ -91,15 +102,6 @@ namespace LS.Core
 					resolver.Invalid = true;
 				ActiveResolvers.Clear ();
 			}
-		}
-
-		public GameState UpdateTimeable (ITimeable t)
-		{
-			if (t is DelayedAction a)
-				return UpdateDelayedAction (a);
-			if (t is Character c)
-				return UpdateCharacter (c);
-			throw new NotImplementedException ();
 		}
 
 		public GameState UpdateDelayedAction (DelayedAction delayedEffect)

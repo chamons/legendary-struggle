@@ -3,9 +3,38 @@ using System.Linq;
 
 namespace LS.Core
 {
-	public class DelayedActionFired : EventArgs
+	public class DelayedActionFiredEventArgs : EventArgs
 	{
+		public DelayedActionFiredEventArgs (DelayedAction action)
+		{
+			Action = action;
+		}
+
 		public DelayedAction Action;
+	}
+
+	public class SkillUsedEventArgs : EventArgs
+	{
+		public SkillUsedEventArgs (Character character, Skill skill)
+		{
+			Character = character;
+			Skill = skill;
+		}
+
+		public Character Character;
+		public Skill Skill;
+	}
+
+	public class SkillChannelEventArgs : EventArgs
+	{
+		public SkillChannelEventArgs (Character character, Skill skill)
+		{
+			Character = character;
+			Skill = skill;
+		}
+
+		public Character Character;
+		public Skill Skill;
 	}
 
 	public class GameEngine
@@ -33,7 +62,15 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
-		public event EventHandler<DelayedAction> DelayedActions;
+		internal void LoadState (GameState state)
+		{
+			CurrentState = state;
+		}
+
+		public event EventHandler<DelayedActionFiredEventArgs> DelayedActions;
+		public event EventHandler<SkillChannelEventArgs> SkillChannelStarted;
+		public event EventHandler<SkillChannelEventArgs> SkillChannelEnded;
+		public event EventHandler<SkillUsedEventArgs> SkillUsed;
 
 		public bool BlockedOnActive => CurrentState.AllCharacters.Any (x => x.ID == CurrentState.ActivePlayerID && Time.IsReady (x));
 
@@ -44,12 +81,17 @@ namespace LS.Core
 
 			IncrementTime ();
 
-			foreach (Character c in CurrentState.AllCharacters.Where (x => Time.IsReady (x)))
+			foreach (Character c in CurrentState.AllCharacters.Where (CanTakeNonActiveTurn))
 				ApplyNonActiveCharacterTurn (CharacterResolver.Create (c, CurrentState));
 			foreach (DelayedAction e in CurrentState.DelayedActions.Where (x => Time.IsReady (x)))
 				ApplyDelayedAction (new DelayedActionResolver (e, CurrentState));
 
 			return true;
+		}
+
+		bool CanTakeNonActiveTurn (Character c)
+		{
+			return c.ID != CurrentState.ActivePlayerID && c.IsAlive && Time.IsReady (c);
 		}
 
 		public void ProcessActivePlayerAction (TargettedSkill skill)
@@ -63,8 +105,10 @@ namespace LS.Core
 		void IncrementTime ()
 		{
 			CurrentState = CurrentState.WithTick (CurrentState.Tick + 1);
-			foreach (ITimeable c in CurrentState.AllTimables)
-				CurrentState = CurrentState.UpdateTimeable (Time.Increment (c));
+			foreach (Character c in CurrentState.AllCharacters.Where (x => x.IsAlive))
+				CurrentState = CurrentState.UpdateCharacter (Time.Increment (c));
+			foreach (DelayedAction a in CurrentState.DelayedActions)
+				CurrentState = CurrentState.UpdateDelayedAction (Time.Increment (a));
 		}
 
 		void ApplyDelayedAction (DelayedAction e)
@@ -72,7 +116,15 @@ namespace LS.Core
 			CurrentState = EffectEngine.Apply (e.TargetAction, CurrentState);
 
 			// TODO - This needs to be a UI friendly processed representation of the action
-			DelayedActions?.Invoke (this, e);
+			if (e.SourceSkill != null)
+			{
+				Character invoker = CurrentState.AllCharacters.WithID (e.SourceSkill.TargetInfo.InvokerID);
+				SkillChannelEnded?.Invoke (this, new SkillChannelEventArgs (invoker, e.SourceSkill.Skill));
+			}
+			else
+			{
+				DelayedActions?.Invoke (this, new DelayedActionFiredEventArgs (e));
+			}
 			CurrentState = CurrentState.WithDelayedActions (CurrentState.DelayedActions.Remove (e));
 		}
 
@@ -88,7 +140,24 @@ namespace LS.Core
 			c.Update (CurrentState);
 
 			if (skillToUse != null)
+			{
 				CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
+				c.Update (CurrentState);
+
+				if (skillToUse.Skill.Delay > 0)
+					SkillChannelStarted?.Invoke (this, new SkillChannelEventArgs (c, skillToUse.Skill));
+				else
+					SkillUsed?.Invoke (this, new SkillUsedEventArgs (c, skillToUse.Skill));
+			}
+		}
+
+		public static GameState Reset (GameState state)
+		{
+			state = state.WithEnemies (null);
+			state = state.WithDelayedActions (null);
+			foreach (Character c in state.Party)
+				state = state.UpdateCharacter (c.WithCT (0).WithHealth (c.Health.WithFull ()).WithStatusEffects (null).WithResetSkills ());
+			return state;
 		}
 	}
 }

@@ -1,4 +1,11 @@
 ﻿[[SkillInfo]]
+Name = "Stab"
+Type = "Damage"
+Power = 150
+Cooldown = 0
+Delay = 0
+
+[[SkillInfo]]
 Name = "Hurt"
 Type = "Damage"
 Power = 100

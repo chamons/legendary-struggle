@@ -23,7 +23,7 @@ namespace LS.Core
 	public class Character : ITimeable
 	{
 		public long ID { get; }
-
+		string Name { get; }
 		public Health Health { get; }
 
 		List<Skill> Skills { get; }
@@ -45,6 +45,9 @@ namespace LS.Core
 
 		[Default ("0")]
 		public int CT { get; }
+
+		[Default ("null")]
+		public TargettedSkill SourceSkill;
 	}
 
 	[Inject]
@@ -107,6 +110,12 @@ namespace LS.Core
 		string Name;
 	}
 
+	public class BehaviorSet
+	{
+		Behavior Behavior;
+		string Name;
+	}
+
 	public class Behavior
 	{
 		List<BehaviorSkill> Skills;	
@@ -149,20 +158,6 @@ namespace LS.Core
 					yield return e;
 				foreach (Character p in Party)
 					yield return p;
-			}
-		}
-
-		[Inject]
-		public IEnumerable <ITimeable> AllTimables
-		{
-			get
-			{
-				foreach (Character e in Enemies)
-					yield return e;
-				foreach (Character p in Party)
-					yield return p;
-				foreach (DelayedAction a in DelayedActions)
-					yield return a;
 			}
 		}
 	}

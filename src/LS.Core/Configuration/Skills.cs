@@ -31,6 +31,7 @@ namespace LS.Core.Configuration
 
 		public SkillInfo [] SkillInfo { get; set; }
 
+		// TODO - Skills need a name independent of action name
 		public Skill GetSkill (string name)
 		{
 			SkillInfo info = SkillInfo.First (x => x.Name == name);

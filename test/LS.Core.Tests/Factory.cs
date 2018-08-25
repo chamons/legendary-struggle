@@ -8,8 +8,8 @@ namespace LS.Core.Tests
 {
 	static class Factory
 	{
-		public static Character Enemy => Character.Create (new Health (1, 1));
-		public static Character Player => Character.Create (new Health (1, 1));
+		public static Character Enemy => Character.Create ("Enemy", new Health (1, 1));
+		public static Character Player => Character.Create ("Player", new Health (1, 1));
 		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
 		public static SkillEngine SkillEngine => new SkillEngine (EffectEngine);
 	
