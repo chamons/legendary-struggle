@@ -91,6 +91,9 @@ namespace LS.Core
 	{
 		public long ID { get; }
 		string Name;
+		// TODO - Need some string here to point to the original skill name for things like behavior
+		// Hurt|Slam needs to be ??
+		// Maybe both?
 		public Action Action;
 
 		bool Available;

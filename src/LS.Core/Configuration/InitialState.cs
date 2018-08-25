@@ -3,6 +3,7 @@ using System.IO;
 using System.Reflection;
 using System.Linq;
 using Nett;
+using System.Collections.Generic;
 
 namespace LS.Core.Configuration
 {
@@ -43,9 +44,29 @@ namespace LS.Core.Configuration
 
 		Character Create (CharacterInfo info)
 		{
-			var skills = info.Skills.Select (x => SkillConfig.GetSkill (x));
-
+			var skills = ParseSkills (info);
 			return Character.Create (info.Name, info.CharacterClass, new Health (info.Health, info.Health)).WithSkills (skills);
+		}
+
+		IEnumerable <Skill> ParseSkills (CharacterInfo info)
+		{
+			List<Skill> skills = new List<Skill> ();
+			foreach (string skillName in info.Skills)
+			{
+				if (skillName.Contains ("|"))
+				{
+					string[] parts = skillName.Split (new char[] { '|' });
+					//skills.Add (SkillConfig.GetSkill (parts[0]).WithName (parts[1]));
+					skills.Add (SkillConfig.GetSkill (parts[0]));
+
+				}
+				else
+				{
+					skills.Add (SkillConfig.GetSkill (skillName));
+				}
+			}
+			return skills;
+
 		}
 	}
 
