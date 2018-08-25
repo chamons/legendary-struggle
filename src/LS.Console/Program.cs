@@ -6,7 +6,7 @@ using LS.Core;
 namespace LS.Console
 {
 	class Program : IGameClientDelegate
-    {
+	{
 		GameClient Client;
 
 		public void Run ()
@@ -66,10 +66,10 @@ namespace LS.Console
 				System.Console.WriteLine (character);
 		}
 
-        static void Main (string[] args)
-        {
+		static void Main (string[] args)
+		{
 			(new Program ()).Run ();
-        }
+		}
 
 		public void OnDelayedAction( DelayedAction action)
 		{
