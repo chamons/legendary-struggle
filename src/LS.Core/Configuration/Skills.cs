@@ -35,7 +35,7 @@ namespace LS.Core.Configuration
 		{
 			SkillInfo info = SkillInfo.First (x => x.Name == name);
 			Action action = new Action (GetAction (info), info.Power, info.EffectName);
-			return Skill.Create (info.Name, action, info.Cooldown, info.Delay);
+			return Skill.Create (info.Name, info.Name, action, info.Cooldown, info.Delay);
 		}
 
 		ActionType GetAction (SkillInfo info)

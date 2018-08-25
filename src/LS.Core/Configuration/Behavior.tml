@@ -1,14 +1,20 @@
 ﻿[[BehaviorInfos]]
 Name = "Monster"
 	[[BehaviorInfos.Skills]]
-	Name = "Hurt"
+	Name = "HeavyStrike"
 	[[BehaviorInfos.Skills]]
-	Name = "Stab"
+	Name = "Strike"
+	[[BehaviorInfos.Skills]]
+	Name = "LightStrike"
 	
 [[BehaviorInfos]]
 Name = "Mage"
 	[[BehaviorInfos.Skills]]
-	Name = "Hurt"
+	Name = "HeavyStrike"
+	[[BehaviorInfos.Skills]]
+	Name = "Strike"
+	[[BehaviorInfos.Skills]]
+	Name = "LightStrike"
 	[[BehaviorInfos.Skills]]
 	Name = "Heal"
 	OverrideCondition = "PartyHealthLow"

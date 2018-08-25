@@ -94,16 +94,18 @@ namespace LS.Core
 	public partial class Skill : IIdentifiable
 	{
 		public long ID { get; }
-		public string Name { get; }
+		public string CosmeticName { get; }
+		public string SkillName { get; }
 		public Action Action { get; }
 		public bool Available { get; }
 		public int Cooldown { get; }
 		public int Delay { get; }
 
-		public Skill (long id, string name, Action action, bool available, int cooldown, int delay)
+		public Skill (long id, string cosmeticName, string skillName, Action action, bool available, int cooldown, int delay)
 		{
 			ID = id;
-			Name = name;
+			CosmeticName = cosmeticName;
+			SkillName = skillName;
 			Action = action;
 			Available = available;
 			Cooldown = cooldown;
@@ -112,32 +114,37 @@ namespace LS.Core
 
 		public Skill WithID (long id)
 		{
-			return new Skill (id, Name, Action, Available, Cooldown, Delay);
+			return new Skill (id, CosmeticName, SkillName, Action, Available, Cooldown, Delay);
 		}
 
-		public Skill WithName (string name)
+		public Skill WithCosmeticName (string cosmeticName)
 		{
-			return new Skill (ID, name, Action, Available, Cooldown, Delay);
+			return new Skill (ID, cosmeticName, SkillName, Action, Available, Cooldown, Delay);
+		}
+
+		public Skill WithSkillName (string skillName)
+		{
+			return new Skill (ID, CosmeticName, skillName, Action, Available, Cooldown, Delay);
 		}
 
 		public Skill WithAction (Action action)
 		{
-			return new Skill (ID, Name, action, Available, Cooldown, Delay);
+			return new Skill (ID, CosmeticName, SkillName, action, Available, Cooldown, Delay);
 		}
 
 		public Skill WithAvailable (bool available)
 		{
-			return new Skill (ID, Name, Action, available, Cooldown, Delay);
+			return new Skill (ID, CosmeticName, SkillName, Action, available, Cooldown, Delay);
 		}
 
 		public Skill WithCooldown (int cooldown)
 		{
-			return new Skill (ID, Name, Action, Available, cooldown, Delay);
+			return new Skill (ID, CosmeticName, SkillName, Action, Available, cooldown, Delay);
 		}
 
 		public Skill WithDelay (int delay)
 		{
-			return new Skill (ID, Name, Action, Available, Cooldown, delay);
+			return new Skill (ID, CosmeticName, SkillName, Action, Available, Cooldown, delay);
 		}
 	}
 

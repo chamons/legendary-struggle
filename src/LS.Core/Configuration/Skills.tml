@@ -1,14 +1,21 @@
 ﻿[[SkillInfo]]
-Name = "Stab"
+Name = "HeavyStrike"
 Type = "Damage"
 Power = 150
+Cooldown = 200
+Delay = 50
+
+[[SkillInfo]]
+Name = "Strike"
+Type = "Damage"
+Power = 100
 Cooldown = 0
 Delay = 0
 
 [[SkillInfo]]
-Name = "Hurt"
+Name = "LightStrike"
 Type = "Damage"
-Power = 100
+Power = 70
 Cooldown = 0
 Delay = 0
 
@@ -18,11 +25,3 @@ Type = "Heal"
 Power = 100
 Cooldown = 0
 Delay = 0
-
-[[SkillInfo]]
-Name = "Burn"
-Type = "Damage|Effect"
-Power = 100
-Cooldown = 0
-Delay = 0
-EffectName = "Burning"

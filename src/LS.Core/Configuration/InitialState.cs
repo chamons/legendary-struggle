@@ -56,9 +56,7 @@ namespace LS.Core.Configuration
 				if (skillName.Contains ("|"))
 				{
 					string[] parts = skillName.Split (new char[] { '|' });
-					//skills.Add (SkillConfig.GetSkill (parts[0]).WithName (parts[1]));
-					skills.Add (SkillConfig.GetSkill (parts[0]));
-
+					skills.Add (SkillConfig.GetSkill (parts[0]).WithCosmeticName (parts[1]));
 				}
 				else
 				{

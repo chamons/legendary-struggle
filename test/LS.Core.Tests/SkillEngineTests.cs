@@ -33,7 +33,7 @@ namespace LS.Core.Tests
 			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
 			Assert.Empty (effectEngine.ActionsUsed);
-			Assert.Contains (state.DelayedActions, x => x.SourceSkill.Skill.Name == skill.Name);
+			Assert.Contains (state.DelayedActions, x => x.SourceSkill.Skill.CosmeticName == skill.CosmeticName);
 			Assert.Equal (50, state.DelayedActions[0].CT);
 		}
 
