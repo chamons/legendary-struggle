@@ -12,12 +12,13 @@ namespace LS.Core.Tests
 			TestEffectEngine effectEngine = new TestEffectEngine ();
 
 			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()).WithCT (Time.ActionAmount));
 
 			SkillEngine engine = new SkillEngine (effectEngine);
 			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
 			Assert.Single (effectEngine.ActionsUsed);
+			Assert.Equal (0, state.Party[0].CT);
 		}
 
 		[Fact]
@@ -27,7 +28,7 @@ namespace LS.Core.Tests
 			TestEffectEngine effectEngine = new TestEffectEngine ();
 
 			GameState state = Factory.DefaultGameState;
-			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()));
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()).WithCT (Time.ActionAmount));
 
 			SkillEngine engine = new SkillEngine (effectEngine);
 			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
@@ -35,6 +36,7 @@ namespace LS.Core.Tests
 			Assert.Empty (effectEngine.ActionsUsed);
 			Assert.Contains (state.DelayedActions, x => x.SourceSkill.Skill.CosmeticName == skill.CosmeticName);
 			Assert.Equal (50, state.DelayedActions[0].CT);
+			Assert.Equal (-50, state.Party[0].CT);
 		}
 
 		[Fact]

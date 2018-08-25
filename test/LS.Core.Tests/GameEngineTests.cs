@@ -81,7 +81,7 @@ namespace LS.Core.Tests
 			Skill skill = Factory.TestSkill;
 
 			TestCharacterBehavior characterBehavior = new TestCharacterBehavior ();
-			characterBehavior.SkillToReturn = new TargettedSkill (skill, TargettingInfo.Empty);
+			characterBehavior.SkillToReturn = new TargettedSkill (skill, TargettingInfo.Self (state.Party[0]));
 
 			TestSkillEngine skillEngine = new TestSkillEngine ();
 			GameEngine engine = Factory.CreateGameEngine (state, characterBehavior, skillEngine);
@@ -109,12 +109,11 @@ namespace LS.Core.Tests
 			Skill skillReportedUsed = null;
 			engine.SkillUsed += (o, s) => skillReportedUsed = s.Skill;
 
-			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Empty));
+			engine.ProcessActivePlayerAction (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])));
 
 			Assert.Single (skillEngine.SkillsUsed);
 			Assert.Contains (skillEngine.SkillsUsed, x => x.ID == skill.ID);
 			Assert.Equal (skillReportedUsed, skillEngine.SkillsUsed.First ());
-			Assert.Equal (0, engine.CurrentState.Party[0].CT);
 		}
 
 		[Fact]

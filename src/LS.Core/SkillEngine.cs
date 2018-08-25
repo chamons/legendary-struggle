@@ -6,6 +6,7 @@ namespace LS.Core
 	public interface ISkillEngine
 	{
 		GameState ApplyTargettedSkill (TargettedSkill skill, GameState state);
+		GameState Wait (ItemResolver<Character> c, GameState state);
 	}
 
 	public class SkillEngine : ISkillEngine
@@ -27,13 +28,9 @@ namespace LS.Core
 			AssertContainSkill (s, state);
 
 			if (s.Skill.Cooldown > 0)
-			{
-				TargettingInfo targettingInfo = new TargettingInfo (s.TargetInfo.InvokerID, s.Skill.ID);
-				TargettedAction cooldownAction = new TargettedAction (CooldownAction, targettingInfo);
-				state = state.AddDelayedAction (DelayedAction.Create (cooldownAction, Time.ActionAmount - s.Skill.Cooldown));
-				Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
-				state = state.UpdateCharacter (character.WithUpdatedSkill (s.Skill.WithAvailable (false)));
-			}
+				state = ApplyCooldown (s, state);
+
+			state = ApplyCTCost (s, state);
 
 			TargettedAction targetAction = s.CreateAction ();
 
@@ -41,6 +38,33 @@ namespace LS.Core
 				return state.AddDelayedAction (DelayedAction.Create (targetAction, Time.ActionAmount - s.Skill.Delay, s));
 			else
 				return EffectEngine.Apply (targetAction, state);
+		}
+
+		GameState ApplyCTCost (TargettedSkill s, GameState state)
+		{
+			Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
+			int cost = s.Skill.Delay + Time.ActionAmount;
+			return state.UpdateCharacter (Time.SpendAction (character, cost));
+		}
+
+		GameState ApplyCooldown (TargettedSkill s, GameState state)
+		{
+			TargettedAction cooldownAction = CreateCooldownAction (s);
+			state = state.AddDelayedAction (DelayedAction.Create (cooldownAction, Time.ActionAmount - s.Skill.Cooldown));
+
+			Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
+			return state.UpdateCharacter (character.WithUpdatedSkill (s.Skill.WithAvailable (false)));
+		}
+
+		TargettedAction CreateCooldownAction (TargettedSkill s)
+		{
+			TargettingInfo targettingInfo = new TargettingInfo (s.TargetInfo.InvokerID, s.Skill.ID);
+			return new TargettedAction (CooldownAction, targettingInfo);
+		}
+
+		public GameState Wait (ItemResolver<Character> c, GameState state)
+		{
+			return state.UpdateCharacter (Time.SpendAction (c));
 		}
 
 		static void AssertContainSkill (TargettedSkill s, GameState state)
