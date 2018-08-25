@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LS.Core.Tests", "test\LS.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LS.Console", "src\LS.Console\LS.Console.csproj", "{4503BD4A-2A65-4781-9E5B-C45E70AF128B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LS.Mac", "src\LS.Mac\LS.Mac.csproj", "{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LS.Platform", "src\LS.Platform\LS.Platform.csproj", "{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,10 +66,52 @@ Global
 		{4503BD4A-2A65-4781-9E5B-C45E70AF128B}.Release|x64.Build.0 = Release|Any CPU
 		{4503BD4A-2A65-4781-9E5B-C45E70AF128B}.Release|x86.ActiveCfg = Release|Any CPU
 		{4503BD4A-2A65-4781-9E5B-C45E70AF128B}.Release|x86.Build.0 = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|x64.Build.0 = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Debug|x86.Build.0 = Debug|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|x64.ActiveCfg = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|x64.Build.0 = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|x86.ActiveCfg = Release|Any CPU
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679}.Release|x86.Build.0 = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|x64.Build.0 = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Debug|x86.Build.0 = Debug|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|x64.ActiveCfg = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|x64.Build.0 = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|x86.ActiveCfg = Release|Any CPU
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{43F2F9A1-9FEF-437C-ADE7-2F33C67EEBF3} = {162B3C00-7FEC-4F47-8FC2-CC547933BF8C}
 		{CA9199FF-DC88-46AD-AE1D-BE42B2A3BED8} = {A9AF78FB-BADD-42AB-B366-EBB248A6478E}
 		{4503BD4A-2A65-4781-9E5B-C45E70AF128B} = {162B3C00-7FEC-4F47-8FC2-CC547933BF8C}
+		{E77BFD96-AB4C-48DF-B585-9A6C9C7E0679} = {162B3C00-7FEC-4F47-8FC2-CC547933BF8C}
+		{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7} = {162B3C00-7FEC-4F47-8FC2-CC547933BF8C}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.inheritsSet = null
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.SpacingAfterMethodDeclarationName = True
+		$2.SpaceAfterMethodCallName = True
+		$2.scope = text/x-csharp
+		$0.TextStylePolicy = $3
+		$3.inheritsSet = null
+		$3.scope = application/vnd.apple-xcode-storyboard
+		$0.XmlFormattingPolicy = $4
+		$4.inheritsSet = null
+		$4.scope = application/vnd.apple-xcode-storyboard
 	EndGlobalSection
 EndGlobal
