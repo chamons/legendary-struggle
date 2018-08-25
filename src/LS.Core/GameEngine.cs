@@ -13,8 +13,6 @@ namespace LS.Core
 		public DelayedAction Action;
 	}
 
-	// TODO needs skill channel event
-
 	public class SkillUsedEventArgs : EventArgs
 	{
 		public SkillUsedEventArgs (Character character, Skill skill)
@@ -64,8 +62,7 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
-		// Hack for console 
-		public void LoadState (GameState state)
+		internal void LoadState (GameState state)
 		{
 			CurrentState = state;
 		}

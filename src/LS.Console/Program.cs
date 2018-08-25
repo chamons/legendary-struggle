@@ -5,75 +5,54 @@ using LS.Core;
 
 namespace LS.Console
 {
-    class Program
+	class Program : IGameClientDelegate
     {
+		GameClient Client;
+
 		public void Run ()
 		{
-			int level = 0;
-			GameEngine engine = GameClient.Create ();
-			engine.SkillUsed += (o, e) => { PrintSkillUsed (e); PrintState (engine.CurrentState); };
-			engine.DelayedActions += (o, e) => PrintDelayedAction (e);
-			engine.SkillChannelStarted += (o, e) => { PrintChannelStarted (e); PrintState (engine.CurrentState); };
-			engine.SkillChannelEnded += (o, e) => { PrintChannelEnded (e); PrintState (engine.CurrentState); };
-
-			PrintState (engine.CurrentState);
+			Client = new GameClient ();
+			Client.Delegate = this;
+			PrintState ();
 			while (true)
 			{
-				if (engine.CurrentState.Enemies.All (x => !x.IsAlive))
+				if (Client.WaitingOnUserInput)
 				{
-					engine.LoadState (GameClient.LoadLevel (engine.CurrentState, level + 1));
-					level = (level + 1).Clamp (0, 2);
-					System.Console.WriteLine ($"\nLoading Level {level + 1}.");
-					PrintState (engine.CurrentState);
-				}
-				if (!engine.CurrentState.ActiveCharacter.IsAlive)
-				{
-					engine.LoadState (GameClient.LoadLevel (engine.CurrentState, 0));
-					level = 0;
-					System.Console.WriteLine ("\nLoading Level 1.");
-					PrintState (engine.CurrentState);
-				}
-
-				if (engine.BlockedOnActive)
-				{
-					string input = ReadLine.Read (CreatePrompt (engine.CurrentState.ActiveCharacter));
+					string input = ReadLine.Read (CreatePrompt ());
 					if (input == "q")
 						return;
 					if (int.TryParse (input, out int number))
 					{
-						if (number >= 0 && number < engine.CurrentState.ActiveCharacter.Skills.Length)
+						if (number >= 0 && number < Client.CurrentState.ActiveCharacter.Skills.Length)
 						{
-							Skill s = engine.CurrentState.ActiveCharacter.Skills [number];
+							Skill s = Client.CurrentState.ActiveCharacter.Skills[number];
 							input = ReadLine.Read ("E, T, M?");
-
-							Action<long> use = (id) =>
-							{
-								TargettingInfo info = TargettingInfo.From (engine.CurrentState.ActivePlayerID, id);
-								engine.ProcessActivePlayerAction (new TargettedSkill (s, info));
-
-							};
 
 							switch (input)
 							{
 								case "E":
-									use (engine.CurrentState.Enemies[0].ID);
+									Client.ProcessAction (number, Client.CurrentState.Enemies[0].ID);
 									break;
 								case "T":
-									use (engine.CurrentState.Party[0].ID);
+									Client.ProcessAction (number, Client.CurrentState.Party[0].ID);
 									break;
 								case "M":
-									use (engine.CurrentState.Party[1].ID);
+									Client.ProcessAction (number, Client.CurrentState.Party[1].ID);
 									break;
 							}
 						}
 					}
 				}
-				engine.Process ();
+				else
+				{
+					Client.Process ();
+				}
 			}
 		}
 
-		string CreatePrompt (Character character)
+		string CreatePrompt ()
 		{
+			Character character = Client.CurrentState.ActiveCharacter;
 			StringBuilder builder = new StringBuilder ();
 			for (int i = 0; i < character.Skills.Length; ++i)
 				builder.Append ($"{i} {character.Skills[i].Action.Name} ");
@@ -81,36 +60,46 @@ namespace LS.Console
 			return builder.ToString ();
 		}
 
-		void PrintDelayedAction (DelayedActionFiredEventArgs d)
+		void PrintState ()
 		{
-			System.Console.WriteLine ("Delayed Action: " + d.Action.TargetAction.Action.Name);
-		}
-
-		void PrintSkillUsed (SkillUsedEventArgs d)
-		{
-			System.Console.WriteLine ($"\n{d.Character.Name} used {d.Skill.Action.Name}.");
-		}
-
-		void PrintChannelStarted (SkillChannelEventArgs d)
-		{
-			System.Console.WriteLine ($"\n{d.Character.Name} begun channeling {d.Skill.Action.Name}.");
-		}
-
-		void PrintChannelEnded (SkillChannelEventArgs d)
-		{
-			System.Console.WriteLine ($"\n{d.Character.Name} finished channeling {d.Skill.Action.Name}.");
-		}
-
-		void PrintState (GameState state)
-		{
-			foreach (var character in state.AllCharacters)
+			foreach (var character in Client.CurrentState.AllCharacters)
 				System.Console.WriteLine (character);
 		}
 
-
-        static void Main(string[] args)
+        static void Main (string[] args)
         {
 			(new Program ()).Run ();
         }
-    }
+
+		public void OnDelayedAction( DelayedAction action)
+		{
+			System.Console.WriteLine ("Delayed Action: " + action.TargetAction.Action.Name);
+		}
+
+		public void OnSkillUsed (Character character, Skill skill)
+		{
+			System.Console.WriteLine ($"\n{character.Name} used {skill.Action.Name}.");
+			PrintState ();
+		}
+
+		public void OnSkillChannelStarted (Character character, Skill skill)
+		{
+			System.Console.WriteLine ($"\n{character.Name} begun channeling {skill.Action.Name}.");
+		}
+
+		public void OnSkillChannelEnded (Character character, Skill skill)
+		{
+			System.Console.WriteLine ($"\n{character.Name} finished channeling {skill.Action.Name}.");
+		}
+
+		public void OnTick (long tick)
+		{
+		}
+
+		public void OnNewLevel (int level)
+		{
+			System.Console.WriteLine ($"\nStarting Level {level}.");
+			PrintState ();
+		}
+	}
 }
