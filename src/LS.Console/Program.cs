@@ -55,7 +55,7 @@ namespace LS.Console
 			Character character = Client.CurrentState.ActiveCharacter;
 			StringBuilder builder = new StringBuilder ();
 			for (int i = 0; i < character.Skills.Length; ++i)
-				builder.Append ($"{i} {character.Skills[i].Action.Name} ");
+				builder.Append ($"{i} {character.Skills[i].Name} ");
 			builder.Append (")");
 			return builder.ToString ();
 		}
@@ -71,25 +71,24 @@ namespace LS.Console
 			(new Program ()).Run ();
 		}
 
-		public void OnDelayedAction( DelayedAction action)
+		public void OnDelayedAction (DelayedAction action)
 		{
-			System.Console.WriteLine ("Delayed Action: " + action.TargetAction.Action.Name);
 		}
 
 		public void OnSkillUsed (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} used {skill.Action.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} used {skill.Name}.");
 			PrintState ();
 		}
 
 		public void OnSkillChannelStarted (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} begun channeling {skill.Action.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} begun channeling {skill.Name}.");
 		}
 
 		public void OnSkillChannelEnded (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} finished channeling {skill.Action.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} finished channeling {skill.Name}.");
 		}
 
 		public void OnTick (long tick)

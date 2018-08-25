@@ -94,14 +94,16 @@ namespace LS.Core
 	public partial class Skill : IIdentifiable
 	{
 		public long ID { get; }
+		public string Name { get; }
 		public Action Action { get; }
 		public bool Available { get; }
 		public int Cooldown { get; }
 		public int Delay { get; }
 
-		public Skill (long id, Action action, bool available, int cooldown, int delay)
+		public Skill (long id, string name, Action action, bool available, int cooldown, int delay)
 		{
 			ID = id;
+			Name = name;
 			Action = action;
 			Available = available;
 			Cooldown = cooldown;
@@ -110,27 +112,32 @@ namespace LS.Core
 
 		public Skill WithID (long id)
 		{
-			return new Skill (id, Action, Available, Cooldown, Delay);
+			return new Skill (id, Name, Action, Available, Cooldown, Delay);
+		}
+
+		public Skill WithName (string name)
+		{
+			return new Skill (ID, name, Action, Available, Cooldown, Delay);
 		}
 
 		public Skill WithAction (Action action)
 		{
-			return new Skill (ID, action, Available, Cooldown, Delay);
+			return new Skill (ID, Name, action, Available, Cooldown, Delay);
 		}
 
 		public Skill WithAvailable (bool available)
 		{
-			return new Skill (ID, Action, available, Cooldown, Delay);
+			return new Skill (ID, Name, Action, available, Cooldown, Delay);
 		}
 
 		public Skill WithCooldown (int cooldown)
 		{
-			return new Skill (ID, Action, Available, cooldown, Delay);
+			return new Skill (ID, Name, Action, Available, cooldown, Delay);
 		}
 
 		public Skill WithDelay (int delay)
 		{
-			return new Skill (ID, Action, Available, Cooldown, delay);
+			return new Skill (ID, Name, Action, Available, Cooldown, delay);
 		}
 	}
 
@@ -307,37 +314,30 @@ namespace LS.Core
 
 	public partial struct Action
 	{
-		public string Name { get; }
 		public ActionType Type { get; }
 		public int Power { get; }
 		public string EffectName { get; }
 
-		public Action (string name, ActionType type, int power, string effectName = "")
+		public Action (ActionType type, int power, string effectName = "")
 		{
-			Name = name;
 			Type = type;
 			Power = power;
 			EffectName = effectName;
 		}
 
-		public Action WithName (string name)
-		{
-			return new Action (name, Type, Power, EffectName);
-		}
-
 		public Action WithType (ActionType type)
 		{
-			return new Action (Name, type, Power, EffectName);
+			return new Action (type, Power, EffectName);
 		}
 
 		public Action WithPower (int power)
 		{
-			return new Action (Name, Type, power, EffectName);
+			return new Action (Type, power, EffectName);
 		}
 
 		public Action WithEffectName (string effectName)
 		{
-			return new Action (Name, Type, Power, effectName);
+			return new Action (Type, Power, effectName);
 		}
 	}
 

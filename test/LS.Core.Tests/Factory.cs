@@ -13,16 +13,16 @@ namespace LS.Core.Tests
 		public static EffectEngine EffectEngine => new EffectEngine (new RandomGenerator (), ConfigData.LoadDefault ());
 		public static SkillEngine SkillEngine => new SkillEngine (EffectEngine);
 	
-		public static Skill TestSkill => Skill.Create (TestAction, 0, 0);
-		public static Skill TestDelayedSkill => Skill.Create (TestAction, 0, 50);
-		public static Skill TestSkillCooldown => Skill.Create (TestAction, 75, 0);
-		public static Skill DamageSkill => Skill.Create (DamageAction, 0, 0);
-		public static Skill HealSkill => Skill.Create (HealAction, 0, 0);
+		public static Skill TestSkill => Skill.Create ("Test", TestAction, 0, 0);
+		public static Skill TestDelayedSkill => Skill.Create ("Delayed", TestAction, 0, 50);
+		public static Skill TestSkillCooldown => Skill.Create ("Cooldown", TestAction, 75, 0);
+		public static Skill DamageSkill => Skill.Create ("Damage", DamageAction, 0, 0);
+		public static Skill HealSkill => Skill.Create ("Heal", HealAction, 0, 0);
 
-		public static Action TestAction => new Action ("Test", ActionType.None, 0);
-		public static Action HealAction => new Action ("Heal", ActionType.Heal, 100);
-		public static Action DamageAction => new Action ("Damage", ActionType.Damage, 100);
-		public static Action StatusEffectAction => new Action ("Freeze", ActionType.Effect, 100, "Chilled");
+		public static Action TestAction => new Action (ActionType.None, 0);
+		public static Action HealAction => new Action (ActionType.Heal, 100);
+		public static Action DamageAction => new Action (ActionType.Damage, 100);
+		public static Action StatusEffectAction => new Action (ActionType.Effect, 100, "Chilled");
 
 		public static GameState EmptyGameState
 		{

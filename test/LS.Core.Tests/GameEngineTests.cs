@@ -39,7 +39,7 @@ namespace LS.Core.Tests
 			var acted = new HashSet<long> ();
 
 			GameState state = Factory.DefaultGameState;
-			TargettedAction testAction = new TargettedAction (new Action ("Test", ActionType.None, 0), TargettingInfo.Empty);
+			TargettedAction testAction = new TargettedAction (new Action (ActionType.None, 0), TargettingInfo.Empty);
 			state = state.WithDelayedActions (DelayedAction.Create (testAction).WithCT (90).Yield ());
 			long delayedActionID = state.DelayedActions[0].ID;
 

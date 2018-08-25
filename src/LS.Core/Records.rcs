@@ -72,7 +72,6 @@ namespace LS.Core
 	[With]
 	public struct Action
 	{
-		string Name;
 		ActionType Type;
 		int Power;
 
@@ -91,6 +90,7 @@ namespace LS.Core
 	public class Skill : IIdentifiable
 	{
 		public long ID { get; }
+		string Name;
 		public Action Action;
 
 		bool Available;

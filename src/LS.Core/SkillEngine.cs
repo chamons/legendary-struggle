@@ -17,7 +17,7 @@ namespace LS.Core
 			EffectEngine = effectEngine;
 		}
 
-		Action CooldownAction = new Action ("Cooldown", ActionType.Cooldown, 0);
+		Action CooldownAction = new Action (ActionType.Cooldown, 0);
 
 		public GameState ApplyTargettedSkill (TargettedSkill s, GameState state)
 		{
