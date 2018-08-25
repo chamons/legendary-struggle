@@ -1,46 +1,10 @@
 ﻿[[BehaviorInfos]]
-Name = "Thief-Damage"
-	[[BehaviorInfos.Skills]]
-	Name = "Backstab"
-	[[BehaviorInfos.Skills]]
-	Name = "Poisoned Blade"
-	[[BehaviorInfos.Skills]]
-	Name = "Stab"
-
-
-[[BehaviorInfos]]
-Name = "Thief-Debuff"
-	[[BehaviorInfos.Skills]]
-	Name = "Poisoned Blade"
-	[[BehaviorInfos.Skills]]
-	Name = "Sap"
-	[[BehaviorInfos.Skills]]
-	Name = "Potion"
-	OverrideCondition = "PartyHealthLow"
-	[[BehaviorInfos.Skills]]
-	Name = "Backstab"
-	OverrideCondition = "EnemyHealthLow"
-	[[BehaviorInfos.Skills]]
-	Name = "Stab"
-
-[[BehaviorInfos]]
-Name = "Imp"
+Name = "Monster"
 	[[BehaviorInfos.Skills]]
 	Name = "Hurt"
-
-[[BehaviorInfos]]
-Name = "Wolf"
 	[[BehaviorInfos.Skills]]
 	Name = "Stab"
-
-[[BehaviorInfos]]
-Name = "Dark Knight"
-	[[BehaviorInfos.Skills]]
-	Name = "Stab"
-	[[BehaviorInfos.Skills]]
-	Name = "Hurt"
-	OverrideCondition = "EnemyHealthLow"
-
+	
 [[BehaviorInfos]]
 Name = "Mage"
 	[[BehaviorInfos.Skills]]

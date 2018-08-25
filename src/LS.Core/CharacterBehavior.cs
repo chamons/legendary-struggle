@@ -23,7 +23,7 @@ namespace LS.Core
 
 		public TargettedSkill Act (GameState state, ItemResolver<Character> c)
 		{
-			Behavior behavior = Behaviors [c.Item.Name];
+			Behavior behavior = Behaviors [c.Item.CharacterClass];
 			foreach (BehaviorSkill behaviorSkill in behavior.Skills.Where (x => x.OverrideCondition != GameCondition.None))
 			{
 				if (ConditionFinder.IsConditionTrue (behaviorSkill.OverrideCondition, state, c))
