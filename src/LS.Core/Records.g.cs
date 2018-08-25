@@ -36,15 +36,17 @@ namespace LS.Core
 	{
 		public long ID { get; }
 		public string Name { get; }
+		public string CharacterClass { get; }
 		public Health Health { get; }
 		public ImmutableArray<Skill> Skills { get; }
 		public ImmutableArray<StatusEffect> StatusEffects { get; }
 		public int CT { get; }
 
-		public Character (long id, string name, Health health, IEnumerable<Skill> skills, IEnumerable<StatusEffect> statusEffects, int ct = 0)
+		public Character (long id, string name, string characterClass, Health health, IEnumerable<Skill> skills, IEnumerable<StatusEffect> statusEffects, int ct = 0)
 		{
 			ID = id;
 			Name = name;
+			CharacterClass = characterClass;
 			Health = health;
 			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<Skill> ());
 			StatusEffects = ImmutableArray.CreateRange (statusEffects ?? Array.Empty<StatusEffect> ());
@@ -53,32 +55,37 @@ namespace LS.Core
 
 		public Character WithID (long id)
 		{
-			return new Character (id, Name, Health, Skills, StatusEffects, CT);
+			return new Character (id, Name, CharacterClass, Health, Skills, StatusEffects, CT);
 		}
 
 		public Character WithName (string name)
 		{
-			return new Character (ID, name, Health, Skills, StatusEffects, CT);
+			return new Character (ID, name, CharacterClass, Health, Skills, StatusEffects, CT);
+		}
+
+		public Character WithCharacterClass (string characterClass)
+		{
+			return new Character (ID, Name, characterClass, Health, Skills, StatusEffects, CT);
 		}
 
 		public Character WithHealth (Health health)
 		{
-			return new Character (ID, Name, health, Skills, StatusEffects, CT);
+			return new Character (ID, Name, CharacterClass, health, Skills, StatusEffects, CT);
 		}
 
 		public Character WithSkills (IEnumerable<Skill> skills)
 		{
-			return new Character (ID, Name, Health, skills, StatusEffects, CT);
+			return new Character (ID, Name, CharacterClass, Health, skills, StatusEffects, CT);
 		}
 
 		public Character WithStatusEffects (IEnumerable<StatusEffect> statusEffects)
 		{
-			return new Character (ID, Name, Health, Skills, statusEffects, CT);
+			return new Character (ID, Name, CharacterClass, Health, Skills, statusEffects, CT);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, Name, Health, Skills, StatusEffects, ct);
+			return new Character (ID, Name, CharacterClass, Health, Skills, StatusEffects, ct);
 		}
 
 		public bool IsAlive => Health.Current > 0;
@@ -224,19 +231,6 @@ namespace LS.Core
 					yield return e;
 				foreach (Character p in Party)
 					yield return p;
-			}
-		}
-
-		public IEnumerable <ITimeable> AllTimables
-		{
-			get
-			{
-				foreach (Character e in Enemies)
-					yield return e;
-				foreach (Character p in Party)
-					yield return p;
-				foreach (DelayedAction a in DelayedActions)
-					yield return a;
 			}
 		}
 	}

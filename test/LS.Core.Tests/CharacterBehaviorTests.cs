@@ -85,8 +85,8 @@ namespace LS.Core.Tests
 
 		static GameState CreateMultiTargetTestState(Skill[] skills)
 		{
-			Character[] party = { Character.Create ("Player", new Health (10, 10)).WithSkills (skills), Character.Create ("Player", new Health (10, 100)) };
-			Character[] enemies = { Character.Create ("Enemy", new Health (10, 10)), Character.Create ("Enemy", new Health (5, 50)) };
+			Character[] party = { Character.Create ("Player", "Player", new Health (10, 10)).WithSkills (skills), Character.Create ("Player", "Player", new Health (10, 100)) };
+			Character[] enemies = { Character.Create ("Enemy", "Enemy", new Health (10, 10)), Character.Create ("Enemy", "Enemy", new Health (5, 50)) };
 			return new GameState (0, party, enemies, null, -1);
 		}
 	}

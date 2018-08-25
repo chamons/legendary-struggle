@@ -24,6 +24,7 @@ namespace LS.Core
 	{
 		public long ID { get; }
 		string Name { get; }
+		string CharacterClass { get; }
 		public Health Health { get; }
 
 		List<Skill> Skills { get; }

@@ -45,7 +45,7 @@ namespace LS.Core.Configuration
 		{
 			var skills = info.Skills.Select (x => SkillConfig.GetSkill (x));
 
-			return Character.Create (info.Name, new Health (info.Health, info.Health)).WithSkills (skills);
+			return Character.Create (info.Name, info.CharacterClass, new Health (info.Health, info.Health)).WithSkills (skills);
 		}
 	}
 
@@ -58,6 +58,7 @@ namespace LS.Core.Configuration
 	public class CharacterInfo
 	{
 		public string Name { get; set; }
+		public string CharacterClass { get; set; }
 		public string[] Skills { get; set; }
 		public int Health { get; set; }
 	}

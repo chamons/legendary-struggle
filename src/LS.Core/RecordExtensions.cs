@@ -7,7 +7,7 @@ namespace LS.Core
 {
 	public partial class Character
 	{
-		public static Character Create (string name, Health health) => new Character (IDs.Next (), name, health, null, null); 
+		public static Character Create (string name, string characterClass, Health health) => new Character (IDs.Next (), name, characterClass, health, null, null); 
 
 		public Character WithDeltaCurrentHealth (int delta) => WithHealth (Health.WithDeltaCurrent (delta));
 		public Character WithCurrentHealth (int current) => WithHealth (Health.WithCurrent (current));
