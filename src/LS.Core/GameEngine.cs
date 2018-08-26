@@ -120,6 +120,7 @@ namespace LS.Core
 			{
 				Character invoker = CurrentState.AllCharacters.WithID (e.SourceSkill.TargetInfo.InvokerID);
 				SkillChannelEnded?.Invoke (this, new SkillChannelEventArgs (invoker, e.SourceSkill.Skill));
+				CurrentState = CurrentState.UpdateCharacter (invoker.WithCasting (null));
 			}
 			else
 			{
