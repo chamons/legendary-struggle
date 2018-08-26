@@ -16,12 +16,11 @@ namespace LS.UI.Views.Combat.Renderers
 			StatusIconLoader = new TilesetLoader ("data/tf_icon_32.png", 32);
 		}
 
-		public void Render (SKCanvas canvas, Character c, int x, int y, long frame)
+		public void Render (SKCanvas canvas, GameState state, Character c, int x, int y, long frame)
 		{
 			DrawHUD (canvas, c, x, y);
-			// HACK
-			//if (c.IsCasting)
-				//DrawCastbar (canvas, c, x, y, frame);
+			if (c.IsCasting)
+				DrawCastbar (canvas, state, c, x, y, frame);
 		}
 
 		void DrawHUD (SKCanvas canvas, Character c, int x, int y)
@@ -54,39 +53,39 @@ namespace LS.UI.Views.Combat.Renderers
 		const int CastbarHeight = 8;
 		const int CastbarLength = 60;
 
-		// HACK
-		//void DrawCastbar (SKCanvas canvas, Character c, int x, int y, long frame)
-		//{
-		//	DrawCastbarOutline (canvas, x, y);
-		//	DrawCastbarFill (canvas, c, x, y, frame);
-		//	DrawCastbarLabel (canvas, x, y, c.CastSkill.Name);
-		//}
+		void DrawCastbar (SKCanvas canvas, GameState state, Character c, int x, int y, long frame)
+		{
+			DrawCastbarOutline (canvas, x, y);
+			DrawCastbarFill (canvas, state, c, x, y);
+			DrawCastbarLabel (canvas, x, y, c.Casting.Skill.CosmeticName, state.Enemies.Contains (c));
+		}
 
-		//void DrawCastbarLabel (SKCanvas canvas, int x, int y, string name)
-		//{
-		//	const int TinyTextBackgroundOffsetX = 1;
-		//	const int TinyTextBackgroundOffsetY = 8;
-		//	const int CastbarTextOffsetX = -12;
-		//	const int CastbarTextOffsetY = 5;
+		void DrawCastbarLabel (SKCanvas canvas, int x, int y, string name, bool isEnemy)
+		{
+			const int TinyTextBackgroundOffsetX = 1;
+			const int TinyTextBackgroundOffsetY = 8;
+			const int CastbarBackgroundHeight = 12;
 
-		//	var castBarTextBackgroundRect = SKRect.Create (x + StyleInfo.CastXOffset - TinyTextBackgroundOffsetX - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY - 1 - TinyTextBackgroundOffsetY, 42, 12);
-		//	canvas.DrawRect (castBarTextBackgroundRect, Styles.TextBackground);
-		//	var castBarTextRect = new SKPoint (x + StyleInfo.CastXOffset - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY);
-		//	canvas.DrawText (name, castBarTextRect, Styles.SmallTextPaint);
-		//}
+			float castbarBackgroundWidth = Styles.SmallTextPaint.MeasureText (name) + 3;
 
-		//void DrawCastbarFill (SKCanvas canvas, Character c, int x, int y, long frame)
-		//{
-		//	int percentCast = c.CastSkill.PercentageCast (frame);
-		//	int filledLength = (int)Math.Round (((CastbarLength - 2.0) * percentCast) / 100);
-		//	var castBarFilledRect = SKRect.Create (x + StyleInfo.CastXOffset + 1, y + StyleInfo.CastYOffset + 1, filledLength, CastbarHeight - 2);
-		//	canvas.DrawRect (castBarFilledRect, CastBarInsidePaint);
-		//}
+			var castBarTextBackgroundRect = SKRect.Create (x + StyleInfo.CastTextXOffset - TinyTextBackgroundOffsetX, y + StyleInfo.CastTextYOffset - 1 - TinyTextBackgroundOffsetY, castbarBackgroundWidth, CastbarBackgroundHeight);
+			canvas.DrawRect (castBarTextBackgroundRect, Styles.TextBackground);
+			var castBarTextRect = new SKPoint (x + StyleInfo.CastTextXOffset, y + StyleInfo.CastTextYOffset);
+			canvas.DrawText (name, castBarTextRect, Styles.SmallTextPaint);
+		}
 
-		//void DrawCastbarOutline (SKCanvas canvas, int x, int y)
-		//{
-		//	var castBarOutlineRect = SKRect.Create (x + StyleInfo.CastXOffset, y + StyleInfo.CastYOffset, CastbarLength, CastbarHeight);
-		//	canvas.DrawRect (castBarOutlineRect, CastBarOutlinePaint);
-		//}
+		void DrawCastbarFill (SKCanvas canvas, GameState state, Character c, int x, int y)
+		{
+			int percentCast = c.Casting.GetPercentageCast (state.Tick);
+			int filledLength = (int)Math.Round (((CastbarLength - 2.0) * percentCast) / 100);
+			var castBarFilledRect = SKRect.Create (x + StyleInfo.CastXOffset + 1, y + StyleInfo.CastYOffset + 1, filledLength, CastbarHeight - 2);
+			canvas.DrawRect (castBarFilledRect, CastBarInsidePaint);
+		}
+
+		void DrawCastbarOutline (SKCanvas canvas, int x, int y)
+		{
+			var castBarOutlineRect = SKRect.Create (x + StyleInfo.CastXOffset, y + StyleInfo.CastYOffset, CastbarLength, CastbarHeight);
+			canvas.DrawRect (castBarOutlineRect, CastBarOutlinePaint);
+		}
 	}
 }

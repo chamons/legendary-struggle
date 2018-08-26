@@ -8,9 +8,9 @@ namespace LS.UI.Views.Combat.Renderers
 	struct CharacterStyleInfo
 	{
 		public static CharacterStyleInfo [] Styles = new CharacterStyleInfo [] {
-			new CharacterStyleInfo (26, 36, 52, 72, 60, 30, -55, 16),
-			new CharacterStyleInfo (52, 72, 52, 72, 60, 30, -55, 16),
-			new CharacterStyleInfo (122, 114, 122, 114, 21, 152, 29, 127),
+			new CharacterStyleInfo (26, 36, 52, 72, 60, 30, -55, 16, -34, 12),
+			new CharacterStyleInfo (52, 72, 52, 72, 60, 30, -55, 16, -34, 12),
+			new CharacterStyleInfo (122, 114, 122, 114, 21, 152, 29, 127, 43, 123),
 		};
 
 		public readonly int Width;
@@ -21,8 +21,10 @@ namespace LS.UI.Views.Combat.Renderers
 		public readonly int TextYOffset;
 		public readonly int CastXOffset;
 		public readonly int CastYOffset;
+		public readonly int CastTextXOffset;
+		public readonly int CastTextYOffset;
 
-		public CharacterStyleInfo (int width, int height, int renderWidth, int renderHeight, int textXOffset, int textYOffset, int castXOffset, int castYOffset)
+		public CharacterStyleInfo (int width, int height, int renderWidth, int renderHeight, int textXOffset, int textYOffset, int castXOffset, int castYOffset, int castTextXOffset, int castTextYOffset)
 		{
 			Width = width;
 			Height = height;
@@ -32,6 +34,8 @@ namespace LS.UI.Views.Combat.Renderers
 			TextYOffset = textYOffset;
 			CastXOffset = castXOffset;
 			CastYOffset = castYOffset;
+			CastTextXOffset = castTextXOffset;
+			CastTextYOffset = castTextYOffset;
 		}
 	}
 
@@ -75,10 +79,10 @@ namespace LS.UI.Views.Combat.Renderers
 			return FrameOffset [(int)((frame / FramesBetweenAnimation) % 4)];
 		}
 
-		public void Render (SKCanvas canvas, Character c, int x, int y, long frame)
+		public void Render (SKCanvas canvas, GameState state, Character c, int x, int y, long frame)
 		{
 			DrawCharacter (canvas, x, y, frame);
-			HUDRenderer.Render (canvas, c, x, y, frame);
+			HUDRenderer.Render (canvas, state, c, x, y, frame);
 		}
 
 		void DrawCharacter (SKCanvas canvas, int x, int y, long frame)

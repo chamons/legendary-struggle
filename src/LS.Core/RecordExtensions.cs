@@ -83,6 +83,16 @@ namespace LS.Core
 		public static bool operator !=(TargettingInfo left, TargettingInfo right) => !Equals (left, right);
 	}
 
+	public partial class CastingInfo
+	{
+		public int GetPercentageCast (long tick)
+		{
+			long framesRemaining = Duration - (tick - StartingTick);
+			double durationPercentage = ((double)framesRemaining / Duration);
+			return 100 - (int)Math.Round (durationPercentage * 100);
+		}
+	}
+
 	public partial class GameState
 	{
 		public Character ActiveCharacter => Party.WithID (ActivePlayerID);

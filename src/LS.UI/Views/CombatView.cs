@@ -25,9 +25,6 @@ namespace LS.UI.Views
 		{
 			LogView = new LogView (LogOffset, new Size (size.Width - (LogOffset.X * 2), 45));
 			TargetView = new TargettingView (position, size);
-
-			// TestData - Log test
-			LogView.Show ("Test Message", 90);
 		}
 
 		public void Load (string mapName)
@@ -48,7 +45,7 @@ namespace LS.UI.Views
 			foreach (Character c in currentState.AllCharacters)
 			{
 				Point renderPoint = CharacterRenderLocation.GetRenderPoint (currentState, c);
-				RenderCache [c].Render (Canvas, c, renderPoint.X, renderPoint.Y, frame);
+				RenderCache [c].Render (Canvas, currentState, c, renderPoint.X, renderPoint.Y, frame);
 			}
 
 			Canvas.DrawSurface (TargetView.Draw (currentState, frame), 0, 0);
