@@ -26,6 +26,8 @@ namespace LS.Console
 						if (number >= 0 && number < Client.CurrentState.ActiveCharacter.Skills.Length)
 						{
 							Skill s = Client.CurrentState.ActiveCharacter.Skills[number];
+							if (!s.Available)
+								continue;
 							input = ReadLine.Read ("E, T, M?");
 
 							switch (input)
@@ -55,8 +57,11 @@ namespace LS.Console
 			Character character = Client.CurrentState.ActiveCharacter;
 			StringBuilder builder = new StringBuilder ();
 			for (int i = 0; i < character.Skills.Length; ++i)
-				builder.Append ($"{i} {character.Skills[i].Name} ");
-			builder.Append (")");
+			{
+				if (character.Skills[i].Available)
+					builder.Append ($"{i} {character.Skills[i].CosmeticName} ");
+			}
+			builder.Append ("-");
 			return builder.ToString ();
 		}
 
@@ -77,18 +82,18 @@ namespace LS.Console
 
 		public void OnSkillUsed (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} used {skill.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} used {skill.CosmeticName}.");
 			PrintState ();
 		}
 
 		public void OnSkillChannelStarted (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} begun channeling {skill.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} begun channeling {skill.CosmeticName}.");
 		}
 
 		public void OnSkillChannelEnded (Character character, Skill skill)
 		{
-			System.Console.WriteLine ($"\n{character.Name} finished channeling {skill.Name}.");
+			System.Console.WriteLine ($"\n{character.Name} finished channeling {skill.CosmeticName}.");
 		}
 
 		public void OnTick (long tick)

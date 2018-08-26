@@ -90,7 +90,8 @@ namespace LS.Core
 	public class Skill : IIdentifiable
 	{
 		public long ID { get; }
-		string Name;
+		string CosmeticName;
+		string SkillName;
 		public Action Action;
 
 		bool Available;

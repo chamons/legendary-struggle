@@ -36,6 +36,11 @@ namespace LS.Core.Tests
 			SkillsUsed.Add (skill.Skill);
 			return state;
 		}
+
+		public GameState Wait (ItemResolver<Character> c, GameState state)
+		{
+			return state;
+		}
 	}
 
 	public class TestRandomGenerator : IRandomGenerator

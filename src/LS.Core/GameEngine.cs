@@ -136,11 +136,11 @@ namespace LS.Core
 
 		void ApplySkill (ItemResolver<Character> c, TargettedSkill skillToUse)
 		{
-			CurrentState = CurrentState.UpdateCharacter (Time.SpendAction (c));
-			c.Update (CurrentState);
-
 			if (skillToUse != null)
 			{
+				if (skillToUse.TargetInfo.InvokerID != c.Item.ID)
+					throw new InvalidOperationException ($"Character {c.Item.Name} ({c.Item.ID}) tried to use use {skillToUse.Skill.CosmeticName}({skillToUse.Skill.ID}) but did not set invoker correctly.");
+
 				CurrentState = SkillEngine.ApplyTargettedSkill (skillToUse, CurrentState);
 				c.Update (CurrentState);
 
@@ -148,6 +148,10 @@ namespace LS.Core
 					SkillChannelStarted?.Invoke (this, new SkillChannelEventArgs (c, skillToUse.Skill));
 				else
 					SkillUsed?.Invoke (this, new SkillUsedEventArgs (c, skillToUse.Skill));
+			}
+			else
+			{
+				CurrentState = SkillEngine.Wait (c, CurrentState);
 			}
 		}
 

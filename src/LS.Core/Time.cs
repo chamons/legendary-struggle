@@ -21,5 +21,10 @@ namespace LS.Core
 		{
 			return c.WithCT (c.CT - ActionAmount);
 		}
+
+		public static Character SpendAction (Character c, int cost)
+		{
+			return c.WithCT (c.CT - cost);
+		}
 	}
 }
