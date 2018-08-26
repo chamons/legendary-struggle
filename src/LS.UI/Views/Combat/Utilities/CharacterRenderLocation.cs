@@ -1,5 +1,5 @@
-﻿using LS.Model;
-using LS.Utilities;
+﻿using LS.Core;
+using LS.UI.Utilities;
 
 namespace LS.UI.Views.Combat.Utilities
 {
@@ -7,7 +7,7 @@ namespace LS.UI.Views.Combat.Utilities
 	{
 		const int CharacterStartingY = 180;
 		const int CharacterYDelta = 80;
-		static Point [] PlayerOffsets = new Point [] {
+		static Point [] PlayerOffsets = {
 			new Point (525, CharacterStartingY), new Point (525, CharacterStartingY + (1 * CharacterYDelta)),
 			new Point (525, CharacterStartingY + (2 * CharacterYDelta)),
 			new Point (525, CharacterStartingY + (3 * CharacterYDelta)),
@@ -15,16 +15,17 @@ namespace LS.UI.Views.Combat.Utilities
 		};
 
 		// MultipleEnemies
-		static Point [] EnemyOffsets = new Point [] {
+		static Point [] EnemyOffsets = {
 			new Point (300, 275),
 		};
 
-		public static Point GetRenderPoint (Character c)
+		public static Point GetRenderPoint (GameState state, Character c)
 		{
-			if (c.Slot < 5)
-				return PlayerOffsets [c.Slot];
+			int slot = state.GetTeammates (c).IndexOf (c);
+			if (state.Party.Contains (c))
+				return PlayerOffsets [slot];
 			else
-				return EnemyOffsets [c.Slot - 5];
+				return EnemyOffsets [slot];
 		}
 	}
 }

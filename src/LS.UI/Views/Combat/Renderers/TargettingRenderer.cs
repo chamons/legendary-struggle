@@ -1,6 +1,7 @@
-﻿using LS.Model;
-using LS.Utilities;
-using SkiaSharp;
+﻿using SkiaSharp;
+
+using LS.Core;
+using LS.UI.Utilities;
 
 namespace LS.UI.Views.Combat.Renderers
 {
@@ -37,14 +38,14 @@ namespace LS.UI.Views.Combat.Renderers
 				return new Point (43, 0);
 		}
 
-		public void Render (SKCanvas canvas, Character c, int x, int y, long frame)
+		public void Render (SKCanvas canvas, GameState state, Character c, int x, int y, long frame)
 		{
 			if (StartingFrame == long.MinValue)
 				StartingFrame = frame;
 
 			if (ShouldShow (frame))
 			{
-				Point offset = OffsetForSlot (c.Slot);
+				Point offset = OffsetForSlot (c.GetSlot (state));
 				SKRect bitmapRect = SKRect.Create (x + offset.X, y + offset.Y, 32, 32);
 				canvas.DrawBitmap (Loader.Tileset, Loader.GetRect (26), bitmapRect, Styles.AntialiasPaint);
 			}

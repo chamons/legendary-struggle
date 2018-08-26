@@ -1,12 +1,11 @@
 ﻿using System;
-using LS.Model;
-using LS.Utilities;
 using SkiaSharp;
 using LS.UI.Views.Combat.Utilities;
 using LS.UI.Views.Combat.Views;
 using LS.UI.Views.Combat.Renderers;
 using LS.UI.Utilities;
 using LS.UI.Scenes;
+using LS.Core;
 
 namespace LS.UI.Views
 {
@@ -48,7 +47,7 @@ namespace LS.UI.Views
 
 			foreach (Character c in currentState.AllCharacters)
 			{
-				Point renderPoint = CharacterRenderLocation.GetRenderPoint (c);
+				Point renderPoint = CharacterRenderLocation.GetRenderPoint (currentState, c);
 				RenderCache [c].Render (Canvas, c, renderPoint.X, renderPoint.Y, frame);
 			}
 

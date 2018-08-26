@@ -147,6 +147,7 @@ namespace LS.Core
 		List<Character> Enemies;
 		List<DelayedAction> DelayedActions;
 		long ActivePlayerID;
+		string CurrentMap;
 
 		[Mutable]
 		List<IItemResolver> ActiveResolvers;

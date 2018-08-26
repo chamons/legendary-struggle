@@ -1,9 +1,7 @@
 ﻿using System;
+using LS.Core;
 using LS.Platform;
-using LS.UI;
 using LS.UI.Scenes;
-using LS.Engine;
-using LS.Model;
 
 namespace LS.UI
 {
@@ -11,10 +9,8 @@ namespace LS.UI
 	{
 		public IGameWindow GameWindow { get; }
 		IScene CurrentScene;
-
-		ILogger Log;
-
-		GameEngine GameEngine;
+		
+		GameClient Client;
 
 		public GameController (IGameWindow gameWindow)
 		{
@@ -29,13 +25,11 @@ namespace LS.UI
 			GameWindow.OnDetailRelease += OnDetailRelease;
 		}
 
-		GameState CurrentState => GameEngine.CurrentState;
+		GameState CurrentState => Client.CurrentState;
 
 		public void Startup (IFileStorage storage)
 		{
-			GameEngine = new GameEngine (storage);
-
-			Log = Dependencies.Get<ILogger> ();
+			Client = new GameClient ();
 
 			var combatScene = new CombatScene (this);
 			combatScene.Load (CurrentState.CurrentMap);
@@ -80,7 +74,7 @@ namespace LS.UI
 
 		void OnPaint (object sender, PaintEventArgs e)
 		{
-			CurrentState.ProcessTick (GameWindow.Frame);
+			Client.Process ();
 
 			e.Surface.Canvas.Scale (GameWindow.Scale);
 			CurrentScene.HandlePaint (e.Surface, CurrentState, GameWindow.Frame);

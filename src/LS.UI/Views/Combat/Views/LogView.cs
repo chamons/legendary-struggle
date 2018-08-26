@@ -1,7 +1,7 @@
-﻿using LS.Model;
-using LS.Utilities;
+﻿using SkiaSharp;
+
 using LS.UI.Utilities;
-using SkiaSharp;
+using LS.Core;
 
 namespace LS.UI.Views.Combat.Views
 {

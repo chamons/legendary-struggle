@@ -137,5 +137,15 @@ namespace LS.Core
 			return Enemies.Contains (c.Item) ? Party : Enemies;
 		}
 
+		public ImmutableArray<Character> GetTeammates (Character c)
+		{
+			return Enemies.Contains (c) ? Enemies : Party;
+		}
+
+		public ImmutableArray<Character> GetOpponents (Character c)
+		{
+			return Enemies.Contains (c) ? Party : Enemies;
+		}
+
 	}
 }

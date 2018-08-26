@@ -1,6 +1,7 @@
 ﻿using System;
-using LS.Model;
 using SkiaSharp;
+
+using LS.Core;
 
 namespace LS.UI.Views.Combat.Renderers
 {
@@ -18,8 +19,9 @@ namespace LS.UI.Views.Combat.Renderers
 		public void Render (SKCanvas canvas, Character c, int x, int y, long frame)
 		{
 			DrawHUD (canvas, c, x, y);
-			if (c.IsCasting)
-				DrawCastbar (canvas, c, x, y, frame);
+			// HACK
+			//if (c.IsCasting)
+				//DrawCastbar (canvas, c, x, y, frame);
 		}
 
 		void DrawHUD (SKCanvas canvas, Character c, int x, int y)
@@ -34,7 +36,7 @@ namespace LS.UI.Views.Combat.Renderers
 
 			canvas.DrawRect (SKRect.Create (x + StyleInfo.TextXOffset - BackgroundOffsetX, y + StyleInfo.TextYOffset - BackgroundOffsetY, HUDWidth, HUDHeight), Styles.TextBackground);
 			canvas.DrawText (c.Name, new SKPoint (x + StyleInfo.TextXOffset, y + StyleInfo.TextYOffset), Styles.TextPaint);
-			canvas.DrawText ($"HP {c.Health.Current}/{c.Health.Maximum}", new SKPoint (x + StyleInfo.TextXOffset, LineHeight + y + StyleInfo.TextYOffset), Styles.TextPaint);
+			canvas.DrawText ($"HP {c.Health.Current}/{c.Health.Max}", new SKPoint (x + StyleInfo.TextXOffset, LineHeight + y + StyleInfo.TextYOffset), Styles.TextPaint);
 
 			// TestData - Status Icons
 			int iconOffset = 0;
@@ -52,38 +54,39 @@ namespace LS.UI.Views.Combat.Renderers
 		const int CastbarHeight = 8;
 		const int CastbarLength = 60;
 
-		void DrawCastbar (SKCanvas canvas, Character c, int x, int y, long frame)
-		{
-			DrawCastbarOutline (canvas, x, y);
-			DrawCastbarFill (canvas, c, x, y, frame);
-			DrawCastbarLabel (canvas, x, y, c.CastSkill.Name);
-		}
+		// HACK
+		//void DrawCastbar (SKCanvas canvas, Character c, int x, int y, long frame)
+		//{
+		//	DrawCastbarOutline (canvas, x, y);
+		//	DrawCastbarFill (canvas, c, x, y, frame);
+		//	DrawCastbarLabel (canvas, x, y, c.CastSkill.Name);
+		//}
 
-		void DrawCastbarLabel (SKCanvas canvas, int x, int y, string name)
-		{
-			const int TinyTextBackgroundOffsetX = 1;
-			const int TinyTextBackgroundOffsetY = 8;
-			const int CastbarTextOffsetX = -12;
-			const int CastbarTextOffsetY = 5;
+		//void DrawCastbarLabel (SKCanvas canvas, int x, int y, string name)
+		//{
+		//	const int TinyTextBackgroundOffsetX = 1;
+		//	const int TinyTextBackgroundOffsetY = 8;
+		//	const int CastbarTextOffsetX = -12;
+		//	const int CastbarTextOffsetY = 5;
 
-			var castBarTextBackgroundRect = SKRect.Create (x + StyleInfo.CastXOffset - TinyTextBackgroundOffsetX - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY - 1 - TinyTextBackgroundOffsetY, 42, 12);
-			canvas.DrawRect (castBarTextBackgroundRect, Styles.TextBackground);
-			var castBarTextRect = new SKPoint (x + StyleInfo.CastXOffset - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY);
-			canvas.DrawText (name, castBarTextRect, Styles.SmallTextPaint);
-		}
+		//	var castBarTextBackgroundRect = SKRect.Create (x + StyleInfo.CastXOffset - TinyTextBackgroundOffsetX - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY - 1 - TinyTextBackgroundOffsetY, 42, 12);
+		//	canvas.DrawRect (castBarTextBackgroundRect, Styles.TextBackground);
+		//	var castBarTextRect = new SKPoint (x + StyleInfo.CastXOffset - CastbarTextOffsetX, y + StyleInfo.CastYOffset - CastbarTextOffsetY);
+		//	canvas.DrawText (name, castBarTextRect, Styles.SmallTextPaint);
+		//}
 
-		void DrawCastbarFill (SKCanvas canvas, Character c, int x, int y, long frame)
-		{
-			int percentCast = c.CastSkill.PercentageCast (frame);
-			int filledLength = (int)Math.Round (((CastbarLength - 2.0) * percentCast) / 100);
-			var castBarFilledRect = SKRect.Create (x + StyleInfo.CastXOffset + 1, y + StyleInfo.CastYOffset + 1, filledLength, CastbarHeight - 2);
-			canvas.DrawRect (castBarFilledRect, CastBarInsidePaint);
-		}
+		//void DrawCastbarFill (SKCanvas canvas, Character c, int x, int y, long frame)
+		//{
+		//	int percentCast = c.CastSkill.PercentageCast (frame);
+		//	int filledLength = (int)Math.Round (((CastbarLength - 2.0) * percentCast) / 100);
+		//	var castBarFilledRect = SKRect.Create (x + StyleInfo.CastXOffset + 1, y + StyleInfo.CastYOffset + 1, filledLength, CastbarHeight - 2);
+		//	canvas.DrawRect (castBarFilledRect, CastBarInsidePaint);
+		//}
 
-		void DrawCastbarOutline (SKCanvas canvas, int x, int y)
-		{
-			var castBarOutlineRect = SKRect.Create (x + StyleInfo.CastXOffset, y + StyleInfo.CastYOffset, CastbarLength, CastbarHeight);
-			canvas.DrawRect (castBarOutlineRect, CastBarOutlinePaint);
-		}
+		//void DrawCastbarOutline (SKCanvas canvas, int x, int y)
+		//{
+		//	var castBarOutlineRect = SKRect.Create (x + StyleInfo.CastXOffset, y + StyleInfo.CastYOffset, CastbarLength, CastbarHeight);
+		//	canvas.DrawRect (castBarOutlineRect, CastBarOutlinePaint);
+		//}
 	}
 }

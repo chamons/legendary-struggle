@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using LS.Model;
 using LS.UI.Views.Combat.Renderers;
+
+using LS.Core;
 
 namespace LS.UI.Views.Combat.Utilities
 {
@@ -9,22 +10,15 @@ namespace LS.UI.Views.Combat.Utilities
 	{
 		Dictionary<string, CharacterRenderer> Cache = new Dictionary<string, CharacterRenderer> ();
 
-		// TestData - Should be based on name not slot
-		CharacterRenderer CreateRendererBySlot (int slot)
+		CharacterRenderer CreateRendererByClass (string characterClass)
 		{
-			switch (slot)
+			switch (characterClass)
 			{
-				case 0:
+				case "Mage":
 					return CharacterRenderer.CreateNormalSized ("data/characters/chara6.png", 21, true);
-				case 1:
-					return CharacterRenderer.CreateNormalSized ("data/characters/chara7.png", 15, true);
-				case 2:
-					return CharacterRenderer.CreateNormalSized ("data/characters/chara2.png", 12, false);
-				case 3:
-					return CharacterRenderer.CreateNormalSized ("data/characters/chara2.png", 69, false);
-				case 4:
+				case "Thief":
 					return CharacterRenderer.CreateNormalSized ("data/characters/chara2.png", 21, false);
-				case 5:
+				case "Monster":
 					return CharacterRenderer.CreateExtraLarge ("data/characters/$monster_bird1.png", 0);
 				default:
 					throw new NotImplementedException ();
@@ -33,8 +27,8 @@ namespace LS.UI.Views.Combat.Utilities
 
 		CharacterRenderer CreateRenderer (Character c)
 		{
-			CharacterRenderer renderer = CreateRendererBySlot (c.Slot);
-			Cache [c.Name] = renderer;
+			CharacterRenderer renderer = CreateRendererByClass (c.CharacterClass);
+			Cache [c.CharacterClass] = renderer;
 			return renderer;
 		}
 
@@ -42,7 +36,7 @@ namespace LS.UI.Views.Combat.Utilities
 		{
 			get
 			{
-				if (Cache.TryGetValue (c.Name, out CharacterRenderer value))
+				if (Cache.TryGetValue (c.CharacterClass, out CharacterRenderer value))
 					return value;
 				else
 					return CreateRenderer (c);

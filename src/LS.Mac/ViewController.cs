@@ -11,7 +11,7 @@ using LS.Core;
 using LS.UI;
 using LS.Utilities;
 
-namespace ArenaLS.Mac
+namespace LS.Mac
 {
 	public class CanvasView : SKCanvasView
 	{
@@ -34,8 +34,8 @@ namespace ArenaLS.Mac
 		public ViewController (IntPtr handle) : base (handle)
 		{
 		}
-
-		GameClient Client;
+		
+		LS.UI.GameController Controller;
 		PaintEventArgs PaintArgs = new PaintEventArgs ();
 		ClickEventArgs ClickArgs = new ClickEventArgs ();
 		KeyEventArgs KeyArgs = new KeyEventArgs ();
@@ -58,7 +58,7 @@ namespace ArenaLS.Mac
 		{
 			base.ViewDidLoad ();
 
-			Client = new GameController (this);
+			Controller = new LS.UI.GameController (this);
 			Controller.Startup (new FileStorage ());
 
 			Canvas = new CanvasView (View.Frame) { IgnorePixelScaling = true };

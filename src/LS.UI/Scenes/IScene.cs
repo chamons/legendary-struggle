@@ -1,5 +1,6 @@
-﻿using LS.Model;
+﻿using LS.Core;
 using SkiaSharp;
+
 namespace LS.UI.Scenes
 {
 	internal interface IScene

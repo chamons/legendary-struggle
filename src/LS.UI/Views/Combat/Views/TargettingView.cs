@@ -1,10 +1,10 @@
-﻿using LS.Model;
+﻿using SkiaSharp;
+
+using LS.Core;
 using LS.UI.Scenes;
 using LS.UI.Utilities;
 using LS.UI.Views.Combat.Renderers;
 using LS.UI.Views.Combat.Utilities;
-using LS.Utilities;
-using SkiaSharp;
 
 namespace LS.UI.Views.Combat.Views
 {
@@ -56,11 +56,16 @@ namespace LS.UI.Views.Combat.Views
 
 			if (Enabled)
 			{
-				Character character = currentState.GetCharacter (CurrentTarget);
+				Character character = null;
+				if (CurrentTarget > 4)
+					character = GameState.Enemies.ElementOrDefault (CurrentTarget - 5);
+				else
+					character = GameState.Party.ElementOrDefault (CurrentTarget);
+
 				if (character != null)
 				{
-					Point renderLocation = CharacterRenderLocation.GetRenderPoint (character);
-					TargetRender.Render (Canvas, character, renderLocation.X, renderLocation.Y, frame);
+					Point renderLocation = CharacterRenderLocation.GetRenderPoint (GameState, character);
+					TargetRender.Render (Canvas, GameState, character, renderLocation.X, renderLocation.Y, frame);
 				}
 			}
 			return Surface;
@@ -77,7 +82,7 @@ namespace LS.UI.Views.Combat.Views
 					break;
 				case TargettingType.Enemy:
 					// MultipleEnemies
-					HandleDirectionVertical (direction, 5, 5 + GameState.Enemies.Count - 1);
+					HandleDirectionVertical (direction, 5, 5 + GameState.Enemies.Length - 1);
 					break;
 				case TargettingType.Both:
 					switch (direction)
@@ -87,7 +92,7 @@ namespace LS.UI.Views.Combat.Views
 							if (CurrentTarget <= 4)
 								HandleDirectionVertical (direction, 0, 4);
 							else
-								HandleDirectionVertical (direction, 5, 5 + GameState.Enemies.Count - 1);
+								HandleDirectionVertical (direction, 5, 5 + GameState.Enemies.Length - 1);
 							break;
 						case Direction.East:
 							CurrentTarget = 0;

@@ -1,9 +1,9 @@
-﻿using LS.Model;
-using LS.Utilities;
-using LS.UI.Views;
+﻿using System;
 using SkiaSharp;
-using System;
+
 using LS.UI.Utilities;
+using LS.UI.Views;
+using LS.Core;
 
 namespace LS.UI.Scenes
 {

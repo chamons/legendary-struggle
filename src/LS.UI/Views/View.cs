@@ -1,6 +1,7 @@
-﻿using LS.Model;
-using LS.Utilities;
-using SkiaSharp;
+﻿using SkiaSharp;
+
+using LS.Core;
+using LS.UI.Utilities;
 
 namespace LS.UI.Views
 {

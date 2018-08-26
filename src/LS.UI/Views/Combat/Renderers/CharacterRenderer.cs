@@ -1,4 +1,4 @@
-﻿using LS.Model;
+﻿using LS.Core;
 using SkiaSharp;
 
 namespace LS.UI.Views.Combat.Renderers

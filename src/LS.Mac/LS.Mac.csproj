@@ -54,6 +54,18 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.Mac" />
+    <Reference Include="SkiaSharp">
+      <HintPath>..\..\packages\SkiaSharp.1.60.3\lib\Xamarin.Mac20\SkiaSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="SkiaSharp.Views.Mac">
+      <HintPath>..\..\packages\SkiaSharp.Views.1.60.3\lib\Xamarin.Mac20\SkiaSharp.Views.Mac.dll</HintPath>
+    </Reference>
+    <Reference Include="Nett">
+      <HintPath>..\..\packages\Nett.0.9.0\lib\netstandard2.0\Nett.dll</HintPath>
+    </Reference>
+    <Reference Include="TiledSharp">
+      <HintPath>..\..\packages\TiledSharp.0.15\lib\TiledSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />
@@ -75,6 +87,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
@@ -97,6 +110,11 @@
       <Project>{CBC78F8C-A1D9-4D20-A097-CDAA4CDBD6F7}</Project>
       <Name>LS.Platform</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LS.UI\LS.UI.csproj">
+      <Project>{20F53D82-1C62-4691-BCBF-9E481659F9C7}</Project>
+      <Name>LS.UI</Name>
+    </ProjectReference>
   </ItemGroup>
+  <Import Project="(MSBuildProjectDirectory)\..\..\..\data\Resources.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

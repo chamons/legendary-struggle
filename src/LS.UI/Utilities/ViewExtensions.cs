@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SkiaSharp;
-using LS.Utilities;
 
 namespace LS.UI.Utilities
 {
