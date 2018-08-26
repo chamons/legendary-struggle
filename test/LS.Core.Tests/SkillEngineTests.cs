@@ -17,6 +17,7 @@ namespace LS.Core.Tests
 			SkillEngine engine = new SkillEngine (effectEngine);
 			state = engine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
 
+			Assert.False (state.Party[0].IsCasting);
 			Assert.Single (effectEngine.ActionsUsed);
 			Assert.Equal (0, state.Party[0].CT);
 		}
@@ -36,7 +37,35 @@ namespace LS.Core.Tests
 			Assert.Empty (effectEngine.ActionsUsed);
 			Assert.Contains (state.DelayedActions, x => x.SourceSkill.Skill.CosmeticName == skill.CosmeticName);
 			Assert.Equal (50, state.DelayedActions[0].CT);
+
+			Assert.True (state.Party[0].IsCasting);
+
+			CastingInfo castingInfo = state.Party[0].Casting;
+			Assert.Equal (state.Party[0].Skills[0], castingInfo.Skill);
+			Assert.Equal (skill.Delay, castingInfo.Duration);
+			Assert.Equal (0, castingInfo.StartingTick);
+
 			Assert.Equal (-50, state.Party[0].CT);
+		}
+
+		[Fact]
+		public void SkillCasting_RemovingCasting_WhenComplete ()
+		{
+			Skill skill = Factory.TestDelayedSkill;
+			TestEffectEngine effectEngine = new TestEffectEngine ();
+
+			GameState state = Factory.DefaultGameState;
+			state = state.UpdateCharacter (state.Party[0].WithSkills (skill.Yield ()).WithCT (Time.ActionAmount));
+
+			SkillEngine skillEngine = new SkillEngine (effectEngine);
+			state = skillEngine.ApplyTargettedSkill (new TargettedSkill (skill, TargettingInfo.Self (state.Party[0])), state);
+
+			Assert.True (state.Party[0].IsCasting);
+			GameEngine engine = Factory.CreateGameEngine (state, skillEngine: skillEngine);
+			for (int i = 0; i < Time.ActionAmount; ++i)
+				engine.Process ();
+
+			Assert.False (engine.CurrentState.Party[0].IsCasting);
 		}
 
 		[Fact]

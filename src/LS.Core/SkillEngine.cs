@@ -35,9 +35,20 @@ namespace LS.Core
 			TargettedAction targetAction = s.CreateAction ();
 
 			if (s.Skill.Delay > 0)
+			{
+				state = ApplyCasting (s, state);
 				return state.AddDelayedAction (DelayedAction.Create (targetAction, Time.ActionAmount - s.Skill.Delay, s));
+			}
 			else
+			{
 				return EffectEngine.Apply (targetAction, state);
+			}
+		}
+
+		GameState ApplyCasting (TargettedSkill s, GameState state)
+		{
+			Character character = state.AllCharacters.WithID (s.TargetInfo.InvokerID);
+			return state.UpdateCharacter (character.WithCasting (new CastingInfo (s.Skill, state.Tick, s.Skill.Delay)));
 		}
 
 		GameState ApplyCTCost (TargettedSkill s, GameState state)

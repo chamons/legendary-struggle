@@ -19,6 +19,13 @@ namespace LS.Core
 		public int Max;
 	}
 
+	public class CastingInfo
+	{
+		Skill Skill;
+		long StartingTick;
+		int Duration;
+	}
+
 	[With]
 	public class Character : ITimeable
 	{
@@ -30,11 +37,17 @@ namespace LS.Core
 		List<Skill> Skills { get; }
 		List<StatusEffect> StatusEffects { get; }
 
+		[Default ("null")]
+		CastingInfo Casting;
+
 		[Default ("0")]
 		public int CT { get; }
 
 		[Inject]
 		public bool IsAlive => Health.Current > 0;
+
+		[Inject]
+		public bool IsCasting => Casting != null;
 	}
 
 	[With]
