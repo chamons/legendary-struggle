@@ -28,7 +28,7 @@ namespace LS.UI.Views.Combat.Renderers
 		{
 			const int BackgroundOffsetX = 5;
 			const int BackgroundOffsetY = 15;
-			const int HUDWidth = 85;
+			const int HUDWidth = 105;
 			const int HUDHeight = 60;
 			const int LineHeight = 18;
 			const int StatusIconHeightGap = 4;
@@ -40,7 +40,7 @@ namespace LS.UI.Views.Combat.Renderers
 
 			// TestData - Status Icons
 			int iconOffset = 0;
-			foreach (int i in new int [] { 33, 42, 148, 36 })
+			foreach (int i in new int [] { 33, 42, 148, 36, 36 })
 			{
 				var bitmapRect = SKRect.Create (x + StyleInfo.TextXOffset + (iconOffset * StatusIconWidthGap), LineHeight + StatusIconHeightGap + y + StyleInfo.TextYOffset, 16, 16);
 				canvas.DrawBitmap (StatusIconLoader.Tileset, StatusIconLoader.GetRect (i), bitmapRect, Styles.AntialiasPaint);
