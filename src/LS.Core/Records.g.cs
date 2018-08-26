@@ -32,6 +32,20 @@ namespace LS.Core
 		EnemyHealthLow
 	}
 
+	public partial class CastingInfo
+	{
+		public Skill Skill { get; }
+		public long StartingTick { get; }
+		public int Duration { get; }
+
+		public CastingInfo (Skill skill, long startingTick, int duration)
+		{
+			Skill = skill;
+			StartingTick = startingTick;
+			Duration = duration;
+		}
+	}
+
 	public partial class Character : ITimeable
 	{
 		public long ID { get; }
@@ -41,8 +55,9 @@ namespace LS.Core
 		public ImmutableArray<Skill> Skills { get; }
 		public ImmutableArray<StatusEffect> StatusEffects { get; }
 		public int CT { get; }
+		public CastingInfo Casting { get; }
 
-		public Character (long id, string name, string characterClass, Health health, IEnumerable<Skill> skills, IEnumerable<StatusEffect> statusEffects, int ct = 0)
+		public Character (long id, string name, string characterClass, Health health, IEnumerable<Skill> skills, IEnumerable<StatusEffect> statusEffects, int ct = 0, CastingInfo casting = null)
 		{
 			ID = id;
 			Name = name;
@@ -51,44 +66,52 @@ namespace LS.Core
 			Skills = ImmutableArray.CreateRange (skills ?? Array.Empty<Skill> ());
 			StatusEffects = ImmutableArray.CreateRange (statusEffects ?? Array.Empty<StatusEffect> ());
 			CT = ct;
+			Casting = casting;
 		}
 
 		public Character WithID (long id)
 		{
-			return new Character (id, Name, CharacterClass, Health, Skills, StatusEffects, CT);
+			return new Character (id, Name, CharacterClass, Health, Skills, StatusEffects, CT, Casting);
 		}
 
 		public Character WithName (string name)
 		{
-			return new Character (ID, name, CharacterClass, Health, Skills, StatusEffects, CT);
+			return new Character (ID, name, CharacterClass, Health, Skills, StatusEffects, CT, Casting);
 		}
 
 		public Character WithCharacterClass (string characterClass)
 		{
-			return new Character (ID, Name, characterClass, Health, Skills, StatusEffects, CT);
+			return new Character (ID, Name, characterClass, Health, Skills, StatusEffects, CT, Casting);
 		}
 
 		public Character WithHealth (Health health)
 		{
-			return new Character (ID, Name, CharacterClass, health, Skills, StatusEffects, CT);
+			return new Character (ID, Name, CharacterClass, health, Skills, StatusEffects, CT, Casting);
 		}
 
 		public Character WithSkills (IEnumerable<Skill> skills)
 		{
-			return new Character (ID, Name, CharacterClass, Health, skills, StatusEffects, CT);
+			return new Character (ID, Name, CharacterClass, Health, skills, StatusEffects, CT, Casting);
 		}
 
 		public Character WithStatusEffects (IEnumerable<StatusEffect> statusEffects)
 		{
-			return new Character (ID, Name, CharacterClass, Health, Skills, statusEffects, CT);
+			return new Character (ID, Name, CharacterClass, Health, Skills, statusEffects, CT, Casting);
 		}
 
 		public Character WithCT (int ct)
 		{
-			return new Character (ID, Name, CharacterClass, Health, Skills, StatusEffects, ct);
+			return new Character (ID, Name, CharacterClass, Health, Skills, StatusEffects, ct, Casting);
+		}
+
+		public Character WithCasting (CastingInfo casting)
+		{
+			return new Character (ID, Name, CharacterClass, Health, Skills, StatusEffects, CT, casting);
 		}
 
 		public bool IsAlive => Health.Current > 0;
+
+		public bool IsCasting => Casting != null;
 	}
 
 	public partial class Skill : IIdentifiable
