@@ -21,6 +21,15 @@ namespace LS.UI.Views
 			IsAntialias = true,
 			IsAutohinted = true,
 			StrokeWidth = 3
+		}; 
+
+		public static SKPaint DarkTextPaint = new SKPaint ()
+		{
+			TextSize = 14,
+			Color = new SKColor (128, 128, 128),
+			IsAntialias = true,
+			IsAutohinted = true,
+			StrokeWidth = 3
 		};
 
 		public static SKPaint SmallTextPaint = new SKPaint ()
@@ -34,6 +43,7 @@ namespace LS.UI.Views
 
 		public static readonly SKPaint TextBackground = new SKPaint () { Color = SKColors.Gray.WithAlpha (160) };
 		public static readonly SKPaint TextBackgroundDark = new SKPaint () { Color = SKColors.DarkGray.WithAlpha (160) };
+		public static readonly SKPaint SkillSelectionBackground = new SKPaint () { Color = SKColors.MidnightBlue.WithAlpha (180) };
 
 		public static readonly SKPaint LogBorder = new SKPaint () { IsStroke = true, StrokeWidth = 8, Color = SKColors.LightGray };
 		public static readonly SKPaint LogFill = new SKPaint () { Style = SKPaintStyle.Fill, Color = SKColors.CornflowerBlue.WithAlpha (220),  };

@@ -9,7 +9,16 @@ using LS.Core;
 
 namespace LS.UI.Views
 {
-	class CombatView : View
+	interface ITargettingSelection
+	{
+		void EnableTargetting (TargettingType type);
+		void DisableTargetting ();
+
+		bool TargettingEnabled { get; }
+		int CurrentTarget { get; }
+	}
+
+	class CombatView : View, ITargettingSelection
 	{
 		CharacterRenderCache RenderCache = new CharacterRenderCache ();
 
@@ -17,14 +26,20 @@ namespace LS.UI.Views
 		string MapName;
 
 		readonly Point LogOffset = new Point (40, 0);
+		Point SkillSelectionOffset;
+		const int SkillSelectionBottomMargin = 20;
+		readonly Size SkillSelectionSize = new Size (350, 200);
 
 		LogView LogView;
 		TargettingView TargetView;
+		SkillSelectionView SkillSelectionView;
 
-		public CombatView (Point position, Size size) : base (position, size)
+		public CombatView (Point position, Size size, IProcessUserAction processAction) : base (position, size)
 		{
 			LogView = new LogView (LogOffset, new Size (size.Width - (LogOffset.X * 2), 45));
 			TargetView = new TargettingView (position, size);
+			SkillSelectionOffset = new Point ((size.Width / 2) - (SkillSelectionSize.Width / 2), size.Height - SkillSelectionSize.Height - SkillSelectionBottomMargin);
+			SkillSelectionView = new SkillSelectionView (SkillSelectionOffset, SkillSelectionSize, this, processAction);
 		}
 
 		public void Load (string mapName)
@@ -51,6 +66,11 @@ namespace LS.UI.Views
 			Canvas.DrawSurface (TargetView.Draw (currentState, frame), 0, 0);
 			Canvas.DrawSurface (LogView.Draw (currentState, frame), LogOffset.X, LogOffset.Y);
 
+			// We must do this from outside since DrawSurface doesn't do transparency the way we need
+			if (SkillSelectionView.IsEnabled (currentState))
+				Canvas.DrawRect (SkillSelectionView.ScreenRect, Styles.SkillSelectionBackground);
+			Canvas.DrawSurface (SkillSelectionView.Draw (currentState, frame), SkillSelectionOffset.X, SkillSelectionOffset.Y);
+
 			return Surface;
 		}
 
@@ -72,15 +92,24 @@ namespace LS.UI.Views
 			Background.Draw (Canvas, backgroundOffset.X, backgroundOffset.Y, null);
 		}
 
-		public void HandleDirection (Direction direction) => TargetView.HandleDirection (direction);
 		public void EnableTargetting (TargettingType type) => TargetView.EnableTargetting (type);
 		public void DisableTargetting () => TargetView.DisableTargetting ();
-
+		public bool TargettingEnabled => TargetView.Enabled;
 		public int CurrentTarget => TargetView.CurrentTarget;
 
 		public override HitTestResults HitTest (SKPointI point)
 		{
 			return null;
+		}
+
+		public void HandleKeyDown (string character)
+		{
+			bool handled = false;
+			if (TargettingEnabled)
+				handled = TargetView.HandleKeyDown (character);
+
+			if (!handled)
+				SkillSelectionView.HandleKeyDown (character);
 		}
 	}
 }

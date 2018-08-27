@@ -5,7 +5,12 @@ using LS.UI.Scenes;
 
 namespace LS.UI
 {
-	public class GameController
+	interface IProcessUserAction
+	{
+		void ProcessAction (int skillIndex, long targetID);
+	}
+
+	public class GameController : IProcessUserAction
 	{
 		public IGameWindow GameWindow { get; }
 		IScene CurrentScene;
@@ -79,5 +84,7 @@ namespace LS.UI
 			e.Surface.Canvas.Scale (GameWindow.Scale);
 			CurrentScene.HandlePaint (e.Surface, CurrentState, GameWindow.Frame);
 		}
+
+		public void ProcessAction (int skillIndex, long targetID) => Client.ProcessAction (skillIndex, targetID);
 	}
 }

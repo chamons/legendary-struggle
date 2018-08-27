@@ -11,7 +11,7 @@ namespace LS.UI.Views.Combat.Views
 	class TargettingView : View
 	{
 		TargettingRenderer TargetRender;
-		bool Enabled { get; set; }
+		public bool Enabled { get; private set; }
 		public int CurrentTarget { get; private set; }
 		GameState GameState;
 
@@ -71,14 +71,14 @@ namespace LS.UI.Views.Combat.Views
 			return Surface;
 		}
 
-		public void HandleDirection (Direction direction)
+		void HandleDirection (Direction direction)
 		{
 			TargetRender.Reset ();
 
 			switch (Type)
 			{
 				case TargettingType.Player:
-					HandleDirectionVertical (direction, 0, 4);
+					HandleDirectionVertical (direction, 0, GameState.Party.Length - 1);
 					break;
 				case TargettingType.Enemy:
 					// MultipleEnemies
@@ -90,7 +90,7 @@ namespace LS.UI.Views.Combat.Views
 						case Direction.North:
 						case Direction.South:
 							if (CurrentTarget <= 4)
-								HandleDirectionVertical (direction, 0, 4);
+								HandleDirectionVertical (direction, 0, GameState.Party.Length - 1);
 							else
 								HandleDirectionVertical (direction, 5, 5 + GameState.Enemies.Length - 1);
 							break;
@@ -106,7 +106,7 @@ namespace LS.UI.Views.Combat.Views
 			}
 		}
 
-		private void HandleDirectionVertical (Direction direction, int min, int max)
+		void HandleDirectionVertical (Direction direction, int min, int max)
 		{
 			switch (direction)
 			{
@@ -126,6 +126,26 @@ namespace LS.UI.Views.Combat.Views
 		public override HitTestResults HitTest (SKPointI point)
 		{
 			return null;
+		}
+
+		public bool HandleKeyDown (string character)
+		{
+			switch (character)
+			{
+				case "Up":
+					HandleDirection (Direction.North);
+					return true;
+				case "Down":
+					HandleDirection (Direction.South);
+					return true;
+				case "Left":
+					HandleDirection (Direction.West);
+					return true;
+				case "Right":
+					HandleDirection (Direction.East);
+					return true;
+			}
+			return false;
 		}
 	}
 }

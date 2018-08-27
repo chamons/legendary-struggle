@@ -13,5 +13,13 @@ namespace LS.UI.Utilities
 			else
 				return slot + 5;
 		}
+
+		public static Character GetCharacterFromSlot (this GameState state, int slot)
+		{
+			if (slot < 5)
+				return state.Party [slot];
+			else
+				return state.Enemies [slot - 5];
+		}
 	}
 }
