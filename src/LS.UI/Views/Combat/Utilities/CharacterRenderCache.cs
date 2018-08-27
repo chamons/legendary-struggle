@@ -18,8 +18,12 @@ namespace LS.UI.Views.Combat.Utilities
 					return CharacterRenderer.CreateNormalSized ("data/characters/chara6.png", 21, true);
 				case "Thief":
 					return CharacterRenderer.CreateNormalSized ("data/characters/chara2.png", 21, false);
-				case "Monster":
+				case "Monster-Imp":
 					return CharacterRenderer.CreateExtraLargeAndTall ("data/characters/elemental.png", 3);
+				case "Monster-Bear":
+					return CharacterRenderer.CreateSquare ("data/animals/animals5.png", 75);
+				case "Monster-Dark Knight":
+					return CharacterRenderer.CreateFourByThree ("data/characters/$monster_dknight2.png", 6);
 				default:
 					throw new NotImplementedException ();
 			}
@@ -27,8 +31,9 @@ namespace LS.UI.Views.Combat.Utilities
 
 		CharacterRenderer CreateRenderer (Character c)
 		{
-			CharacterRenderer renderer = CreateRendererByClass (c.CharacterClass);
-			Cache [c.CharacterClass] = renderer;
+			string key = GetKey (c);
+			CharacterRenderer renderer = CreateRendererByClass (key);
+			Cache [key] = renderer;
 			return renderer;
 		}
 
@@ -36,11 +41,13 @@ namespace LS.UI.Views.Combat.Utilities
 		{
 			get
 			{
-				if (Cache.TryGetValue (c.CharacterClass, out CharacterRenderer value))
+				if (Cache.TryGetValue (GetKey (c), out CharacterRenderer value))
 					return value;
 				else
 					return CreateRenderer (c);
 			}
 		}
+
+		string GetKey (Character c) => c.CharacterClass == "Monster" ? c.CharacterClass + "-" + c.Name : c.CharacterClass;
 	}
 }

@@ -161,7 +161,7 @@ namespace LS.Core
 			state = state.WithEnemies (null);
 			state = state.WithDelayedActions (null);
 			foreach (Character c in state.Party)
-				state = state.UpdateCharacter (c.WithCT (0).WithHealth (c.Health.WithFull ()).WithStatusEffects (null).WithResetSkills ());
+				state = state.UpdateCharacter (c.WithCT (0).WithHealth (c.Health.WithFull ()).WithStatusEffects (null).WithCasting(null).WithResetSkills ());
 			return state;
 		}
 	}

@@ -3,6 +3,21 @@
     <BundleResource Include="..\..\data\images\characters\animals1.png">
       <Link>data\characters\animals1.png</Link>
     </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals2.png">
+      <Link>data\animals\animals2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals2.png">
+      <Link>data\animals\animals2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals3.png">
+      <Link>data\animals\animals3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals4.png">
+      <Link>data\animals\animals4.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals5.png">
+      <Link>data\animals\animals5.png</Link>
+    </BundleResource>
     <BundleResource Include="..\..\data\images\characters\bonus1.png">
       <Link>data\characters\bonus1.png</Link>
     </BundleResource>

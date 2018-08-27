@@ -82,6 +82,7 @@ namespace LS.UI.Views.Combat.Views
 
 						Targetting.DisableTargetting ();
 						ProcessAction.ProcessAction (Selected, targetID);
+						Selected = 0;
 					}
 					else
 					{
