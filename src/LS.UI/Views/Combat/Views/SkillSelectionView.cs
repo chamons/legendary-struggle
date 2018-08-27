@@ -58,6 +58,9 @@ namespace LS.UI.Views.Combat.Views
 
 		public void HandleKeyDown (string character)
 		{
+			if (!IsEnabled (State))
+				return;
+
 			switch (character)
 			{
 				case "Up":
