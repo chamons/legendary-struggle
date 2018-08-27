@@ -28,7 +28,7 @@ namespace LS.UI.Views.Combat.Renderers
 			const int BackgroundOffsetX = 5;
 			const int BackgroundOffsetY = 15;
 			const int HUDWidth = 105;
-			const int HUDHeight = 60;
+			int HUDHeight = c.StatusEffects.Length > 0 ? 60 : 40;
 			const int LineHeight = 18;
 			const int StatusIconHeightGap = 4;
 			const int StatusIconWidthGap = 20;
@@ -37,14 +37,18 @@ namespace LS.UI.Views.Combat.Renderers
 			canvas.DrawText (c.Name, new SKPoint (x + StyleInfo.TextXOffset, y + StyleInfo.TextYOffset), Styles.TextPaint);
 			canvas.DrawText ($"HP {c.Health.Current}/{c.Health.Max}", new SKPoint (x + StyleInfo.TextXOffset, LineHeight + y + StyleInfo.TextYOffset), Styles.TextPaint);
 
-			// TestData - Status Icons
 			int iconOffset = 0;
-			foreach (int i in new int [] { 33, 42, 148, 36, 36 })
+			foreach (StatusEffect effect in c.StatusEffects)
 			{
 				var bitmapRect = SKRect.Create (x + StyleInfo.TextXOffset + (iconOffset * StatusIconWidthGap), LineHeight + StatusIconHeightGap + y + StyleInfo.TextYOffset, 16, 16);
-				canvas.DrawBitmap (StatusIconLoader.Tileset, StatusIconLoader.GetRect (i), bitmapRect, Styles.AntialiasPaint);
+				canvas.DrawBitmap (StatusIconLoader.Tileset, StatusIconLoader.GetRect (GetStatusEffectNumber (effect)), bitmapRect, Styles.AntialiasPaint);
 				iconOffset++;
 			}
+		}
+
+		int GetStatusEffectNumber (StatusEffect effect)
+		{
+			return 33;
 		}
 
 		readonly SKPaint CastBarOutlinePaint = new SKPaint () { StrokeWidth = 2, Color = new SKColor (238, 238, 238), IsStroke = true };
