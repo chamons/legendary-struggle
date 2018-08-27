@@ -19,7 +19,7 @@ namespace LS.UI.Views.Combat.Utilities
 				case "Thief":
 					return CharacterRenderer.CreateNormalSized ("data/characters/chara2.png", 21, false);
 				case "Monster":
-					return CharacterRenderer.CreateExtraLarge ("data/characters/$monster_bird1.png", 0);
+					return CharacterRenderer.CreateExtraLargeAndTall ("data/characters/elemental.png", 3);
 				default:
 					throw new NotImplementedException ();
 			}

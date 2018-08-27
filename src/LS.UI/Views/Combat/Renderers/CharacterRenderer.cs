@@ -3,18 +3,21 @@ using SkiaSharp;
 
 namespace LS.UI.Views.Combat.Renderers
 {
-	enum CharacterStyle { Normal, Double, ExtraLarge }
+	enum CharacterStyle { Normal, Double, ExtraLarge, ExtraLargeAndTall }
 
 	struct CharacterStyleInfo
 	{
 		public static CharacterStyleInfo [] Styles = new CharacterStyleInfo [] {
-			new CharacterStyleInfo (26, 36, 52, 72, 60, 30, -55, 16, -34, 12),
-			new CharacterStyleInfo (52, 72, 52, 72, 60, 30, -55, 16, -34, 12),
-			new CharacterStyleInfo (122, 114, 122, 114, 21, 152, 29, 127, 43, 123),
+			new CharacterStyleInfo (26, 36, 0, 0, 52, 72, 60, 30, -55, 26, -34, 22),
+			new CharacterStyleInfo (52, 72, 0, 0, 52, 72, 60, 30, -55, 26, -34, 22),
+			new CharacterStyleInfo (122, 114, 0, 0, 122, 114, 21, 152, 29, 127, 43, 123),
+			new CharacterStyleInfo (120, 160, 10, -20, 120, 160, 21, 152, 39, 127, 53, 123)
 		};
 
 		public readonly int Width;
 		public readonly int Height;
+		public readonly int RenderXOffset;
+		public readonly int RenderYOffset;
 		public readonly int RenderWidth;
 		public readonly int RenderHeight;
 		public readonly int TextXOffset;
@@ -24,10 +27,12 @@ namespace LS.UI.Views.Combat.Renderers
 		public readonly int CastTextXOffset;
 		public readonly int CastTextYOffset;
 
-		public CharacterStyleInfo (int width, int height, int renderWidth, int renderHeight, int textXOffset, int textYOffset, int castXOffset, int castYOffset, int castTextXOffset, int castTextYOffset)
+		public CharacterStyleInfo (int width, int height, int renderXOffset, int renderYOffset, int renderWidth, int renderHeight, int textXOffset, int textYOffset, int castXOffset, int castYOffset, int castTextXOffset, int castTextYOffset)
 		{
 			Width = width;
 			Height = height;
+			RenderXOffset = renderXOffset;
+			RenderYOffset = renderYOffset;
 			RenderWidth = renderWidth;
 			RenderHeight = renderHeight;
 			TextXOffset = textXOffset;
@@ -72,6 +77,11 @@ namespace LS.UI.Views.Combat.Renderers
 			return Create (path, startingID, CharacterStyleInfo.Styles [(int)CharacterStyle.ExtraLarge]);
 		}
 
+		public static CharacterRenderer CreateExtraLargeAndTall (string path, int startingID)
+		{
+			return Create (path, startingID, CharacterStyleInfo.Styles[(int)CharacterStyle.ExtraLargeAndTall]);
+		}
+
 		readonly int [] FrameOffset = new int [] { 1, 0, 1, 2 };
 		int CalculateAnimationOffset (long frame)
 		{
@@ -88,7 +98,7 @@ namespace LS.UI.Views.Combat.Renderers
 		void DrawCharacter (SKCanvas canvas, int x, int y, long frame)
 		{
 			var tilesetRect = CharacterLoader.GetRect (StartingID + CalculateAnimationOffset (frame));
-			canvas.DrawBitmap (CharacterLoader.Tileset, tilesetRect, SKRect.Create (x, y, StyleInfo.RenderWidth, StyleInfo.RenderHeight));
+			canvas.DrawBitmap (CharacterLoader.Tileset, tilesetRect, SKRect.Create (x + StyleInfo.RenderXOffset, y + StyleInfo.RenderYOffset, StyleInfo.RenderWidth, StyleInfo.RenderHeight));
 		}
 	}
 }
