@@ -72,9 +72,14 @@ namespace LS.UI.Views.Combat.Renderers
 
 			float castbarBackgroundWidth = Styles.SmallTextPaint.MeasureText (name) + 3;
 
-			var castBarTextBackgroundRect = SKRect.Create (x + StyleInfo.CastTextXOffset - TinyTextBackgroundOffsetX, y + StyleInfo.CastTextYOffset - 1 - TinyTextBackgroundOffsetY, castbarBackgroundWidth, CastbarBackgroundHeight);
+			float offsetX = StyleInfo.CastTextXOffset;
+			if (x + StyleInfo.CastTextXOffset + castbarBackgroundWidth > x + StyleInfo.CastXOffset + CastbarLength)
+				offsetX = StyleInfo.CastXOffset;
+
+			var castBarTextBackgroundRect = SKRect.Create (x + offsetX - TinyTextBackgroundOffsetX, y + StyleInfo.CastTextYOffset - 1 - TinyTextBackgroundOffsetY, castbarBackgroundWidth, CastbarBackgroundHeight);
 			canvas.DrawRect (castBarTextBackgroundRect, Styles.TextBackground);
-			var castBarTextRect = new SKPoint (x + StyleInfo.CastTextXOffset, y + StyleInfo.CastTextYOffset);
+
+			var castBarTextRect = new SKPoint (x + offsetX, y + StyleInfo.CastTextYOffset);
 			canvas.DrawText (name, castBarTextRect, Styles.SmallTextPaint);
 		}
 
