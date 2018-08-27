@@ -224,40 +224,47 @@ namespace LS.Core
 		public ImmutableArray<Character> Enemies { get; }
 		public ImmutableArray<DelayedAction> DelayedActions { get; }
 		public long ActivePlayerID { get; }
+		public string CurrentMap { get; }
 		List<IItemResolver> ActiveResolvers;
 
-		public GameState (long tick, IEnumerable<Character> party, IEnumerable<Character> enemies, IEnumerable<DelayedAction> delayedActions, long activePlayerID)
+		public GameState (long tick, IEnumerable<Character> party, IEnumerable<Character> enemies, IEnumerable<DelayedAction> delayedActions, long activePlayerID, string currentMap)
 		{
 			Tick = tick;
 			Party = ImmutableArray.CreateRange (party ?? Array.Empty<Character> ());
 			Enemies = ImmutableArray.CreateRange (enemies ?? Array.Empty<Character> ());
 			DelayedActions = ImmutableArray.CreateRange (delayedActions ?? Array.Empty<DelayedAction> ());
 			ActivePlayerID = activePlayerID;
+			CurrentMap = currentMap;
 		}
 
 		public GameState WithTick (long tick)
 		{
-			return new GameState (tick, Party, Enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (tick, Party, Enemies, DelayedActions, ActivePlayerID, CurrentMap) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithParty (IEnumerable<Character> party)
 		{
-			return new GameState (Tick, party, Enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, party, Enemies, DelayedActions, ActivePlayerID, CurrentMap) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithEnemies (IEnumerable<Character> enemies)
 		{
-			return new GameState (Tick, Party, enemies, DelayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, Party, enemies, DelayedActions, ActivePlayerID, CurrentMap) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithDelayedActions (IEnumerable<DelayedAction> delayedActions)
 		{
-			return new GameState (Tick, Party, Enemies, delayedActions, ActivePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, Party, Enemies, delayedActions, ActivePlayerID, CurrentMap) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public GameState WithActivePlayerID (long activePlayerID)
 		{
-			return new GameState (Tick, Party, Enemies, DelayedActions, activePlayerID) { ActiveResolvers = this.ActiveResolvers };
+			return new GameState (Tick, Party, Enemies, DelayedActions, activePlayerID, CurrentMap) { ActiveResolvers = this.ActiveResolvers };
+		}
+
+		public GameState WithCurrentMap (string currentMap)
+		{
+			return new GameState (Tick, Party, Enemies, DelayedActions, ActivePlayerID, currentMap) { ActiveResolvers = this.ActiveResolvers };
 		}
 
 		public IEnumerable <Character> AllCharacters

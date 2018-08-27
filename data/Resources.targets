@@ -1,0 +1,187 @@
+<Project>
+<ItemGroup>
+    <BundleResource Include="..\..\data\images\characters\animals1.png">
+      <Link>data\characters\animals1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals2.png">
+      <Link>data\animals\animals2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals2.png">
+      <Link>data\animals\animals2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals3.png">
+      <Link>data\animals\animals3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals4.png">
+      <Link>data\animals\animals4.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\animals\animals5.png">
+      <Link>data\animals\animals5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\bonus1.png">
+      <Link>data\characters\bonus1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\chara2.png">
+      <Link>data\characters\chara2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\chara3.png">
+      <Link>data\characters\chara3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\chara4.png">
+      <Link>data\characters\chara4.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\chara5.png">
+      <Link>data\characters\chara5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\military1.png">
+      <Link>data\characters\military1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\military2.png">
+      <Link>data\characters\military2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\military3.png">
+      <Link>data\characters\military3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\npc1.png">
+      <Link>data\characters\npc1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\npc2.png">
+      <Link>data\characters\npc2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\npc3.png">
+      <Link>data\characters\npc3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\characters\npc4.png">
+      <Link>data\characters\npc4.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\dwarfelf\dwarf1.png">
+      <Link>data\characters\dwarf1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\dwarfelf\dwarf2.png">
+      <Link>data\characters\dwarf2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\dwarfelf\elf1.png">
+      <Link>data\characters\elf1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\dwarfelf\elf2.png">
+      <Link>data\characters\elf2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\farmform\tf_icon_32.png">
+      <Link>data\tf_icon_32.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_bird1.png">
+      <Link>data\characters\%24monster_bird1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_bird2.png">
+      <Link>data\characters\%24monster_bird2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_bird3.png">
+      <Link>data\characters\%24monster_bird3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_boar.png">
+      <Link>data\characters\%24monster_boar.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_cacto.png">
+      <Link>data\characters\%24monster_cacto.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_dknight1.png">
+      <Link>data\characters\%24monster_dknight1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_dknight2.png">
+      <Link>data\characters\%24monster_dknight2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_elk.png">
+      <Link>data\characters\%24monster_elk.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_golem1.png">
+      <Link>data\characters\%24monster_golem1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_golem2.png">
+      <Link>data\characters\%24monster_golem2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_lich.png">
+      <Link>data\characters\%24monster_lich.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_lizardman1.png">
+      <Link>data\characters\%24monster_lizardman1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_lizardman2.png">
+      <Link>data\characters\%24monster_lizardman2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_minotaur.png">
+      <Link>data\characters\%24monster_minotaur.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_phoenix.png">
+      <Link>data\characters\%24monster_phoenix.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_raptor1.png">
+      <Link>data\characters\%24monster_raptor1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_raptor2.png">
+      <Link>data\characters\%24monster_raptor2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_treant.png">
+      <Link>data\characters\%24monster_treant.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_wolf1.png">
+      <Link>data\characters\%24monster_wolf1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\%24monster_wolf2.png">
+      <Link>data\characters\%24monster_wolf2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\chara6.png">
+      <Link>data\characters\chara6.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\chara7.png">
+      <Link>data\characters\chara7.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\chara8.png">
+      <Link>data\characters\chara8.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\elemental.png">
+      <Link>data\characters\elemental.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\monster1.png">
+      <Link>data\characters\monster1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\monster2.png">
+      <Link>data\characters\monster2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\monster3.png">
+      <Link>data\characters\monster3.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\monster4.png">
+      <Link>data\characters\monster4.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\mount1.png">
+      <Link>data\characters\mount1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\mount2.png">
+      <Link>data\characters\mount2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\npc5.png">
+      <Link>data\characters\npc5.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\npc6.png">
+      <Link>data\characters\npc6.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\orc1.png">
+      <Link>data\characters\orc1.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\orc2.png">
+      <Link>data\characters\orc2.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\images\monsters\wizard.png">
+      <Link>data\characters\wizard.png</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\maps\beach\BeachMap.tmx">
+      <Link>data\maps\BeachMap.tmx</Link>
+    </BundleResource>
+    <BundleResource Include="..\..\data\maps\beach\beach_tileset.tsx">
+      <Link>data\maps\beach_tileset.tsx</Link>
+      </BundleResource>
+    <BundleResource Include="..\..\data\images\beach\beach_tileset.png">
+      <Link>data\maps\beach_tileset.png</Link>
+    </BundleResource>
+  </ItemGroup>
+</Project>

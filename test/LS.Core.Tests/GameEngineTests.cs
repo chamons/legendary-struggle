@@ -134,7 +134,7 @@ namespace LS.Core.Tests
 		public void ActivePlayerDoesNotTakeAutomatedAction_WhenCTsAreSynced ()
 		{
 			Character [] party = { Factory.Player, Factory.Player };
-			GameState state = new GameState (0, party, null, null, party[0].ID);
+			GameState state = new GameState (0, party, null, null, party[0].ID, "");
 
 			TestCharacterBehavior behavior = new TestCharacterBehavior ();
 
@@ -150,7 +150,7 @@ namespace LS.Core.Tests
 		public void DeadCharacters_DontTakeActionsOrCT()
 		{
 			Character[] party = { Factory.Player, Factory.Player.WithCurrentHealth (0) };
-			GameState state = new GameState (0, party, null, null, -1);
+			GameState state = new GameState (0, party, null, null, -1, "");
 
 			TestCharacterBehavior behavior = new TestCharacterBehavior ();
 

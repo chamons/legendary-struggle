@@ -25,5 +25,10 @@ namespace LS.Core
 		{
 			return array.Replace (array.WithID (item.ID), item);
 		}
+
+		public static T ElementOrDefault<T> (this ImmutableArray<T> array, int index) where T : class
+		{
+			return (index >= 0 && index < array.Length) ? array[index] : null;
+		}
 	}
 }

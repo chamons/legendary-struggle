@@ -14,6 +14,7 @@ Health = 800
 
 [[Battles]]
 Name = "Summoning Circle"
+MapName = "BeachMap"
 
 	[[Battles.Characters]]
 	Name = "Imp"
@@ -23,6 +24,7 @@ Name = "Summoning Circle"
 
 [[Battles]]
 Name = "Forest Ambust"
+MapName = "BeachMap"
 
 	[[Battles.Characters]]
 	Name = "Wolf"
@@ -31,7 +33,8 @@ Name = "Forest Ambust"
 	Health = 2400
 
 [[Battles]]
-Name = "Ancient Bridge" 
+Name = "Ancient Bridge"
+MapName = "BeachMap"
 
 	[[Battles.Characters]]
 	Name = "Dark Knight"

@@ -31,7 +31,7 @@ namespace LS.Core.Configuration
 		public GameState CreateInitialBattle ()
 		{
 			var party = Party.Select (x => Create (x)).ToList ();
-			var state = new GameState (0, party, null, null, party.First ().ID);
+			var state = new GameState (0, party, null, null, party.First ().ID, null);
 			return LoadBattle (state, 0);
 		}
 
@@ -39,7 +39,7 @@ namespace LS.Core.Configuration
 		{
 			state = GameEngine.Reset (state);
 			var enemies = Battles[index].Characters.Select (x => Create (x));
-			return state.WithEnemies (enemies);
+			return state.WithEnemies (enemies).WithCurrentMap (Battles[index].MapName);
 		}
 
 		Character Create (CharacterInfo info)
@@ -71,6 +71,7 @@ namespace LS.Core.Configuration
 	public class BattleInfo
 	{
 		public string Name { get; set; }
+		public string MapName { get; set; }
 		public CharacterInfo[] Characters { get; set; }
 	}
 
