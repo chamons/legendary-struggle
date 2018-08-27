@@ -9,7 +9,7 @@ namespace LS.UI.Scenes
 {
 	enum TargettingType { Player, Enemy, Both }
 
-	class CombatScene : IScene
+	class CombatScene : IScene, IGameClientDelegate
 	{
 		GameController Controller;
 		CombatView CombatView;
@@ -59,6 +59,32 @@ namespace LS.UI.Scenes
 		public void HandleKeyDown (string character)
 		{
 			CombatView.HandleKeyDown (character);
+		}
+
+		public void OnDelayedAction (DelayedAction action)
+		{
+		}
+
+		public void OnSkillUsed (Character character, Skill skill)
+		{
+			CombatView.ShowSkill (character.Name, skill.CosmeticName);
+		}
+
+		public void OnSkillChannelStarted (Character character, Skill skill)
+		{
+		}
+
+		public void OnSkillChannelEnded (Character character, Skill skill)
+		{
+			CombatView.ShowSkill (character.Name, skill.CosmeticName);
+		}
+
+		public void OnTick (long tick)
+		{
+		}
+
+		public void OnNewLevel (int level)
+		{
 		}
 	}
 }

@@ -111,5 +111,10 @@ namespace LS.UI.Views
 			if (!handled)
 				SkillSelectionView.HandleKeyDown (character);
 		}
+
+		public void ShowSkill (string character, string name)
+		{
+			LogView.Show ($"{character} - {name}", 45);
+		}
 	}
 }

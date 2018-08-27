@@ -37,6 +37,8 @@ namespace LS.UI
 			Client = new GameClient ();
 
 			var combatScene = new CombatScene (this);
+			Client.Delegate = combatScene;
+
 			combatScene.Load (CurrentState.CurrentMap);
 			CurrentScene = combatScene;
 
