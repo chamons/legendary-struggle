@@ -16,7 +16,7 @@ namespace LS.Utilities
 #if __UNIFIED__
 				string savedGamePath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), "Library/Application Support/");
 #else
-				savedGamePath = System.Environment.ExpandEnvironmentVariables ("%USERPROFILE%\\Saved Games");
+				string savedGamePath = System.Environment.ExpandEnvironmentVariables ("%USERPROFILE%\\Saved Games");
 #endif
 				return Path.Combine (savedGamePath, FolderName, "LS.sav");
 			}
