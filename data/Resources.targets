@@ -184,4 +184,9 @@
       <Link>data\maps\beach_tileset.png</Link>
     </BundleResource>
   </ItemGroup>
+  <ItemGroup>
+   <Content Include="@(BundleResource)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
