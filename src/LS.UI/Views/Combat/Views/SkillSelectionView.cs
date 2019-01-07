@@ -89,7 +89,8 @@ namespace LS.UI.Views.Combat.Views
 					}
 					else
 					{
-						Targetting.EnableTargetting (Scenes.TargettingType.Both);
+						if (State.ActiveCharacter.Skills[Selected].Available)
+							Targetting.EnableTargetting (Scenes.TargettingType.Both);
 					}
 					break;
 			}
